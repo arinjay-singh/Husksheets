@@ -1,3 +1,5 @@
+package API;
+
 interface GetPublishers {
    //no arg passed, only body:{
     //    "publisher": "alice"
@@ -7,7 +9,7 @@ interface GetPublishers {
         //getPublishersFromDB
         //returnRequest
 
-    public bool getPublishersFromDB();
+    public boolean getPublishersFromDB();
         //connect to db
         //cycle through each user_id and get:
             //usernames
