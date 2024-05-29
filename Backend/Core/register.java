@@ -1,3 +1,8 @@
+//@/api/v2/register
+//method here
+
+
+
 interface Register {
     //no arg passed, only body:{
     //    "publisher": "alice"
@@ -14,7 +19,7 @@ interface Register {
         //extract password
 
 
-    public boolean registerInDB();
+    public boolean registerInServer();
         //check no duplicate user, display error if username already registered
         //enter user credentials into DB
         //store username in plaintext
