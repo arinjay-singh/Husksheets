@@ -1,4 +1,11 @@
-interface GetPublishers {
+/*
+Core: GetPublishers interface
+Author: Nicholas O'Sullivan
+ */
+
+package Services.GetPublishers;
+
+interface GetPublishersService {
    //no arg passed, only body:{
     //    "publisher": "alice"
     //}
@@ -7,7 +14,7 @@ interface GetPublishers {
         //getPublishersFromDB
         //returnRequest
 
-    public bool getPublishersFromDB();
+    public boolean getPublishersFromStorage();
         //connect to db
         //cycle through each user_id and get:
             //usernames
