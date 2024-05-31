@@ -1,20 +1,30 @@
-interface Register {
+/*
+Core: Register interface
+Author: Nicholas O'Sullivan
+ */
+
+package com.Services.Register;
+
+
+import com.Services.DataTypes.User;
+
+public interface RegisterService {
     //no arg passed, only body:{
     //    "publisher": "alice"
     //}
     //return json:{"success":true,"message":null,"value":[],"time":1716902506016}
-    public void register();
+    public void register(String request);
         //parseRequest
-        //registerInDB
+        //registerInStorage
         //returnMessage
 
 
-    public boolean parseRegisterRequest();
+    public User parseRegisterRequest(String request);
         //extract username
         //extract password
 
 
-    public boolean registerInDB();
+    public boolean registerInStorage(User user);
         //check no duplicate user, display error if username already registered
         //enter user credentials into DB
         //store username in plaintext
