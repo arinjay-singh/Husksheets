@@ -3,7 +3,7 @@ Core: GetPublishers interface
 Author: Nicholas O'Sullivan
  */
 
-package Services.GetPublishers;
+package com.Services.GetPublishers;
 
 interface GetPublishersService {
    //no arg passed, only body:{

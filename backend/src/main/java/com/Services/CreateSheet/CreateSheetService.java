@@ -2,9 +2,9 @@
 Core: CreateSheet interface
 Author: Nicholas O'Sullivan
  */
-package Services.CreateSheet;
+package com.Services.CreateSheet;
 
-interface CreateSheetService {
+public interface CreateSheetService {
     //json passed argument w/ spreadsheet body
     //return json valid:
     //return json error: {"success":false,"message":"Sheet is nullUnauthorized: sender is not owner of sheet","value":[],"time":1716903138329}

@@ -3,7 +3,7 @@ User storage class, singleton instance
 Author: Nicholas O'Sullivan
  */
 
-package Services.DataTypes;
+package com.Services.DataTypes;
 import java.util.HashMap;
 
 

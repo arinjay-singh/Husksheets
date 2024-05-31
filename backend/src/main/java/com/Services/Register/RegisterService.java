@@ -3,10 +3,10 @@ Core: Register interface
 Author: Nicholas O'Sullivan
  */
 
-package Services.Register;
+package com.Services.Register;
 
 
-import Services.DataTypes.User;
+import com.Services.DataTypes.User;
 
 public interface RegisterService {
     //no arg passed, only body:{

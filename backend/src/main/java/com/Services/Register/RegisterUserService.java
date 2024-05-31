@@ -2,9 +2,9 @@
 Register user service class
 Author: Nicholas O'Sullivan
  */
-package Services.Register;
-import Services.DataTypes.User;
-import Services.DataTypes.UserStorage;
+package com.Services.Register;
+import com.Services.DataTypes.User;
+import com.Services.DataTypes.UserStorage;
 
 
 public class RegisterUserService implements RegisterService {

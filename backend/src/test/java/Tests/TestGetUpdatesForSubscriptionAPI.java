@@ -1,8 +1,10 @@
-package API.Tests;
+package Tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ public class TestGetUpdatesForSubscriptionAPI {
 
     @BeforeEach
     public void setUp(){
-        Mockito.openAnnotations(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach

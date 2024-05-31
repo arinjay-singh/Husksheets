@@ -2,7 +2,7 @@
 User class
 Author: Nicholas O'Sullivan
  */
-package Services.DataTypes;
+package com.Services.DataTypes;
 
 import java.util.ArrayList;
 

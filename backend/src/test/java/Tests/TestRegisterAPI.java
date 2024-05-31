@@ -1,32 +1,31 @@
-package API.Tests;/*
+/*
 Nicholas O'Sullivan
-Test GetPublishers API, in/output focused.
+Test Register API, in/output focused.
  */
-
+package Tests;
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-public class TestGetPublishersAPI {
+public class TestRegisterAPI {
 
     @Mock
-    private GetPublishers getPublishersInstance;
-
-    private GetPublishersAPI getPublishersAPI;
+    private Register registerUserInstance;
+    private RegisterAPI regAPI;
 
     //set up test environment
     //set up mock + api
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        //getPublishersAPI = new getPublishersAPI(getPublishersInstance);
+        //regAPI = new RegisterAPI(registerUserInstance);
     }
 
     //tear down environment after each test
@@ -38,15 +37,15 @@ public class TestGetPublishersAPI {
     @Test
     public void testGetResponse() {
         // Arrange
-        String input = "GetPublishersAPIJsonRequest";
+        String input = "registerApiJson";
         String expectedOutput = "Correct";
-        when(getPublishersInstance.processInput(input)).thenReturn(expectedOutput);
+        when(registerUserInstance.processInput(input)).thenReturn(expectedOutput);
 
         // Act
-        String actualOutput = getPublishersAPI.getResponse(input);
+        String actualOutput = regAPI.getResponse(input);
 
         // Assert
         assertEquals(expectedOutput, actualOutput);
-        verify(getPublishersInstance, times(1)).processInput(input);
+        verify(registerUserInstance, times(1)).processInput(input);
     }
 }

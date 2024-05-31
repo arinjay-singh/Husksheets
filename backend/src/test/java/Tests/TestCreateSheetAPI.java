@@ -1,31 +1,36 @@
+package Tests;
+
 /*
 Nicholas O'Sullivan
-Test Register API, in/output focused.
+Test CreateSheet API, in/output focused.
  */
-package API.Tests;
+
 import static org.mockito.Mockito.*;
+
+import com.Services.CreateSheet.CreateSheetService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-public class TestRegisterAPI {
+public class TestCreateSheetAPI {
 
     @Mock
-    private Register registerUserInstance;
-    private RegisterAPI regAPI;
+    private CreateSheetService createSheetInstance;
+
+    private CreateSheetAPI createSheetAPI;
 
     //set up test environment
     //set up mock + api
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        //regAPI = new RegisterAPI(registerUserInstance);
+        //createSheetAPI = new CreateSheetAPI(createSheetInstance);
     }
 
     //tear down environment after each test
@@ -37,15 +42,15 @@ public class TestRegisterAPI {
     @Test
     public void testGetResponse() {
         // Arrange
-        String input = "registerApiJson";
+        String input = "CreateSheetAPIJsonRequest";
         String expectedOutput = "Correct";
-        when(registerUserInstance.processInput(input)).thenReturn(expectedOutput);
+        when(createSheetInstance.processInput(input)).thenReturn(expectedOutput);
 
         // Act
-        String actualOutput = regAPI.getResponse(input);
+        String actualOutput = createSheetAPI.getResponse(input);
 
         // Assert
         assertEquals(expectedOutput, actualOutput);
-        verify(registerUserInstance, times(1)).processInput(input);
+        verify(createSheetInstance, times(1)).processInput(input);
     }
 }

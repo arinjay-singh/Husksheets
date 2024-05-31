@@ -1,6 +1,8 @@
-package API.Tests;/*
+package Tests;
+
+/*
 Nicholas O'Sullivan
-Test CreateSheet API, in/output focused.
+Test GetPublishers API, in/output focused.
  */
 
 import static org.mockito.Mockito.*;
@@ -14,19 +16,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-public class TestCreateSheetAPI {
+public class TestGetPublishersAPI {
 
     @Mock
-    private CreateSheet createSheetInstance;
+    private GetPublishers getPublishersInstance;
 
-    private CreateSheetAPI createSheetAPI;
+    private GetPublishersAPI getPublishersAPI;
 
     //set up test environment
     //set up mock + api
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        //createSheetAPI = new CreateSheetAPI(createSheetInstance);
+        //getPublishersAPI = new getPublishersAPI(getPublishersInstance);
     }
 
     //tear down environment after each test
@@ -38,15 +40,15 @@ public class TestCreateSheetAPI {
     @Test
     public void testGetResponse() {
         // Arrange
-        String input = "CreateSheetAPIJsonRequest";
+        String input = "GetPublishersAPIJsonRequest";
         String expectedOutput = "Correct";
-        when(createSheetInstance.processInput(input)).thenReturn(expectedOutput);
+        when(getPublishersInstance.processInput(input)).thenReturn(expectedOutput);
 
         // Act
-        String actualOutput = createSheetAPI.getResponse(input);
+        String actualOutput = getPublishersAPI.getResponse(input);
 
         // Assert
         assertEquals(expectedOutput, actualOutput);
-        verify(createSheetInstance, times(1)).processInput(input);
+        verify(getPublishersInstance, times(1)).processInput(input);
     }
 }
