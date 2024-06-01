@@ -1,3 +1,11 @@
+/**
+ * @file sheet.ts
+ * @brief Spreadsheet class to represent a sheets
+ * @version 1.0
+ * @date 05-31-2024
+ * @author Troy Caron
+ */
+
 import { Cell } from './cell';
 
 /**

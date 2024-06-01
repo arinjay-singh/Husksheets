@@ -1,4 +1,13 @@
 /**
+ * @file cell.ts
+ * @brief Cell class to represent a cell in a spreadsheet
+ * @version 1.0
+ * @date 05-31-2024
+ * @author Troy Caron
+ */
+
+
+/**
  * Represents a cell on a spreadsheet
  */
 class Cell {

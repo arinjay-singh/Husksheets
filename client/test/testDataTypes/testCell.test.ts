@@ -1,3 +1,12 @@
+/**
+ * @file testCell.test.ts
+ * @brief Tests for the Cell class
+ * @version 1.0
+ * @date 06-01-2024
+ * @author Troy Caron
+ */
+
+
 import { Cell } from '../../src/data-types/cell';
 
 
