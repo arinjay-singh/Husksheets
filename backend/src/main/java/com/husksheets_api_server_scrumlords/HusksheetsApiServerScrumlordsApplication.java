@@ -9,5 +9,4 @@ public class HusksheetsApiServerScrumlordsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HusksheetsApiServerScrumlordsApplication.class, args);
 	}
-
 }
