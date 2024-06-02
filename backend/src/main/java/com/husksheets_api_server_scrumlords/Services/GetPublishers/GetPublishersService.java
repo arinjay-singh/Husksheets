@@ -3,7 +3,7 @@ Core: GetPublishers interface
 Author: Nicholas O'Sullivan
  */
 
-package com.Services.GetPublishers;
+package com.husksheets_api_server_scrumlords.Services.GetPublishers;
 
 interface GetPublishersService {
    //no arg passed, only body:{

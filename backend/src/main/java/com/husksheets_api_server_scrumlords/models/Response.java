@@ -9,7 +9,7 @@ public class Response {
 
     @Getter
     @Setter
-    Boolean success;
+    boolean success;
 
     @Getter
     @Setter
@@ -23,7 +23,7 @@ public class Response {
     @Setter
     Long time;
 
-    public Response(ArrayList<Value> values) {
+    public Response() {
         this.success = false;
         this.message = null;
         this.values = values;
@@ -40,5 +40,11 @@ public class Response {
                     "time":"%s"
                 }""",
                 success, message, values, time);
+    }
+
+    public boolean equals(Response otherResponse) {
+        return (this.success == otherResponse.success) &&
+                (this.message.equals(otherResponse.message)) &&
+                (this.values.equals(otherResponse.values));
     }
 }
