@@ -7,9 +7,10 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { parseOperationString } from "../functions/sheet-equations";
 
 const Spreadsheet: React.FC = () => {
-  const [data, setData] = useState<string[][]>([[""]]);
+  const [data, setData] = useState<string[][]>([["","",""],["","",""],["","",""]]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -30,6 +31,9 @@ const Spreadsheet: React.FC = () => {
     colIndex: number,
     value: string
   ) => {
+    const operationResult = parseOperationString(value);
+    value = operationResult ? operationResult : value;
+
     const newData = data.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? value : cell
@@ -55,14 +59,14 @@ const Spreadsheet: React.FC = () => {
               {data.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {row.map((cell, colIndex) => (
-                    <td key={colIndex} className="border border-gray-400 p-2">
+                    <td key={colIndex} className="border border-gray-400">
                       <input
                         type="text"
                         value={cell}
                         onChange={(e) =>
                           handleInputChange(rowIndex, colIndex, e.target.value)
                         }
-                        className="w-full p-1 border border-gray-300 rounded text-black"
+                        className="w-full text-black p-2"
                       />
                     </td>
                   ))}
@@ -114,5 +118,7 @@ const Spreadsheet: React.FC = () => {
     </div>
   );
 };
+
+
 
 export default Spreadsheet;
