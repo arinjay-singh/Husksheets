@@ -93,7 +93,7 @@ const Spreadsheet: React.FC = () => {
       </div>
       <div className=" flex items-center pt-3">
         <button
-          onClick={() => setData([[""]])}
+          onClick={() => setData([["","",""],["","",""],["","",""]])}
           className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
         >
           Reset

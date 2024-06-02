@@ -6,20 +6,36 @@
  * @author Arinjay Singh
  */
 
-'use client';
+"use client";
 
-import type { NextPage } from 'next'
-import Spreadsheet from '../components/spreadsheet'
+import type { NextPage } from "next";
+import Spreadsheet from "../components/spreadsheet";
+import ProtectedRoute from "@/components/protected-route";
+import { useAuth } from "@/context/auth-context";
 
 const Home: NextPage = () => {
+  const { logout } = useAuth();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-black text-center">HuskSheets</h1>
-        <Spreadsheet />
+    <ProtectedRoute>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white p-6 rounded shadow-lg">
+          <div className="flex flex-row-reverse">
+            <button
+              onClick={logout}
+              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+            >
+              Logout
+            </button>
+          </div>
+          <h1 className="text-2xl font-bold mb-4 text-black text-center">
+            HuskSheets
+          </h1>
+          <Spreadsheet />
+        </div>
       </div>
-    </div>
-  )
-}
+    </ProtectedRoute>
+  );
+};
 
 export default Home;
