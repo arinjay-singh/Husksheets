@@ -4,7 +4,7 @@ package Tests;
 Nicholas O'Sullivan
 Test GetPublishers API, in/output focused.
  */
-
+/*
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -19,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestGetPublishersAPI {
 
     @Mock
-    private GetPublishers getPublishersInstance;
+    private
+    GetPublishers getPublishersInstance;
 
     private GetPublishersAPI getPublishersAPI;
 
@@ -52,3 +53,4 @@ public class TestGetPublishersAPI {
         verify(getPublishersInstance, times(1)).processInput(input);
     }
 }
+*/

@@ -2,7 +2,7 @@
 Core: CreateSheet interface
 Author: Nicholas O'Sullivan
  */
-package com.Services.CreateSheet;
+package com.husksheets_api_server_scrumlords.Services.CreateSheet;
 
 public interface CreateSheetService {
     //json passed argument w/ spreadsheet body

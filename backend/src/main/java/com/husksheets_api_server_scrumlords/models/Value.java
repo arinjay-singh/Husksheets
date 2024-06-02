@@ -5,9 +5,9 @@ import lombok.Setter;
 
 public class Value {
 
-    @Getter
-    @Setter
-    Publisher publisher;
+   // @Getter
+  //  @Setter
+  //  Publisher publisher;
 
     @Getter
     @Setter
@@ -21,8 +21,8 @@ public class Value {
     @Setter
     String payload;
 
-    public Value(Publisher publisher) {
-        this.publisher = publisher;
+    public Value() {
+       // this.publisher = publisher;
         this.sheet = null;
         this.id = null;
         this.payload = null;
