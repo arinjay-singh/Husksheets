@@ -1,3 +1,11 @@
+/**
+ * @file layout.tsx
+ * @brief The root layout of the application.
+ * @version 1.0
+ * @date 06-02-2024
+ * @author Arinjay Singh
+ */
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
