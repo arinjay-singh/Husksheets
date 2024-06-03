@@ -14,9 +14,7 @@ public class RegisterUserService  {
     //register user as a publisher, always return success.
     public Response register(String username) {
         addToPublishers(username);
-        Response response =  new Response();
-        response.setSuccess(true);
-        return response;
+        return new Response(true, null);
     }
 
 
@@ -26,7 +24,6 @@ public class RegisterUserService  {
     public void addToPublishers(String username) {
         Publishers publishers = Publishers.getInstance();
         publishers.addNewPublisher(username);
-        System.out.println(publishers.getPublisher(username).name());
+        System.out.println(publishers.getPublisher(username).getName());
     }
-
 }
