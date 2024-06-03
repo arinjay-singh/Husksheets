@@ -26,7 +26,7 @@ public class RegisterUserService  {
     public void addToPublishers(String username) {
         Publishers publishers = Publishers.getInstance();
         publishers.addNewPublisher(username);
-        System.out.println(publishers.getPublisher(username).getName());
+        System.out.println(publishers.getPublisher(username).name());
     }
 
 }
