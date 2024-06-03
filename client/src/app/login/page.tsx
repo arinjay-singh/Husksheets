@@ -1,3 +1,12 @@
+/**
+ * @file page.tsx
+ * @brief The login page of the application.
+ * @version 1.0
+ * @date 06-02-2024
+ * @author Arinjay Singh
+ * @
+ */
+
 'use client';
 import { useState } from 'react';
 import { useAuth } from '../../context/auth-context';

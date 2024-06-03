@@ -1,3 +1,12 @@
+/**
+ * @file protected-route.tsx
+ * @brief The protected route component of the application.
+ * @version 1.0
+ * @date 06-02-2024
+ * @author Arinjay Singh
+ */
+
+
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '../context/auth-context';

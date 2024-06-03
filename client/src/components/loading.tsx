@@ -1,3 +1,11 @@
+/**
+ * @file loading.tsx
+ * @brief The loading component of the application.
+ * @version 1.0
+ * @date 06-02-2024
+ * @author Arinjay Singh
+ */
+
 const Loading = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
