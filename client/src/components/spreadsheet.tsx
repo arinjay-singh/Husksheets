@@ -10,21 +10,38 @@ import React, { useState, useEffect } from "react";
 import { parseOperationString } from "../functions/sheet-equations";
 
 const Spreadsheet: React.FC = () => {
-  const [data, setData] = useState<string[][]>([["","",""],["","",""],["","",""]]);
+  const [data, setData] = useState<string[][]>([
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ]);
+  const [behindData, setBehindData] = useState<string[][]>([
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ]);
   const [isClient, setIsClient] = useState(false);
+  
 
   useEffect(() => {
     setIsClient(true);
     const savedData = localStorage.getItem("spreadsheetData");
     if (savedData) {
-      setData(JSON.parse(savedData));
+      const rawData = JSON.parse(savedData);
+      const displayData = rawData.map((row: string[]) =>
+        row.map((cell: string) => {
+          const operationResult = parseOperationString(cell);
+          return operationResult ? operationResult : cell;
+        })
+      );
+      setData(displayData);
     }
   }, []);
 
   useEffect(() => {
     if (!isClient) return;
-    localStorage.setItem("spreadsheetData", JSON.stringify(data));
-  }, [data, isClient]);
+    localStorage.setItem("spreadsheetData", JSON.stringify(behindData));
+  }, [behindData, isClient]);
 
   const handleInputChange = (
     rowIndex: number,
@@ -32,14 +49,23 @@ const Spreadsheet: React.FC = () => {
     value: string
   ) => {
     const operationResult = parseOperationString(value);
-    value = operationResult ? operationResult : value;
+    const displayValue = operationResult ? operationResult : value;
 
-    const newData = data.map((row, rIdx) =>
+    const displayData = data.map((row, rIdx) =>
+      row.map((cell, cIdx) =>
+        rIdx === rowIndex && cIdx === colIndex ? displayValue : cell
+      )
+    );
+
+    setData(displayData);
+
+    const behindDisplayData = behindData.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? value : cell
       )
     );
-    setData(newData);
+
+    setBehindData(behindDisplayData);
   };
 
   const addRow = () => {
@@ -88,37 +114,42 @@ const Spreadsheet: React.FC = () => {
           >
             +
           </button>
-          <div className="p-5"/>
+          <div className="p-5" />
         </div>
       </div>
       <div className=" flex items-center pt-3">
         <button
-          onClick={() => setData([["","",""],["","",""],["","",""]])}
+          onClick={() =>
+            setData([
+              ["", "", ""],
+              ["", "", ""],
+              ["", "", ""],
+            ])
+          }
           className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
         >
           Reset
         </button>
         <button
-            onClick={() => {
-                if (data.length > 1) setData(data.slice(0, -1));
-            }}
-            className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+          onClick={() => {
+            if (data.length > 1) setData(data.slice(0, -1));
+          }}
+          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
         >
-            Delete Row
+          Delete Row
         </button>
         <button
-            onClick={() => {
-                if (data[0].length > 1) setData(data.map(row => row.slice(0, -1)));
-            }}
-            className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+          onClick={() => {
+            if (data[0].length > 1)
+              setData(data.map((row) => row.slice(0, -1)));
+          }}
+          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
         >
-            Delete Column
+          Delete Column
         </button>
       </div>
     </div>
   );
 };
-
-
 
 export default Spreadsheet;
