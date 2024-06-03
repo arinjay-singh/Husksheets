@@ -68,6 +68,16 @@ class Cell {
         //this.evaluateFormula(); To be implemented
     }
 
+    /**
+     * Resets the cell's attributes to their default values.
+     */
+    reset(): void {
+        this._color = 'white';
+        this._text = '';
+        this._font = 'Arial';
+        this._formula = null;
+    }
+
     // Method to display cell info
     displayCellInfo(): string {
         return `Cell [color=${this._color}, text="${this._text}", font=${this._font}]`;
