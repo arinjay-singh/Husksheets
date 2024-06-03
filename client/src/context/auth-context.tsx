@@ -1,3 +1,11 @@
+/**
+ * @file auth-context.tsx
+ * @brief The authentication context of the application.
+ * @version 1.0
+ * @date 06-02-2024
+ * @author Arinjay Singh
+ */
+
 "use client";
 
 import {
