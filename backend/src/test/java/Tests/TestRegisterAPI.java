@@ -43,8 +43,7 @@ public class TestRegisterAPI {
     public void testGetResponse() {
         // Arrange
         String username = "team5";
-        Response expectedOutput = new Response();
-        expectedOutput.setSuccess(true);
+        Response expectedOutput = new Response(true, null);
       //  when(registerUserService.register(username)).thenReturn(expectedOutput);
 
         //I dont think we can test outer API shell from java without implementing a pipeline

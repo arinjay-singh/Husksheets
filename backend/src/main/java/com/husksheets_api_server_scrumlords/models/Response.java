@@ -4,28 +4,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Response {
 
     @Getter
-    @Setter
     boolean success;
 
     @Getter
-    @Setter
     String message;
 
     @Getter
     @Setter
-    ArrayList<Value> values;
+    List<Value> values;
 
     @Getter
-    @Setter
     Long time;
 
-    public Response() {
-        this.success = false;
-        this.message = null;
+    public Response(Boolean success, String message) {
+        this.success = success;
+        this.message = message;
         this.values = new ArrayList<>();
         this.time = System.currentTimeMillis();
     }

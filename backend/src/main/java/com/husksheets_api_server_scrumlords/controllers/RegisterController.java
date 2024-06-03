@@ -1,7 +1,5 @@
 package com.husksheets_api_server_scrumlords.controllers;
-//import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
-import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
@@ -11,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -42,11 +39,10 @@ public class RegisterController {
         ArrayList<String> allPublishers = new ArrayList<>(publishers.getPublisherMap().keySet());
 
         ArrayList<Value> values = (ArrayList<Value>) allPublishers.stream()
-                .map(Value::new)
+                .map(publisher -> new Value(publisher, null, null))
                 .collect(Collectors.toList());
 
-        Response response = new Response();
-        response.setSuccess(true);
+        Response response = new Response(true, null);
         response.setValues(values);
         return response;
     }
