@@ -36,5 +36,16 @@ describe("Cell", () => {
         expect(cell.font).toBe("Times New Roman");
     });
 
+    test('should correctly reset values after being updated', () => {
+        const cell = new Cell();
+        cell.text = "Test Text";
+        cell.color = "black";
+        cell.font = "Times New Roman";
+        cell.reset();
+        expect(cell.color).toBe("white");
+        expect(cell.text).toBe("");
+        expect(cell.font).toBe("Arial");
+    });
+
 
 });
