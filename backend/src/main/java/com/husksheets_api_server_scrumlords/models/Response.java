@@ -26,7 +26,7 @@ public class Response {
     public Response() {
         this.success = false;
         this.message = null;
-        this.values = values;
+        this.values = new ArrayList<>();
         this.time = System.currentTimeMillis();
     }
 

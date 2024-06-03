@@ -3,10 +3,13 @@
  * author: nicholas o'sullivan
  */
 package com.husksheets_api_server_scrumlords.models;
+import lombok.Getter;
+
 import java.util.HashMap;
 
 public class Publishers
 {
+    @Getter
     private HashMap<String, Publisher> publisherMap; //map username -> Publisher Class
     private Publishers() {
         publisherMap = new HashMap<>();
