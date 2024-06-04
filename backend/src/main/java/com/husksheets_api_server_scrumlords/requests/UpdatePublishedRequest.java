@@ -1,6 +1,5 @@
 package com.husksheets_api_server_scrumlords.requests;
 
-import com.husksheets_api_server_scrumlords.models.Sheet;
 import lombok.Getter;
 import lombok.Setter;
 
