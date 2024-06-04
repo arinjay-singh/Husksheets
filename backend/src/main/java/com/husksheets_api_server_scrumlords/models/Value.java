@@ -35,4 +35,19 @@ public class Value {
         this.id = id;
         this.payload = payload;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Value)) {
+            return false;
+        }
+        Value value = (Value) obj;
+        return value.getPublisher().equals(this.getPublisher()) &&
+                value.getSheet().equals(this.getSheet()) &&
+                value.getId().equals(this.getId()) &&
+                value.getPayload().equals(this.getPayload());
+    }
 }
