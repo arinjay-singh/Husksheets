@@ -6,53 +6,49 @@
  * @author Arinjay Singh
  */
 
-export const parseOperationString = (input: string) => {
-    // regular expressions to match different operations
-    const sumPattern = /^=SUM\(([\d\s,]*)\)$/;
-    const subPattern = /^=SUB\(([\d\s,]*)\)$/;
-    const mulPattern = /^=MUL\(([\d\s,]*)\)$/;
-    const divPattern = /^=DIV\(([\d\s,]*)\)$/;
-  
-    // function to extract numbers from matched pattern
-    const extractNumbers = (pattern : RegExp, input : string) => {
-      const match = input.match(pattern);
-      if (match) {
-        const numbersString = match[1];
-        const numbers = numbersString.split(',').map(num => Number(num.trim()));
-        return numbers;
+export const parseOperation = (operation: string) => {
+  // ensure the operation is in the correct format
+  if (!operation.startsWith("=") || operation.length < 4) {
+    return null;
+  }
+
+  // extract the arithmetic expression within the parentheses
+  const expression = operation.slice(1).trim();
+
+  // regular expression to match and capture the operation components
+  const regex = /^\((\-?\d+\.?\d*)\s*([\+\-\*\/])\s*(\-?\d+\.?\d*)\)$/;
+  const match = expression.match(regex);
+  if (!match) {
+    return null;
+  }
+
+  // extract the operands and operator
+  const operand1 = parseFloat(match[1]);
+  const operator = match[2];
+  const operand2 = parseFloat(match[3]);
+
+  // perform the arithmetic operation
+  let result: number;
+  switch (operator) {
+    case "+":
+      result = operand1 + operand2;
+      break;
+    case "-":
+      result = operand1 - operand2;
+      break;
+    case "*":
+      result = operand1 * operand2;
+      break;
+    case "/":
+      if (operand2 === 0) {
+        return "#DIV/0!";
       }
+      result = operand1 / operand2;
+      break;
+    default:
       return null;
-    };
-  
-    // check and perform the corresponding operation
-    if (sumPattern.test(input)) {
-      const numbers = extractNumbers(sumPattern, input);
-      if (numbers) {
-        const result = numbers.reduce((acc, num) => acc + num, 0);
-        return result.toString();
-      }
-    } else if (subPattern.test(input)) {
-      const numbers = extractNumbers(subPattern, input);
-      if (numbers && numbers.length === 2) {
-        const result = numbers[0] - numbers[1];
-        return result.toString();
-      }
-    } else if (mulPattern.test(input)) {
-      const numbers = extractNumbers(mulPattern, input);
-      if (numbers && numbers.length === 2) {
-        const result = numbers[0] * numbers[1];
-        return result.toString();
-      }
-    } else if (divPattern.test(input)) {
-      const numbers = extractNumbers(divPattern, input);
-      if (numbers && numbers.length === 2) {
-        if (numbers[1] !== 0) {
-          const result = numbers[0] / numbers[1];
-          return result.toString();
-        } else {
-          return '#DIV/0!';
-        }
-      }
-    }
-    return null; 
-  };
+  }
+
+  // return the result as a string
+  return result.toString();
+};

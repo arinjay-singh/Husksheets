@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { parseOperationString } from "../functions/sheet-equations";
+import { parseOperation } from "../functions/sheet-equations";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -25,7 +25,7 @@ const Spreadsheet: React.FC = () => {
     ["", "", ""],
     ["", "", ""],
   ]);
-  
+
   // load the data from local storage when the component mounts
   useEffect(() => {
     // get the raw JSON data from local storage
@@ -63,8 +63,8 @@ const Spreadsheet: React.FC = () => {
     value: string
   ) => {
     // check if the value is an operation string
-    const operationResult = parseOperationString(value);
-    
+    const operationResult = parseOperation(value);
+
     // adjust the display value based on the operation result
     const displayValue = operationResult ? operationResult : value;
 
