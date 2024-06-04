@@ -25,9 +25,14 @@ const Spreadsheet: React.FC = () => {
     ["", "", ""],
     ["", "", ""],
   ]);
+  // state variable to prevent reloading from resetting the data
+  const [isClient, setIsClient] = useState(false);
 
   // load the data from local storage when the component mounts
   useEffect(() => {
+    // set isClient to true when the component mounts
+    setIsClient(true);
+
     // get the raw JSON data from local storage
     const rawJSONData = localStorage.getItem("spreadsheetData");
 
@@ -51,10 +56,12 @@ const Spreadsheet: React.FC = () => {
   }, []);
 
   // save the data to local storage when the data state changes
-  // dependencies: rawData
+  // dependencies: rawData and isClient
   useEffect(() => {
+    // if client is false, return
+    if (!isClient) return;
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
-  }, [rawData]);
+  }, [rawData, isClient]);
 
   // handle input change in the spreadsheet
   const handleInputChange = (
