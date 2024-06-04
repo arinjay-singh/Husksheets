@@ -15,8 +15,13 @@ export const parseOperation = (operation: string) => {
   // extract the arithmetic expression within the parentheses
   const expression = operation.slice(1).trim();
 
+  // exception handling operator with 2 characters
+  if (expression.match(/^\((\-?\d+\.?\d*)\s*([+\-*/<>]|<>)\s*(\-?\d+\.?\d*)\)$/)){
+    return "TBD";
+  }
+
   // regular expression to match and capture the operation components
-  const regex = /^\(([^()]+)\s*([\S]+)\s*([^()]+)\)$/;
+  const regex = /^\((\-?\d+\.?\d*)\s*([\+\-\*\/<>]|[><&|=:])\s*(\-?\d+\.?\d*)\)$/;
   const match = expression.match(regex);
   if (!match) {
     return null;
@@ -26,10 +31,12 @@ export const parseOperation = (operation: string) => {
   const operand1 = match[1].trim();
   const operator = match[2];
   const operand2 = match[3].trim();
+  console.log(operand1, operator, operand2)
 
-  if (operator === "=" || operator === "<>" || operator === ":") {
+  if (operator === "=" || operator === ":") {
     // need to implement
     // requires consideration of number and string comparison
+    return "TBD";
   }
 
   if (isNaN(Number(operand1)) || isNaN(Number(operand2))) {
@@ -65,7 +72,6 @@ export const parseOperation = (operation: string) => {
       result = num1 < num2 ? 1 : 0;
       break;
     case "&":
-      console.log('here')
       result = num1 !== 0 && num2 !== 0 ? 1 : 0;
       break;
     case "|":
