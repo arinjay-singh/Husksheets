@@ -28,6 +28,10 @@ public class Response {
         this.time = System.currentTimeMillis();
     }
 
+     public void addValue(Value value) {
+        this.values.add(value);
+    }
+
     @Override
     public String toString() {
         return String.format("""

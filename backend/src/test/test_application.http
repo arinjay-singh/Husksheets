@@ -1,4 +1,10 @@
 ### GET request to example server
 GET localhost:8080/api/v1/register
 Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+
+
 ###
+
+
+GET localhost:8080/api/v1/getPublishers
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
