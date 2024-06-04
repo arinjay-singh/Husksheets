@@ -6,7 +6,9 @@
  * @author Arinjay Singh
  */
 
-const Loading = () => {
+// loading component
+export const Loading = () => {
+  // render the loading component
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
@@ -16,5 +18,3 @@ const Loading = () => {
     </div>
   );
 };
-
-export default Loading;

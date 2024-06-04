@@ -6,28 +6,33 @@
  * @author Arinjay Singh
  */
 
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "../context/auth-context";
+import { Loading } from "./loading";
 
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useAuth } from '../context/auth-context';
-import Loading from './loading';
-
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+// protected route component
+export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  // get the authentication state and loading state from the auth context
   const { isAuthenticated, loading } = useAuth();
+
+  // get the router and pathname from the next navigation
   const router = useRouter();
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    useEffect(() => {
-        if (!isAuthenticated && pathname !== '/login' && !loading) {
-            router.push('/login');
-        }
-    }, [isAuthenticated, pathname, router, loading]);
-
-    if (loading) {
-        return <Loading/>;
+  // redirect to the login page if the user is not authenticated,
+  // the current path is not the login page, and the loading state is false
+  useEffect(() => {
+    if (!isAuthenticated && pathname !== "/login" && !loading) {
+      router.push("/login");
     }
+  }, [isAuthenticated, pathname, router, loading]);
 
+  // render the loading component if the loading state is true
+  if (loading) {
+    return <Loading />;
+  }
+
+  // render the children if the user is authenticated
   return children;
 };
-
-export default ProtectedRoute;

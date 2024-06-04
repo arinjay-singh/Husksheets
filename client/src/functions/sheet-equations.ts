@@ -7,13 +7,13 @@
  */
 
 export const parseOperationString = (input: string) => {
-    // Regular expressions to match different operations
+    // regular expressions to match different operations
     const sumPattern = /^=SUM\(([\d\s,]*)\)$/;
     const subPattern = /^=SUB\(([\d\s,]*)\)$/;
     const mulPattern = /^=MUL\(([\d\s,]*)\)$/;
     const divPattern = /^=DIV\(([\d\s,]*)\)$/;
   
-    // Function to extract numbers from matched pattern
+    // function to extract numbers from matched pattern
     const extractNumbers = (pattern : RegExp, input : string) => {
       const match = input.match(pattern);
       if (match) {
@@ -24,7 +24,7 @@ export const parseOperationString = (input: string) => {
       return null;
     };
   
-    // Check and perform the corresponding operation
+    // check and perform the corresponding operation
     if (sumPattern.test(input)) {
       const numbers = extractNumbers(sumPattern, input);
       if (numbers) {
