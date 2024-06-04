@@ -13,7 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
+/**
+ * Http basic authentication config + user/pass loader
+ * author: nicholas o'sullivan
+ */
 @Configuration
 public class SpringSecurityConfig {
 
