@@ -16,12 +16,15 @@ export const parseOperation = (operation: string) => {
   const expression = operation.slice(1).trim();
 
   // exception handling operator with 2 characters
-  if (expression.match(/^\((\-?\d+\.?\d*)\s*([+\-*/<>]|<>)\s*(\-?\d+\.?\d*)\)$/)){
+  if (
+    expression.match(/^\((\-?\d+\.?\d*)\s*([+\-*/<>]|<>)\s*(\-?\d+\.?\d*)\)$/)
+  ) {
     return "TBD";
   }
 
   // regular expression to match and capture the operation components
-  const regex = /^\((\-?\d+\.?\d*)\s*([\+\-\*\/<>]|[><&|=:])\s*(\-?\d+\.?\d*)\)$/;
+  const regex =
+    /^\((\-?\d+\.?\d*)\s*([\+\-\*\/<>]|[><&|=:])\s*(\-?\d+\.?\d*)\)$/;
   const match = expression.match(regex);
   if (!match) {
     return null;
@@ -31,7 +34,7 @@ export const parseOperation = (operation: string) => {
   const operand1 = match[1].trim();
   const operator = match[2];
   const operand2 = match[3].trim();
-  console.log(operand1, operator, operand2)
+  console.log(operand1, operator, operand2);
 
   if (operator === "=" || operator === ":") {
     // need to implement
@@ -83,4 +86,30 @@ export const parseOperation = (operation: string) => {
 
   // return the result as a string
   return result.toString();
+};
+
+// TODO
+export const evaluateFunction = (func: string) => {
+  const ifPattern = /^=IF\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*\)$/;
+
+  if (func.match(ifPattern)) {
+    const match = func.match(ifPattern);
+    if (match) {
+      const e1 = match[1].trim();
+      const e2 = match[2].trim();
+      const e3 = match[3].trim();
+      console.log(e1, e2, e3);
+
+      const e1Num = parseFloat(e1);
+      if (isNaN(e1Num)) {
+        return "ERROR";
+      }
+
+      if (e1Num !== 0) {
+        return e2;
+      } else {
+        return e3;
+      }
+    }
+  }
 };
