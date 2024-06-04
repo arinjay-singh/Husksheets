@@ -1,8 +1,10 @@
 package Tests;
+
 import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
 import com.husksheets_api_server_scrumlords.models.Response;
+import com.husksheets_api_server_scrumlords.models.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import java.util.Base64;
+
+import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,34 +33,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {RegisterController.class, RegisterUserService.class, SpringSecurityConfig.class})
 public class TestAPIs {
 
-    //instead of this moving forward we shoud set a for loop to test two random users from our future userLogins enum
-
-
     @Autowired
     public MockMvc mockMvc;
     @MockBean
     private RegisterUserService registerUserService;
+
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     //main test template
-     @Test
+    @Test
     public void testAPIs() throws Exception {
+        ArrayList<Value> publishers = new ArrayList<>();
+        Response getPublishersResponse = new Response(true, null);
+
         //test get publishers when no publishers registered.
-         testNoAuth(StaticVars.getPublishersRequest);
-         testGetPublishersAPI(StaticVars.getPublishersEmptySuccess, StaticVars.getPublishersRequest, StaticVars.username1, StaticVars.password1);
+        testNoAuth(StaticVars.getPublishersRequest);
+        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
 
-         // register publisher 1
-       // testNoAuth(StaticVars.registerRequest);
-        testRegisterAPI(StaticVars.registerRequest, StaticVars.username1, StaticVars.password1);
+        // register publisher 1
+        testNoAuth(StaticVars.registerRequest);
+        testRegisterAPI(StaticVars.registerRequest, StaticVars.team5username, StaticVars.team5password);
 
+        publishers.add(StaticVars.Team5PublisherNoDocsValue);
+        getPublishersResponse.setValues(publishers);
         //get publishers w/ 1 publisher registered.
-         //testGetPublishersAPI(StaticVar, StaticVars.getPublishersRequest, StaticVars.username1, StaticVars.password1);
+        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
 
+        //register publisher 2
+        testNoAuth(StaticVars.registerRequest);
+        testRegisterAPI(StaticVars.registerRequest, StaticVars.mikeUsername, StaticVars.mikePassword);
 
-         //register publisher 2
+        publishers.add(StaticVars.MikePublisherNoDocsValue);
+         getPublishersResponse.setValues(publishers);
+
+        //get publishers w/ 2 publishers registered.
+        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
 
     }
 
@@ -73,6 +85,7 @@ public class TestAPIs {
                 password);
         TestAPIHelpers.assertResponse(resultActions, StaticVars.registerResponseSuccess);
     }
+
     private void mockRegisterService(Response expectedOutput) {
         BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willReturn(expectedOutput);
     }
@@ -93,10 +106,8 @@ public class TestAPIs {
         //trigger request
         ResultActions resultActions = TestAPIHelpers.performGetRequestNoAuth(mockMvc, url);
         resultActions.andExpect(status().isUnauthorized())
-                     .andExpect(content().string(noAuthExpectedOutput));
+                .andExpect(content().string(noAuthExpectedOutput));
     }
-
-
 
 
 }

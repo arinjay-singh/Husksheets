@@ -48,7 +48,7 @@ public class TestAPIHelpers {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(expectedOutput.isSuccess()))
                 .andExpect(jsonPath("$.message").value(expectedOutput.getMessage()))
-                .andExpect(jsonPath("$.values").isArray()) //change to something diff
+                .andExpect(jsonPath("$.values").value(expectedOutput.getValues())) //change to something diff
                 .andExpect(jsonPath("$.time").exists());
     }
 
