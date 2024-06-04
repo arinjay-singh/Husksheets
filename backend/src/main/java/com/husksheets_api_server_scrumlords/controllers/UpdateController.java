@@ -63,6 +63,4 @@ public class UpdateController {
             return new Response(true, null);
         }
     }
-
-
 }
