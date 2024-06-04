@@ -16,34 +16,60 @@ export const parseOperation = (operation: string) => {
   const expression = operation.slice(1).trim();
 
   // regular expression to match and capture the operation components
-  const regex = /^\((\-?\d+\.?\d*)\s*([\+\-\*\/])\s*(\-?\d+\.?\d*)\)$/;
+  const regex = /^\(([^()]+)\s*([\S]+)\s*([^()]+)\)$/;
   const match = expression.match(regex);
   if (!match) {
     return null;
   }
 
   // extract the operands and operator
-  const operand1 = parseFloat(match[1]);
+  const operand1 = match[1].trim();
   const operator = match[2];
-  const operand2 = parseFloat(match[3]);
+  const operand2 = match[3].trim();
+
+  if (operator === "=" || operator === "<>" || operator === ":") {
+    // need to implement
+    // requires consideration of number and string comparison
+  }
+
+  if (isNaN(Number(operand1)) || isNaN(Number(operand2))) {
+    return "ERROR";
+  }
+
+  // Convert operands to numbers
+  const num1 = parseFloat(operand1);
+  const num2 = parseFloat(operand2);
 
   // perform the arithmetic operation
   let result: number;
   switch (operator) {
     case "+":
-      result = operand1 + operand2;
+      result = num1 + num2;
       break;
     case "-":
-      result = operand1 - operand2;
+      result = num1 - num2;
       break;
     case "*":
-      result = operand1 * operand2;
+      result = num1 * num2;
       break;
     case "/":
-      if (operand2 === 0) {
+      if (num2 === 0) {
         return "#DIV/0!";
       }
-      result = operand1 / operand2;
+      result = num1 / num2;
+      break;
+    case ">":
+      result = num1 > num2 ? 1 : 0;
+      break;
+    case "<":
+      result = num1 < num2 ? 1 : 0;
+      break;
+    case "&":
+      console.log('here')
+      result = num1 !== 0 && num2 !== 0 ? 1 : 0;
+      break;
+    case "|":
+      result = num1 === 1 || num2 === 1 ? 1 : 0;
       break;
     default:
       return null;

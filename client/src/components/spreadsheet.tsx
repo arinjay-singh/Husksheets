@@ -40,7 +40,7 @@ const Spreadsheet: React.FC = () => {
       // executing any operations in the cells
       const displayData = parsedData.map((row: string[]) =>
         row.map((cell: string) => {
-          const operationResult = parseOperationString(cell);
+          const operationResult = parseOperation(cell);
           return operationResult ? operationResult : cell;
         })
       );
