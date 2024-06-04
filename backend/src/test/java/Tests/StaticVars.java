@@ -15,6 +15,7 @@ public class StaticVars
     public static final String password2 = "12345password";
     public static final  String registerRequest = "/api/v1/register"; //same with this request thing we should abstract it
     public static final String getPublishersRequest = "/api/v1/getPublishers";
+    public static final String unauthorizedResponse = "Unauthorized";
     public static final Response registerResponseSuccess = new Response(true, null);
     public static final Response getPublishersEmptySuccess = new Response(true, null);
     public static final Value EmptyTeam5PublisherValue = new Value("Team5", null, null, null);

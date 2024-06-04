@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Base64;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * TestRegister API
@@ -48,7 +48,7 @@ public class TestAPIs {
      @Test
     public void testAPIs() throws Exception {
         //test get publishers when no publishers registered.
-         //testNoAuth(mockMvc, StaticVars.getPublishersRequest);
+         testNoAuth(StaticVars.getPublishersRequest);
          testGetPublishersAPI(StaticVars.getPublishersEmptySuccess, StaticVars.getPublishersRequest, StaticVars.username1, StaticVars.password1);
 
          // register publisher 1
@@ -77,7 +77,7 @@ public class TestAPIs {
         BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willReturn(expectedOutput);
     }
 
-    //======================================== getPublishers Helpers ================================================
+    //======================================== getPublishers Helpers
     public void testGetPublishersAPI(Response expectedResponse, String request, String username, String password) throws Exception {
         ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc,
                 request,
@@ -86,14 +86,14 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
-
-    // Test API failure when no authentication sent.
+    //======================================== No Auth Helpers
     public void testNoAuth(String url) throws Exception {
 
-        Response noAuthExpectedOutput = new Response(false, null);
+        String noAuthExpectedOutput = StaticVars.unauthorizedResponse;
         //trigger request
         ResultActions resultActions = TestAPIHelpers.performGetRequestNoAuth(mockMvc, url);
-        TestAPIHelpers.assertResponse(resultActions, noAuthExpectedOutput);  //compare output
+        resultActions.andExpect(status().isUnauthorized())
+                     .andExpect(content().string(noAuthExpectedOutput));
     }
 
 

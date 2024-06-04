@@ -1,5 +1,6 @@
 package com.husksheets_api_server_scrumlords.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 public class SpringSecurityConfig {
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
 
     @Bean
     public PasswordEncoder encoder() { return new BCryptPasswordEncoder();}
@@ -51,6 +57,8 @@ public class SpringSecurityConfig {
      //   .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
      //   .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         .httpBasic(Customizer.withDefaults())
+            //handle authentication errors
+        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
         .build();
     }
 }
