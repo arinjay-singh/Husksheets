@@ -56,7 +56,7 @@ public class RegisterController {
         ArrayList<String> allPublishers = new ArrayList<>(publishers.getPublisherMap().keySet());
 
         ArrayList<Value> values = (ArrayList<Value>) allPublishers.stream()
-                .map(publisher -> new Value(publisher, null, null))
+                .map(publisher -> new Value(publisher, null, null, null))
                 .collect(Collectors.toList());
 
         Response response = new Response(true, null);

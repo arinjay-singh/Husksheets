@@ -13,7 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
+/**
+ * Http basic authentication config + user/pass loader
+ * author: nicholas o'sullivan
+ */
 @Configuration
 public class SpringSecurityConfig {
 
@@ -40,7 +43,7 @@ public class SpringSecurityConfig {
     return httpSecurity
         .csrf(AbstractHttpConfigurer::disable)  //disable front-end cross site request forgery.
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).permitAll()
+           // .requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
                 //any authenticated user can register
             //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
             .anyRequest().authenticated()
