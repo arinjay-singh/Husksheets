@@ -21,10 +21,10 @@ public class Value {
     @Setter
     String payload;
 
-    public Value(String publisher, String sheet, String payload) {
+    public Value(String publisher, String sheet, Integer id, String payload) {
         this.publisher = publisher;
         this.sheet = sheet;
-        this.id = null;
+        this.id = id;
         this.payload = payload;
     }
 }

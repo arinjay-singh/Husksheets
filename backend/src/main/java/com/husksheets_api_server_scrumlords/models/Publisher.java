@@ -10,11 +10,15 @@ public class Publisher {
     private final String name;
     @Getter
     private List<Sheet> sheets;
+    @Getter
+    String payload;
 
-    public Publisher(String name) {
+    public Publisher(String name, String payload) {
         this.name = name;
         this.sheets = new ArrayList<>();
+        this.payload = payload;
     }
+
 
     public void addSheet(Sheet sheet) {
         sheets.add(sheet);
