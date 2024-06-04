@@ -11,17 +11,24 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/auth-context';
 
+
+// login page component
 const LoginPage = () => {
+  // state hooks to store the username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  // get the login function from the auth context
   const { login } = useAuth();
 
+  // handle the login form submission
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Perform authentication logic here
     login();
   };
 
+  // render the login form
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
