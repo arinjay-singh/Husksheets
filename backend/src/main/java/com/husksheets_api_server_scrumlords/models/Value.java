@@ -8,19 +8,15 @@ import lombok.Setter;
  * author: Kaan Tural and Parnika Jain
  */
 public class Value {
-
     @Getter
     @Setter
     String publisher;
-
     @Getter
     @Setter
     String sheet;
-
     @Getter
     @Setter
     Integer id;
-
     @Getter
     @Setter
     String payload;

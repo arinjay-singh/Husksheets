@@ -14,13 +14,17 @@ author: Parnika Jain
  */
 @RestController
 public class UpdateController {
-
     private final Publishers publishers;
-
     public UpdateController() {
         this.publishers = Publishers.getInstance();
     }
 
+    /**
+     * Update the payload of a sheet directly from the publisher themselves in a request.
+     *
+     * @param request the body of the request given to the server.
+     * @return Success response or failure with a message why it failed.
+     */
     @PostMapping("api/v1/updatePublished")
     public Response updatePublished(@RequestBody UpdateRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -45,6 +49,12 @@ public class UpdateController {
         }
     }
 
+    /**
+     * Makes a request to update the payload of a sheet from someone who isn't the publisher.
+     *
+     * @param request the body of the request given to the server.
+     * @return Success response or failure with a message why it failed.
+     */
     @PostMapping("api/v1/updateSubscription")
     public Response updateSubscription(@RequestBody UpdateRequest request) {
         String owner = request.getPublisher();

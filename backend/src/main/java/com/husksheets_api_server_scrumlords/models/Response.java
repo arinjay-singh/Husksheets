@@ -11,17 +11,13 @@ import java.util.List;
  * author: Kaan Tural and Parnika Jain
  */
 public class Response {
-
     @Getter
     boolean success;
-
     @Getter
     String message;
-
     @Getter
     @Setter
     List<Value> values;
-
     @Getter
     Long time;
 

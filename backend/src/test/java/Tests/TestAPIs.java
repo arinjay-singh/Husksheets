@@ -1,6 +1,6 @@
 package Tests;
 
-import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
+import com.husksheets_api_server_scrumlords.Helpers.RegisterUserService;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
 import com.husksheets_api_server_scrumlords.models.Response;

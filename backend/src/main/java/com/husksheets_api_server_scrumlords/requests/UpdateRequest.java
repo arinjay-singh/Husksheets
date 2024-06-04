@@ -10,7 +10,6 @@ public class UpdateRequest extends AbstractPublisherRequest {
     @Getter
     @Setter
     private String sheet;
-
     @Getter
     @Setter
     private String payload;
