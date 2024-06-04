@@ -33,7 +33,7 @@ public class Publishers
             return false; //if user already registered, do nothing
         }
         else {
-            Publisher publisher = new Publisher(username, null); //create a new publisher for the user
+            Publisher publisher = new Publisher(username); //create a new publisher for the user
             publisherMap.put(username, publisher);  //enter into publisherMap
             return true;
         }
