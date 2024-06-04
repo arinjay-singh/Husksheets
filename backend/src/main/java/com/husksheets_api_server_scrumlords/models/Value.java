@@ -2,7 +2,10 @@ package com.husksheets_api_server_scrumlords.models;
 
 import lombok.Getter;
 import lombok.Setter;
-
+/*
+Update sheet APIs
+author: Kaan Tural, Parnika Jain
+ */
 public class Value {
 
     @Getter

@@ -2,8 +2,11 @@ package com.husksheets_api_server_scrumlords.requests;
 
 import lombok.Getter;
 import lombok.Setter;
-
-public class UpdatePublishedRequest extends AbstractPublisherRequest {
+/*
+Update request
+author: Parnika Jain
+ */
+public class UpdateRequest extends AbstractPublisherRequest {
     @Getter
     @Setter
     private String sheet;

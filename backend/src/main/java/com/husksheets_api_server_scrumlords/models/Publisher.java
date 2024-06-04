@@ -5,6 +5,10 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Update sheet APIs
+author: Kaan Tural, Parnika Jain
+ */
 public class Publisher {
     @Getter
     private final String name;
