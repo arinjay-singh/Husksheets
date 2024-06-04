@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { parseOperation } from "../functions/sheet-equations";
+import { parseOperation, parseEquation } from "../functions/sheet-equations";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -69,32 +69,33 @@ const Spreadsheet: React.FC = () => {
     colIndex: number,
     value: string
   ) => {
-    // check if the value is an operation string
-    const operationResult = parseOperation(value);
-
-    // adjust the display value based on the operation result
-    const displayValue = operationResult ? operationResult : value;
 
     // switch out the display value with the result if the cell is an operation
     const displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? displayValue : cell
+        rIdx === rowIndex && cIdx === colIndex ? value : cell
       )
     );
 
     // set the display data state
     setData(displayData);
 
-    // create the raw data
-    // if the value is an operation, set the raw data to the operation string
-    const behindDisplayData = rawData.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? value : cell
-      )
-    );
-
     // update the raw data state
-    setRawData(behindDisplayData);
+    setRawData(displayData);
+  };
+
+  const executeCell = (rowIndex: number, colIndex: number, value: string) => {
+    const equationResult = parseEquation(value);
+
+    if (equationResult) {
+      const displayData = data.map((row, rIdx) =>
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
+        )
+      );
+
+      setData(displayData);
+    }
   };
 
   // add a row to the spreadsheet
@@ -124,6 +125,12 @@ const Spreadsheet: React.FC = () => {
                         onChange={(e) =>
                           handleInputChange(rowIndex, colIndex, e.target.value)
                         }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            executeCell(rowIndex, colIndex, (e.target as HTMLInputElement).value);
+                          }
+                        }}
                         className="w-full text-black p-2"
                       />
                     </td>
