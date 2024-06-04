@@ -1,8 +1,11 @@
 package Tests;
 
+import Tests.Utils.Constants;
+import Tests.Utils.TestAPIHelpers;
 import com.husksheets_api_server_scrumlords.Helpers.RegisterUserService;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
+import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,79 +38,70 @@ public class TestAPIs {
 
     @Autowired
     public MockMvc mockMvc;
+
     @MockBean
     private RegisterUserService registerUserService;
-
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        Publishers.getInstance().getPublisherMap().clear(); // Reset the shared data store before each test
     }
 
-    //main test template
     @Test
     public void testAPIs() throws Exception {
         ArrayList<Value> publishers = new ArrayList<>();
         Response getPublishersResponse = new Response(true, null);
 
-        //test get publishers when no publishers registered.
-        testNoAuth(StaticVars.getPublishersRequest);
-        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
+        // Test get publishers when no publishers registered.
+        testNoAuth(Constants.getPublishersRequest);
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
 
-        // register publisher 1
-        testNoAuth(StaticVars.registerRequest);
-        testRegisterAPI(StaticVars.registerRequest, StaticVars.team5username, StaticVars.team5password);
+        // Register publisher 1
+        testNoAuth(Constants.registerRequest);
+        testRegisterAPI(Constants.registerRequest, Constants.team5username, Constants.team5password);
 
-        publishers.add(StaticVars.Team5PublisherNoDocsValue);
+        publishers.add(Constants.Team5PublisherNoDocsValue);
         getPublishersResponse.setValues(publishers);
-        //get publishers w/ 1 publisher registered.
-        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
+        System.out.println("Publishers after registering Team5: " + publishers);
 
-        //register publisher 2
-        testNoAuth(StaticVars.registerRequest);
-        testRegisterAPI(StaticVars.registerRequest, StaticVars.mikeUsername, StaticVars.mikePassword);
+        // Get publishers with 1 publisher registered
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
 
-        publishers.add(StaticVars.MikePublisherNoDocsValue);
-         getPublishersResponse.setValues(publishers);
+        // Register publisher 2
+        testNoAuth(Constants.registerRequest);
+        testRegisterAPI(Constants.registerRequest, Constants.mikeUsername, Constants.mikePassword);
 
-        //get publishers w/ 2 publishers registered.
-        testGetPublishersAPI(getPublishersResponse, StaticVars.getPublishersRequest, StaticVars.team5username, StaticVars.team5password);
+        publishers.add(Constants.MikePublisherNoDocsValue);
+        getPublishersResponse.setValues(publishers);
+        System.out.println("Publishers after registering Mike: " + publishers);
 
+        // Get publishers with 2 publishers registered
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
     }
 
-
-    //======================================== Register Helpers ================================================
     public void testRegisterAPI(String request, String username, String password) throws Exception {
-        mockRegisterService(StaticVars.registerResponseSuccess);
-        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc,
-                request,
-                username,
-                password);
-        TestAPIHelpers.assertResponse(resultActions, StaticVars.registerResponseSuccess);
+        mockRegisterService();
+        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
+        TestAPIHelpers.assertResponse(resultActions, Constants.registerResponseSuccess);
     }
 
-    private void mockRegisterService(Response expectedOutput) {
-        BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willReturn(expectedOutput);
+    private void mockRegisterService() {
+        BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willAnswer(invocation -> {
+            String username = invocation.getArgument(0);
+            Publishers.getInstance().addNewPublisher(username);
+            return Constants.registerResponseSuccess;
+        });
     }
 
-    //======================================== getPublishers Helpers
     public void testGetPublishersAPI(Response expectedResponse, String request, String username, String password) throws Exception {
-        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc,
-                request,
-                username,
-                password);
+        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
-    //======================================== No Auth Helpers
     public void testNoAuth(String url) throws Exception {
-
-        String noAuthExpectedOutput = StaticVars.unauthorizedResponse;
-        //trigger request
+        String noAuthExpectedOutput = Constants.unauthorizedResponse;
         ResultActions resultActions = TestAPIHelpers.performGetRequestNoAuth(mockMvc, url);
-        resultActions.andExpect(status().isUnauthorized())
-                .andExpect(content().string(noAuthExpectedOutput));
+        resultActions.andExpect(status().isUnauthorized()).andExpect(content().string(noAuthExpectedOutput));
     }
-
-
 }

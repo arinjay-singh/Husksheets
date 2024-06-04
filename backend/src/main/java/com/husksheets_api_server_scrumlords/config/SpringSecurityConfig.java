@@ -67,15 +67,12 @@ public class SpringSecurityConfig {
     return httpSecurity
         .csrf(AbstractHttpConfigurer::disable)  //disable front-end cross site request forgery.
         .authorizeHttpRequests(auth -> auth
-           // .requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
+            //.requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
                 //any authenticated user can register
             //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
             .anyRequest().authenticated()
         )
-     //   .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-     //   .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         .httpBasic(Customizer.withDefaults())
-            //handle authentication errors
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
         .build();
     }
