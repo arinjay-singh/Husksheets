@@ -28,13 +28,15 @@ public class UpdateController {
         if (!username.equals(request.getPublisher())) {
             return new Response(false, "Unauthorized: sender is not owner of sheet");
         }
-        boolean sheetExists = publisher.getSheets().stream().allMatch(sheet -> sheet.getSheet().equals(request.getSheet()));
-        if (!sheetExists) {
+        //boolean sheetExists = publisher.getSheets().stream().allMatch(sheet -> sheet.getSheet().equals(request.getSheet()));
+        if (userSheet == null) {
             return new Response(false, "Not found:" + request.getPublisher() +
                     "/" + request.getSheet());
         }
-        userSheet.setPayload(request.getPayload());
-        return new Response(true, null);
+        else {
+            userSheet.setPayload(request.getPayload());
+            return new Response(true, null);
+        }
     }
 
 
