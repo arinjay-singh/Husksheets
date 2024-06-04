@@ -10,12 +10,15 @@
 
 import type { NextPage } from "next";
 import Spreadsheet from "../components/spreadsheet";
-import ProtectedRoute from "@/components/protected-route";
+import {ProtectedRoute} from "@/components/protected-route";
 import { useAuth } from "@/context/auth-context";
 
+// home page component
 const Home: NextPage = () => {
+  // get the logout function from the auth context
   const { logout } = useAuth();
 
+  // render the home page
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -38,4 +41,5 @@ const Home: NextPage = () => {
   );
 };
 
+// export the home page component as the default export
 export default Home;
