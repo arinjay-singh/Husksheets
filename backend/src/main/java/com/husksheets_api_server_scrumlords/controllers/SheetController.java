@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 public class SheetController {
     private final Publishers publishers;
-
     public SheetController() {
         this.publishers = Publishers.getInstance();
     }
@@ -67,6 +66,12 @@ public class SheetController {
         return new Response(true, null);
     }
 
+    /**
+     * API route to delete a sheet with the given name from the current publisher.
+     *
+     * @param request the body of the API call, containing the sheet to delete and publisher.
+     * @return A response to show the action has been done successfully or information if not.
+     */
     @PostMapping("api/v1/deleteSheet")
     public Response deleteSheet(@RequestBody DeleteSheetRequest request) {
         Publisher publisher = checkAuthentication(request);
@@ -83,6 +88,12 @@ public class SheetController {
         return new Response(true, null);
     }
 
+    /**
+     * API route to get all the sheets associated with publisher given in the call's body.
+     *
+     * @param request the body of the API call, containing the publisher to get sheets from.
+     * @return A response with the sheets associated with the publisher or an error message.
+     */
     @PostMapping("api/v1/getSheets")
     public Response getSheets(@RequestBody GetSheetsRequest request) {
         String publisherName = request.getPublisher();

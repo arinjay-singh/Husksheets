@@ -1,5 +1,5 @@
 package com.husksheets_api_server_scrumlords.controllers;
-import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
+import com.husksheets_api_server_scrumlords.Helpers.RegisterUserService;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
