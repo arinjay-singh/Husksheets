@@ -33,16 +33,12 @@ const Spreadsheet: React.FC = () => {
   useEffect(() => {
     // set isClient to true when the component mounts
     setIsClient(true);
-
     // retrieve the display data from local storage
     const displayData = localStorage.getItem("displaySpreadsheetData");
-    
     // retrieve the raw data from local storage
     const rawData = localStorage.getItem("spreadsheetData");
-
     // if the display data exists, set the data state to the display data
     if (displayData) setData(JSON.parse(displayData));
-
     // if the raw data exists, set the raw data state to the raw data
     if (rawData) setRawData(JSON.parse(rawData));
   }, []);
@@ -52,7 +48,6 @@ const Spreadsheet: React.FC = () => {
   useEffect(() => {
     // if client is false, return
     if (!isClient) return;
-
     // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
@@ -70,38 +65,37 @@ const Spreadsheet: React.FC = () => {
         rIdx === rowIndex && cIdx === colIndex ? value : cell
       )
     );
-
     // set the display data state
     setData(displayData);
-
     // switch out the new value in the raw data
     const equationData = rawData.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? value : cell
       )
     );
-
     // update the raw data state
     setRawData(equationData);
   };
 
   // handle 'enter' key press for a cell
-  const executeCell = (rowIndex: number, colIndex: number, value: string | null) => {
+  const executeCell = (
+    rowIndex: number,
+    colIndex: number,
+    value: string | null
+  ) => {
     // if the value is null, alert the user and return
     if (value === null) {
       alert("Cannot execute empty cell");
       return;
     }
-
     // parse the cell references in the value
     const parsedValue = parseCellReferences(data, value);
     // parse the equation in the value
     const equationResult = parseEquation(parsedValue);
-
     // create a display data variable
     let displayData: string[][];
-
     // if the equation result exists, set the display data to the equation result
+    // otherwise, set the display data to the parsed value
     if (equationResult) {
       displayData = data.map((row, rIdx) =>
         row.map((cell, cIdx) =>
@@ -109,26 +103,33 @@ const Spreadsheet: React.FC = () => {
         )
       );
     } else {
-      // if the equation result does not exist, set the display data to the parsed value
-      // and update the display data for all cells with equations
       displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) => {
-          if (rIdx === rowIndex && cIdx === colIndex) return parsedValue;
-          else {
-            if (rawData[rIdx][cIdx].includes("$")) {
-              const parsedValue = parseCellReferences(data, rawData[rIdx][cIdx]);
-              const equationResult = parseEquation(parsedValue);
-              return equationResult;
-            }
-            return cell;
-          }
-        })
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === colIndex ? parsedValue : cell
+        )
       );
     }
-
+    let current = displayData;
+    // cascading updates for the results of equation data dependent on the current cell
+    displayData = displayData.map((row, rIdx) =>
+      row.map((cell, cIdx) => {
+        if (rIdx === rowIndex && cIdx === colIndex) return cell;
+        else {
+          if (rawData[rIdx][cIdx].includes("$")) {
+            const newParsedValue = parseCellReferences(
+              current,
+              rawData[rIdx][cIdx]
+            );
+            const newEquationResult = parseEquation(newParsedValue);
+            current[rIdx][cIdx] = newEquationResult;
+            return newEquationResult;
+          }
+          return cell;
+        }
+      })
+    );
     // set the display data state
     setData(displayData);
-
     // update the local storage of the display data
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
   };
@@ -213,20 +214,28 @@ const Spreadsheet: React.FC = () => {
       </div>
       <div className=" flex items-center pt-3">
         <button
-          onClick={() =>
+          onClick={() => {
             setData([
               ["", "", ""],
               ["", "", ""],
               ["", "", ""],
-            ])
-          }
+            ]);
+            setRawData([
+              ["", "", ""],
+              ["", "", ""],
+              ["", "", ""],
+            ]);
+          }}
           className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
         >
           Reset
         </button>
         <button
           onClick={() => {
-            if (data.length > 1) setData(data.slice(0, -1));
+            if (data.length > 1) {
+              setData(data.slice(0, -1));
+              setRawData(rawData.slice(0, -1));
+            }
           }}
           className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
         >
@@ -236,6 +245,7 @@ const Spreadsheet: React.FC = () => {
           onClick={() => {
             if (data[0].length > 1)
               setData(data.map((row) => row.slice(0, -1)));
+            setRawData(rawData.map((row) => row.slice(0, -1)));
           }}
           className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
         >
