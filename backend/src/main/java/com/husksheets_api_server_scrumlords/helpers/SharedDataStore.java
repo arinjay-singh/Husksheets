@@ -1,4 +1,4 @@
-package com.husksheets_api_server_scrumlords.Helpers;
+package com.husksheets_api_server_scrumlords.helpers;
 
 import com.husksheets_api_server_scrumlords.models.Value;
 

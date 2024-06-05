@@ -1,4 +1,4 @@
-package Tests.Utils;
+package Tests.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.husksheets_api_server_scrumlords.models.Response;
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * TestAPIHelpers class: Consolidate reusable test methods
- * author: Nicholas O'Sullivan
+ * author: Nicholas O'Sullivan and Kaan Tural
  */
 public class TestAPIHelpers {
 

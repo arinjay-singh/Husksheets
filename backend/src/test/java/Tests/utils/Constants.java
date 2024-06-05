@@ -1,4 +1,4 @@
-package Tests.Utils;
+package Tests.utils;
 
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
