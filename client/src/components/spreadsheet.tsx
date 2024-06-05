@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect } from "react";
 import { parseOperation, parseEquation } from "../functions/sheet-equations";
+import { parseCellReferences } from "../functions/cell-referencing";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -33,30 +34,11 @@ const Spreadsheet: React.FC = () => {
     // set isClient to true when the component mounts
     setIsClient(true);
 
+    // retrieve the display data from local storage
     const displayData = localStorage.getItem("displaySpreadsheetData");
 
+    // if the display data exists, set the data state to the display data
     if (displayData) setData(JSON.parse(displayData));
-
-    // // get the raw JSON data from local storage
-    // const rawJSONData = localStorage.getItem("spreadsheetData");
-
-    // // if the raw JSON data exists, parse it and set the data state
-    // if (rawJSONData) {
-    //   // parse the raw JSON data and set the data state
-    //   const parsedData = JSON.parse(rawJSONData);
-
-    //   // derive the display data from the parsed data by
-    //   // executing any operations in the cells
-    //   const displayData = parsedData.map((row: string[]) =>
-    //     row.map((cell: string) => {
-    //       const operationResult = parseOperation(cell);
-    //       return operationResult ? operationResult : cell;
-    //     })
-    //   );
-
-    //   // set the display data state
-    //   setData(displayData);
-    // }
   }, []);
 
   // save the data to local storage when the data state changes
@@ -73,7 +55,6 @@ const Spreadsheet: React.FC = () => {
     colIndex: number,
     value: string
   ) => {
-
     // switch out the display value with the result if the cell is an operation
     const displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) =>
@@ -89,18 +70,27 @@ const Spreadsheet: React.FC = () => {
   };
 
   const executeCell = (rowIndex: number, colIndex: number, value: string) => {
-    const equationResult = parseEquation(value);
+    const parsedValue = parseCellReferences(data, value);
+    const equationResult = parseEquation(parsedValue);
+
+    let displayData: string[][];
 
     if (equationResult) {
-      const displayData = data.map((row, rIdx) =>
+      displayData = data.map((row, rIdx) =>
         row.map((cell, cIdx) =>
           rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
         )
       );
-
-      setData(displayData);
-      localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
+    } else {
+      displayData = data.map((row, rIdx) =>
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === colIndex ? parsedValue : cell
+        )
+      );
     }
+
+    setData(displayData);
+    localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
   };
 
   // add a row to the spreadsheet
@@ -133,7 +123,11 @@ const Spreadsheet: React.FC = () => {
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
-                            executeCell(rowIndex, colIndex, (e.target as HTMLInputElement).value);
+                            executeCell(
+                              rowIndex,
+                              colIndex,
+                              (e.target as HTMLInputElement).value
+                            );
                           }
                         }}
                         className="w-full text-black p-2"
