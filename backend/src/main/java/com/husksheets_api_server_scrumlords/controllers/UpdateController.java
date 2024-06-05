@@ -72,6 +72,7 @@ public class UpdateController {
         }
     }
 
+    // need to implement frontend routes to complete these 2 APIs
     @GetMapping("api/v1/getupdatesForPublished")
     public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
