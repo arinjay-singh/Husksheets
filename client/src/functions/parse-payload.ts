@@ -19,8 +19,8 @@ export const parseServerPayload = (payload: string): (string | null)[][] => {
     for (const line of lines) {
         if (line.trim()) { // Check if the line is not empty
             const [ref, ...termParts] = line.split(' ');
-            const term = termParts.join(' ');
-            if (ref && term) { // Ensure both ref and term are defined
+            const term = termParts.join(' ') || ""; // Ensure empty cells are represented as empty strings
+            if (ref) { // Ensure ref is defined
                 const [row, col] = cellMap(ref);
                 parsedPayload.push({ row, col, value: term });
                 if (row > maxRow) maxRow = row;
@@ -30,7 +30,7 @@ export const parseServerPayload = (payload: string): (string | null)[][] => {
     }
 
     // Create a 2D array filled with nulls
-    const result: (string | null)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(null));
+    const result: (string | null)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(""));
 
     // Fill the 2D array with parsed values
     for (const { row, col, value } of parsedPayload) {
@@ -38,4 +38,43 @@ export const parseServerPayload = (payload: string): (string | null)[][] => {
     }
 
     return result;
+};
+
+// Function to convert a 2D array back into a server payload
+export const convertToPayload = (data: (string | number | null)[][]): string => {
+    const payloadLines: string[] = [];
+
+    for (let row = 0; row < data.length; row++) {
+        for (let col = 0; col < data[row].length; col++) {
+            const value = data[row][col];
+            if (value !== null) {
+                const cellRef = getCellReference(row, col);
+                payloadLines.push(`${cellRef} ${value}`);
+            }
+        }
+    }
+
+    return payloadLines.join('\n') + '\n';
+};
+
+
+
+// Function to convert a 0-indexed row and column to a cell reference
+const getCellReference = (row: number, col: number): string => {
+    const columnReference = getColumnLetters(col);
+    const rowReference = (row + 1).toString();
+    return `$${columnReference}${rowReference}`;
+};
+
+// Function to convert column index to column letters
+const getColumnLetters = (col: number): string => {
+    let columnReference = '';
+    let colIndex = col;
+
+    while (colIndex >= 0) {
+        columnReference = String.fromCharCode((colIndex % 26) + 65) + columnReference;
+        colIndex = Math.floor(colIndex / 26) - 1;
+    }
+
+    return columnReference;
 };
