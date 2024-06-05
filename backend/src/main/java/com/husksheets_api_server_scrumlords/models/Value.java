@@ -8,19 +8,15 @@ import lombok.Setter;
  * author: Kaan Tural and Parnika Jain
  */
 public class Value {
-
     @Getter
     @Setter
     String publisher;
-
     @Getter
     @Setter
     String sheet;
-
     @Getter
     @Setter
     Integer id;
-
     @Getter
     @Setter
     String payload;
@@ -38,5 +34,20 @@ public class Value {
         this.sheet = sheet;
         this.id = id;
         this.payload = payload;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Value)) {
+            return false;
+        }
+        Value value = (Value) obj;
+        return value.getPublisher().equals(this.getPublisher()) &&
+                value.getSheet().equals(this.getSheet()) &&
+                value.getId().equals(this.getId()) &&
+                value.getPayload().equals(this.getPayload());
     }
 }

@@ -1,5 +1,8 @@
-package Tests;
+package Tests.Utils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.husksheets_api_server_scrumlords.models.Response;
+import com.husksheets_api_server_scrumlords.models.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -42,22 +45,31 @@ public class TestAPIHelpers {
     }
 
 
-    //compare actual vs/ expected
     public static void assertResponse(ResultActions resultActions, Response expectedOutput) throws Exception {
-       // System.out.println(resultActions.toString());
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(expectedOutput.isSuccess()))
                 .andExpect(jsonPath("$.message").value(expectedOutput.getMessage()))
-                .andExpect(jsonPath("$.values").isArray()) //change to something diff
                 .andExpect(jsonPath("$.time").exists());
+
+        // Assert each element in the values list
+        if (expectedOutput.getValues() != null) {
+            for (int i = 0; i < expectedOutput.getValues().size(); i++) {
+                Value expectedValue = expectedOutput.getValues().get(i);
+                resultActions.andExpect(jsonPath("$.values[" + i + "].publisher").value(expectedValue.getPublisher()))
+                        .andExpect(jsonPath("$.values[" + i + "].sheet").value(expectedValue.getSheet()))
+                        .andExpect(jsonPath("$.values[" + i + "].id").value(expectedValue.getId()))
+                        .andExpect(jsonPath("$.values[" + i + "].payload").value(expectedValue.getPayload()));
+            }
+        } else {
+            resultActions.andExpect(jsonPath("$.values").isEmpty());
+        }
     }
 
-
-
-
-
-
-
-
-
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -11,11 +11,9 @@ public class Sheet {
     @Getter
     @Setter
     private String sheet;
-
     @Getter
     @Setter
     private String payload;
-
     @Getter
     private final String publisherName;
 

@@ -21,14 +21,25 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SpringSecurityConfig {
 
+    /**
+     * CustomAuthenticationEntryPoint bean to handle unauthorized requests to the server.
+     */
     @Bean
     public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
         return new CustomAuthenticationEntryPoint();
     }
 
+    /**
+     * PasswordEncoder bean to encode passwords for security.
+     */
     @Bean
     public PasswordEncoder encoder() { return new BCryptPasswordEncoder();}
 
+    /**
+     * InMemoryUserDetailsManager bean to store user details in memory.
+     *
+     * @return InMemoryUserDetailsManager created with our created users
+     */
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails Team5User = User.builder()
@@ -44,20 +55,24 @@ public class SpringSecurityConfig {
         return new InMemoryUserDetailsManager(Team5User, MikeUser);
     }
 
+    /**
+     * SecurityFilterChain bean to configure the security filter chain.
+     *
+     * @param httpSecurity the HttpSecurity object to configure
+     * @return SecurityFilterChain configured with our security settings
+     * @throws Exception if an exception occurs
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     return httpSecurity
         .csrf(AbstractHttpConfigurer::disable)  //disable front-end cross site request forgery.
         .authorizeHttpRequests(auth -> auth
-           // .requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
+            //.requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
                 //any authenticated user can register
             //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
             .anyRequest().authenticated()
         )
-     //   .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-     //   .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         .httpBasic(Customizer.withDefaults())
-            //handle authentication errors
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
         .build();
     }

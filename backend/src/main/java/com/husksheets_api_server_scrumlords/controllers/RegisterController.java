@@ -1,5 +1,5 @@
 package com.husksheets_api_server_scrumlords.controllers;
-import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
+import com.husksheets_api_server_scrumlords.Helpers.RegisterUserService;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
@@ -19,7 +19,6 @@ author: nicholas o'sullivan and Kaan Tural
 @RestController
 public class RegisterController {
     private final RegisterUserService registerUserService; //inject service into controller.
-    private final Publishers publishers;
 
     /**
      * Constructor for a RegisterController.
@@ -29,7 +28,6 @@ public class RegisterController {
      */
     public RegisterController(RegisterUserService registerUserService) {
         this.registerUserService = registerUserService;
-        this.publishers = Publishers.getInstance();
     }
 
     /**
@@ -53,7 +51,9 @@ public class RegisterController {
      */
     @GetMapping("api/v1/getPublishers")
     public Response getPublishers() {
+        Publishers publishers = Publishers.getInstance();
         ArrayList<String> allPublishers = new ArrayList<>(publishers.getPublisherMap().keySet());
+        System.out.println("All publishers: " + allPublishers);
 
         ArrayList<Value> values = (ArrayList<Value>) allPublishers.stream()
                 .map(publisher -> new Value(publisher, null, null, null))

@@ -1,8 +1,13 @@
 package Tests;
-import com.husksheets_api_server_scrumlords.Services.Register.RegisterUserService;
+
+import Tests.Utils.Constants;
+import Tests.Utils.TestAPIHelpers;
+import com.husksheets_api_server_scrumlords.Helpers.RegisterUserService;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
+import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
+import com.husksheets_api_server_scrumlords.models.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import java.util.Base64;
+
+import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,71 +36,75 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {RegisterController.class, RegisterUserService.class, SpringSecurityConfig.class})
 public class TestAPIs {
 
-    //instead of this moving forward we shoud set a for loop to test two random users from our future userLogins enum
-
-
     @Autowired
     public MockMvc mockMvc;
+
     @MockBean
     private RegisterUserService registerUserService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        Publishers.getInstance().getPublisherMap().clear(); // Reset the shared data store before each test
     }
 
-    //main test template
-     @Test
+    @Test
     public void testAPIs() throws Exception {
-        //test get publishers when no publishers registered.
-         testNoAuth(StaticVars.getPublishersRequest);
-         testGetPublishersAPI(StaticVars.getPublishersEmptySuccess, StaticVars.getPublishersRequest, StaticVars.username1, StaticVars.password1);
+        mockRegisterService();
 
-         // register publisher 1
-       // testNoAuth(StaticVars.registerRequest);
-        testRegisterAPI(StaticVars.registerRequest, StaticVars.username1, StaticVars.password1);
+        ArrayList<Value> publishers = new ArrayList<>();
+        Response getPublishersResponse = new Response(true, null);
 
-        //get publishers w/ 1 publisher registered.
-         //testGetPublishersAPI(StaticVar, StaticVars.getPublishersRequest, StaticVars.username1, StaticVars.password1);
+        // Test get publishers when no publishers registered.
+        testNoAuth(Constants.getPublishersRequest);
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
 
+        // Register publisher 1
+        testNoAuth(Constants.registerRequest);
+        testRegisterAPI(Constants.registerRequest, Constants.team5username, Constants.team5password);
 
-         //register publisher 2
+        publishers.addFirst(Constants.Team5PublisherNoDocsValue);
+        getPublishersResponse.setValues(publishers);
+        System.out.println("Publishers after registering Team5: " + publishers);
 
+        // Get publishers with 1 publisher registered
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
+
+        // Register publisher 2
+        testNoAuth(Constants.registerRequest);
+        testRegisterAPI(Constants.registerRequest, Constants.mikeUsername, Constants.mikePassword);
+
+        publishers.addFirst(Constants.MikePublisherNoDocsValue);
+        getPublishersResponse.setValues(publishers);
+        System.out.println("Publishers after registering Mike: " + publishers);
+
+        // Get publishers with 2 publishers registered
+        testGetPublishersAPI(getPublishersResponse, Constants.getPublishersRequest, Constants.team5username, Constants.team5password);
     }
 
-
-    //======================================== Register Helpers ================================================
     public void testRegisterAPI(String request, String username, String password) throws Exception {
-        mockRegisterService(StaticVars.registerResponseSuccess);
-        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc,
-                request,
-                username,
-                password);
-        TestAPIHelpers.assertResponse(resultActions, StaticVars.registerResponseSuccess);
-    }
-    private void mockRegisterService(Response expectedOutput) {
-        BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willReturn(expectedOutput);
+        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
+        TestAPIHelpers.assertResponse(resultActions, Constants.registerResponseSuccess);
     }
 
-    //======================================== getPublishers Helpers
+    private void mockRegisterService() {
+    BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willAnswer(invocation -> {
+        String username = invocation.getArgument(0);
+        System.out.println("Registering publisher with username: \"" + username + "\"");
+        Publishers.getInstance().addNewPublisher(username);
+        return Constants.registerResponseSuccess;
+    });
+}
+   // private void mockGetPublishersService
+
     public void testGetPublishersAPI(Response expectedResponse, String request, String username, String password) throws Exception {
-        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc,
-                request,
-                username,
-                password);
+        ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
-    //======================================== No Auth Helpers
     public void testNoAuth(String url) throws Exception {
-
-        String noAuthExpectedOutput = StaticVars.unauthorizedResponse;
-        //trigger request
+        String noAuthExpectedOutput = Constants.unauthorizedResponse;
         ResultActions resultActions = TestAPIHelpers.performGetRequestNoAuth(mockMvc, url);
-        resultActions.andExpect(status().isUnauthorized())
-                     .andExpect(content().string(noAuthExpectedOutput));
+        resultActions.andExpect(status().isUnauthorized()).andExpect(content().string(noAuthExpectedOutput));
     }
-
-
-
-
 }

@@ -11,17 +11,13 @@ import java.util.List;
  * author: Kaan Tural and Parnika Jain
  */
 public class Response {
-
     @Getter
     boolean success;
-
     @Getter
     String message;
-
     @Getter
     @Setter
     List<Value> values;
-
     @Getter
     Long time;
 
@@ -32,6 +28,13 @@ public class Response {
      * @param message Message if the API was called improperly
      */
     public Response(Boolean success, String message) {
+        this.success = success;
+        this.message = message;
+        this.values = new ArrayList<>();
+        this.time = System.currentTimeMillis();
+    }
+
+    public Response(Boolean success, String message, ArrayList<Value> values) {
         this.success = success;
         this.message = message;
         this.values = new ArrayList<>();
