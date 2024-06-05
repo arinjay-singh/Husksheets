@@ -30,10 +30,17 @@ public class Sheet {
      * @param publisherName Name of the publisher for this sheet.
      */
     public Sheet(String name, String publisherName) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Sheet name cannot be null or empty");
+        }
+        if (publisherName == null || publisherName.isEmpty()) {
+            throw new IllegalArgumentException("Publisher name cannot be null or empty");
+        }
         this.sheetName = name;
         this.publisherName = publisherName;
         this.publisherUpdates = new ArrayList<>();
         this.subscriberUpdates = new ArrayList<>();
+        System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
     }
 
     public void addPublisherUpdate(Value value) {

@@ -31,7 +31,7 @@ Content-Type: application/json
 
 {
     "publisher": "Team5",
-    "sheetName": "Sheet1"
+    "sheet": "Sheet1"
 }
 
 ###
