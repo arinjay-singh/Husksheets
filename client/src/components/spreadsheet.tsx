@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { parseOperation, parseEquation } from "../functions/sheet-equations";
+import { parseEquation } from "../functions/sheet-equations";
 import { parseCellReferences } from "../functions/cell-referencing";
 
 // spreadsheet component
@@ -47,7 +47,8 @@ const Spreadsheet: React.FC = () => {
     // if client is false, return
     if (!isClient) return;
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
-  }, [rawData, isClient]);
+    localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
+  }, [data, rawData, isClient]);
 
   // handle input change in the spreadsheet
   const handleInputChange = (
