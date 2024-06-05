@@ -6,6 +6,7 @@
  * @author Arinjay Singh
  */
 
+// function to parse and evaluate a standard mathematical operation
 export const parseEquation = (equation: string) => {
   // ensure the operation is in the correct format
   if (!equation.startsWith("=") || equation.length < 4) {
