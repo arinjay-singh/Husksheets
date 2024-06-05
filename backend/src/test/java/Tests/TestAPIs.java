@@ -50,6 +50,8 @@ public class TestAPIs {
 
     @Test
     public void testAPIs() throws Exception {
+        mockRegisterService();
+
         ArrayList<Value> publishers = new ArrayList<>();
         Response getPublishersResponse = new Response(true, null);
 
@@ -61,7 +63,7 @@ public class TestAPIs {
         testNoAuth(Constants.registerRequest);
         testRegisterAPI(Constants.registerRequest, Constants.team5username, Constants.team5password);
 
-        publishers.add(Constants.Team5PublisherNoDocsValue);
+        publishers.addFirst(Constants.Team5PublisherNoDocsValue);
         getPublishersResponse.setValues(publishers);
         System.out.println("Publishers after registering Team5: " + publishers);
 
@@ -72,7 +74,7 @@ public class TestAPIs {
         testNoAuth(Constants.registerRequest);
         testRegisterAPI(Constants.registerRequest, Constants.mikeUsername, Constants.mikePassword);
 
-        publishers.add(Constants.MikePublisherNoDocsValue);
+        publishers.addFirst(Constants.MikePublisherNoDocsValue);
         getPublishersResponse.setValues(publishers);
         System.out.println("Publishers after registering Mike: " + publishers);
 
@@ -81,18 +83,19 @@ public class TestAPIs {
     }
 
     public void testRegisterAPI(String request, String username, String password) throws Exception {
-        mockRegisterService();
         ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
         TestAPIHelpers.assertResponse(resultActions, Constants.registerResponseSuccess);
     }
 
     private void mockRegisterService() {
-        BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willAnswer(invocation -> {
-            String username = invocation.getArgument(0);
-            Publishers.getInstance().addNewPublisher(username);
-            return Constants.registerResponseSuccess;
-        });
-    }
+    BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willAnswer(invocation -> {
+        String username = invocation.getArgument(0);
+        System.out.println("Registering publisher with username: \"" + username + "\"");
+        Publishers.getInstance().addNewPublisher(username);
+        return Constants.registerResponseSuccess;
+    });
+}
+   // private void mockGetPublishersService
 
     public void testGetPublishersAPI(Response expectedResponse, String request, String username, String password) throws Exception {
         ResultActions resultActions = TestAPIHelpers.performGetRequestWithBasicAuth(mockMvc, request, username, password);
