@@ -14,12 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 Update sheet APIs
 author: Parnika Jain
  */
+
+/**
+ *
+ */
 @RestController
 public class UpdateController {
     private final Publishers publishers;
     public UpdateController() {
         this.publishers = Publishers.getInstance();
     }
+
+
+    /**
+     * Requests to update data of client's own sheet.
+     *
+     * @param request is the body of the API call, containing the sheet owner's name,
+     *                sheet name and updated sheet data.
+     * @return a success response if update was processed, or a failure response.
+     */
     @PostMapping("api/v1/updatePublished")
     public Response updatePublished(@RequestBody UpdateRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -28,7 +41,7 @@ public class UpdateController {
         if (!owner.equals(username)) {
             return new Response(false, "Unauthorized: sender is not owner of sheet");
         }
-        Publisher publisher = publishers.getPublisher(username);
+        Publisher publisher = publishers.getPublisher(owner);
         Sheet userSheet = publisher.getSheets().stream()
                 .filter(s -> request.getSheet().equals(s.getSheet())).findAny().orElse(null);
         if (userSheet == null) {
@@ -39,6 +52,16 @@ public class UpdateController {
             return new Response(true, null);
         }
     }
+
+
+    /**
+     * Requests to update data of someone else's sheet, where owner of the sheet is not
+     * the client.
+     *
+     * @param request is the body of the API call, containing the sheet owner's name,
+     *                sheet name and updated sheet data.
+     * @return a success response if update was processed, or a failure response.
+     */
     @PostMapping("api/v1/updateSubscription")
     public Response updateSubscription(@RequestBody UpdateRequest request) {
         String owner = request.getPublisher();
@@ -59,6 +82,15 @@ public class UpdateController {
     }
 
     // need to implement frontend routes to complete these 2 APIs
+
+    /**
+     * Requests to update data of someone else's sheet, where owner of the sheet is not
+     * the client.
+     *
+     * @param request is the body of the API call, containing the sheet owner's name,
+     *                sheet name and updated sheet data.
+     * @return a success response if update was processed, or a failure response.
+     */
     @GetMapping("api/v1/getupdatesForPublished")
     public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,6 +115,14 @@ public class UpdateController {
         return new Response(true, null);
     }
 
+    /**
+     * Requests to update data of someone else's sheet, where owner of the sheet is not
+     * the client.
+     *
+     * @param request is the body of the API call, containing the sheet owner's name,
+     *                sheet name and updated sheet data.
+     * @return a success response if update was processed, or a failure response.
+     */
     @GetMapping("api/v1/getupdatesForSubscription")
     public Response getUpdatesForSubscription(@RequestBody GetUpdatesRequest request) {
         String owner = request.getPublisher();
@@ -102,6 +142,12 @@ public class UpdateController {
         return new Response(true, null);
     }
 
+    /**
+     * Private helper function helps determine if a passed in id is valid.
+     *
+     * @param id is the id string.
+     * @return true or false.
+     */
     private boolean validId(String id) {
         if (id.isEmpty()) {
             return false;
