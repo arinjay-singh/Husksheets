@@ -2,7 +2,7 @@
 Register user service class
 Author: Nicholas O'Sullivan
  */
-package com.husksheets_api_server_scrumlords.helpers;
+package com.husksheets_api_server_scrumlords.services;
 
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;

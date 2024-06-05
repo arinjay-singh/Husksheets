@@ -1,5 +1,9 @@
 package com.husksheets_api_server_scrumlords.controllers;
 
+import com.husksheets_api_server_scrumlords.services.CreateSheetService;
+import com.husksheets_api_server_scrumlords.services.DeleteSheetService;
+import com.husksheets_api_server_scrumlords.services.GetSheetsService;
+import com.husksheets_api_server_scrumlords.services.RegisterUserService;
 import com.husksheets_api_server_scrumlords.models.*;
 import com.husksheets_api_server_scrumlords.requests.AbstractPublisherRequest;
 import com.husksheets_api_server_scrumlords.requests.CreateSheetRequest;
@@ -17,10 +21,64 @@ import java.util.List;
  */
 @RestController
 public class SheetController {
+    private final CreateSheetService createSheetService; //inject service into controller.
+    private final DeleteSheetService deleteSheetService;
+    private final GetSheetsService getSheetsService;
     private final Publishers publishers;
-    public SheetController() {
+    public SheetController(CreateSheetService createSheetService, DeleteSheetService deleteSheetService, GetSheetsService getSheetsService) {
+        this.createSheetService = createSheetService;
+        this.deleteSheetService = deleteSheetService;
+        this.getSheetsService = getSheetsService;
         this.publishers = Publishers.getInstance();
     }
+
+
+    /**
+     * API route to create a sheet and assign it to the current publisher.
+     *
+     * @param request the body of the API call.
+     * @return A response with the publisher and sheet being assigned to that publisher
+     */
+    @PostMapping("api/v1/createSheet")
+    public Response createSheet(@RequestBody CreateSheetRequest request) {
+        Publisher publisher = checkAuthentication(request);
+        if (publisher == null) {
+            return new Response(false, "Unauthorized: sender is not owner of sheet");
+        }
+        return createSheetService.createSheet(publisher, request.getSheet(), request.getPublisher());
+    }
+
+    /**
+     * API route to delete a sheet with the given name from the current publisher.
+     *
+     * @param request the body of the API call, containing the sheet to delete and publisher.
+     * @return A response to show the action has been done successfully or information if not.
+     */
+    @PostMapping("api/v1/deleteSheet")
+    public Response deleteSheet(@RequestBody DeleteSheetRequest request) {
+        Publisher publisher = checkAuthentication(request);
+        if (publisher == null) {
+            return new Response(false, "Unauthorized: sender is not owner of sheet");
+        }
+        return deleteSheetService.deleteSheet(publisher, request.getSheet());
+    }
+
+    /**
+     * API route to get all the sheets associated with publisher given in the call's body.
+     *
+     * @param request the body of the API call, containing the publisher to get sheets from.
+     * @return A response with the sheets associated with the publisher or an error message.
+     */
+    @PostMapping("api/v1/getSheets")
+    public Response getSheets(@RequestBody GetSheetsRequest request) {
+        String publisherName = request.getPublisher();
+        Publisher publisher = publishers.getPublisher(publisherName);
+        if (publisher == null) {
+            return new Response(false, String.format("Publisher not found: %s", publisherName));
+        }
+        return getSheetsService.getSheets(publisher);
+    }
+
 
     /**
      * Helper function to check if the current request is a Publisher that exists and
@@ -39,78 +97,5 @@ public class SheetController {
         } else {
             return publisher;
         }
-    }
-
-    /**
-     * API route to create a sheet and assign it to the current publisher.
-     *
-     * @param request the body of the API call.
-     * @return A response with the publisher and sheet being assigned to that publisher
-     */
-    @PostMapping("api/v1/createSheet")
-    public Response createSheet(@RequestBody CreateSheetRequest request) {
-        Publisher publisher = checkAuthentication(request);
-        if (publisher == null) {
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
-        }
-
-        boolean sheetExists = publisher.getSheets().stream()
-                .anyMatch(sheet -> sheet.getSheet().equals(request.getSheet()));
-        if (sheetExists) {
-            return new Response(false, String.format("Sheet already exists: %s", request.getSheet()));
-        }
-
-        Sheet sheet = new Sheet(request.getSheet(), request.getPublisher());
-        publisher.addSheet(sheet);
-
-        return new Response(true, null);
-    }
-
-    /**
-     * API route to delete a sheet with the given name from the current publisher.
-     *
-     * @param request the body of the API call, containing the sheet to delete and publisher.
-     * @return A response to show the action has been done successfully or information if not.
-     */
-    @PostMapping("api/v1/deleteSheet")
-    public Response deleteSheet(@RequestBody DeleteSheetRequest request) {
-        Publisher publisher = checkAuthentication(request);
-        if (publisher == null) {
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
-        }
-
-        boolean success = publisher.deleteSheet(request.getSheet());
-
-        if (!success) {
-            return new Response(false, String.format("Sheet does not exist: %s", request.getSheet()));
-        }
-
-        return new Response(true, null);
-    }
-
-    /**
-     * API route to get all the sheets associated with publisher given in the call's body.
-     *
-     * @param request the body of the API call, containing the publisher to get sheets from.
-     * @return A response with the sheets associated with the publisher or an error message.
-     */
-    @PostMapping("api/v1/getSheets")
-    public Response getSheets(@RequestBody GetSheetsRequest request) {
-        String publisherName = request.getPublisher();
-        Publisher publisher = publishers.getPublisher(publisherName);
-        if (publisher == null) {
-            return new Response(false, String.format("Publisher not found: %s", publisherName));
-        }
-
-        List<Value> values = publisher.getSheets().stream()
-                .map(sheet -> new Value(sheet.getPublisherName(), sheet.getSheet(), null, null))
-                .toList();
-        for (Sheet sheet : publisher.getSheets()) {
-            System.out.println(sheet.getSheet());
-        }
-
-        Response response = new Response(true, null);
-        response.setValues(values);
-        return response;
     }
 }

@@ -2,7 +2,8 @@ package Tests;
 
 import Tests.utils.Constants;
 import Tests.utils.TestAPIHelpers;
-import com.husksheets_api_server_scrumlords.helpers.RegisterUserService;
+import com.husksheets_api_server_scrumlords.services.GetPublishersService;
+import com.husksheets_api_server_scrumlords.services.RegisterUserService;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
 import com.husksheets_api_server_scrumlords.models.Publishers;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers = RegisterController.class)
-@ContextConfiguration(classes = {RegisterController.class, RegisterUserService.class, SpringSecurityConfig.class})
+@ContextConfiguration(classes = {RegisterController.class, RegisterUserService.class, GetPublishersService.class, SpringSecurityConfig.class})
 public class TestAPIs {
 
     @Autowired
