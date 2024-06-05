@@ -29,6 +29,7 @@ export const cellMap = (cell: string): [number, number] => {
   return [row - 1, col - 1];
 };
 
+// function to retrieve the value of a cell from a 2D array
 export const retrieveCellValue = (
   data: string[][],
   coord: [number, number]
@@ -36,7 +37,9 @@ export const retrieveCellValue = (
   return data[coord[0]][coord[1]];
 };
 
+// function to parse cell references in a string
 export const parseCellReferences = (data: string[][], expression: string) => {
+  // map cell references to values and replace them in the expression
   return expression.replace(/\$[a-zA-Z]\d+/g, (match) => {
     try {
       const cellReference = match.slice(1);
@@ -44,6 +47,7 @@ export const parseCellReferences = (data: string[][], expression: string) => {
       const cellValue = retrieveCellValue(data, cellCoords);
       return cellValue;
     } catch (e) {
+      // if the cell reference is invalid, return the match and alert the user
       alert("Error: Invalid cell reference");
       return match;
     }

@@ -53,9 +53,7 @@ const Spreadsheet: React.FC = () => {
     // if client is false, return
     if (!isClient) return;
 
-    console.log(data);
-    console.log(rawData);
-
+    // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
   }, [data, rawData, isClient]);
@@ -66,7 +64,7 @@ const Spreadsheet: React.FC = () => {
     colIndex: number,
     value: string
   ) => {
-    // switch out the display value with the result if the cell is an operation
+    // switch out the new value in the display data
     const displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? value : cell
@@ -76,6 +74,7 @@ const Spreadsheet: React.FC = () => {
     // set the display data state
     setData(displayData);
 
+    // switch out the new value in the raw data
     const equationData = rawData.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? value : cell
@@ -86,16 +85,23 @@ const Spreadsheet: React.FC = () => {
     setRawData(equationData);
   };
 
+  // handle 'enter' key press for a cell
   const executeCell = (rowIndex: number, colIndex: number, value: string | null) => {
+    // if the value is null, alert the user and return
     if (value === null) {
       alert("Cannot execute empty cell");
       return;
     }
+
+    // parse the cell references in the value
     const parsedValue = parseCellReferences(data, value);
+    // parse the equation in the value
     const equationResult = parseEquation(parsedValue);
 
+    // create a display data variable
     let displayData: string[][];
 
+    // if the equation result exists, set the display data to the equation result
     if (equationResult) {
       displayData = data.map((row, rIdx) =>
         row.map((cell, cIdx) =>
@@ -103,6 +109,8 @@ const Spreadsheet: React.FC = () => {
         )
       );
     } else {
+      // if the equation result does not exist, set the display data to the parsed value
+      // and update the display data for all cells with equations
       displayData = data.map((row, rIdx) =>
         row.map((cell, cIdx) => {
           if (rIdx === rowIndex && cIdx === colIndex) return parsedValue;
@@ -118,7 +126,10 @@ const Spreadsheet: React.FC = () => {
       );
     }
 
+    // set the display data state
     setData(displayData);
+
+    // update the local storage of the display data
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
   };
 
