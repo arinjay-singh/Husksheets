@@ -36,9 +36,15 @@ const Spreadsheet: React.FC = () => {
 
     // retrieve the display data from local storage
     const displayData = localStorage.getItem("displaySpreadsheetData");
+    
+    // retrieve the raw data from local storage
+    const rawData = localStorage.getItem("spreadsheetData");
 
     // if the display data exists, set the data state to the display data
     if (displayData) setData(JSON.parse(displayData));
+
+    // if the raw data exists, set the raw data state to the raw data
+    if (rawData) setRawData(JSON.parse(rawData));
   }, []);
 
   // save the data to local storage when the data state changes
@@ -46,6 +52,10 @@ const Spreadsheet: React.FC = () => {
   useEffect(() => {
     // if client is false, return
     if (!isClient) return;
+
+    console.log(data);
+    console.log(rawData);
+
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
   }, [data, rawData, isClient]);
@@ -66,11 +76,21 @@ const Spreadsheet: React.FC = () => {
     // set the display data state
     setData(displayData);
 
+    const equationData = rawData.map((row, rIdx) =>
+      row.map((cell, cIdx) =>
+        rIdx === rowIndex && cIdx === colIndex ? value : cell
+      )
+    );
+
     // update the raw data state
-    setRawData(displayData);
+    setRawData(equationData);
   };
 
-  const executeCell = (rowIndex: number, colIndex: number, value: string) => {
+  const executeCell = (rowIndex: number, colIndex: number, value: string | null) => {
+    if (value === null) {
+      alert("Cannot execute empty cell");
+      return;
+    }
     const parsedValue = parseCellReferences(data, value);
     const equationResult = parseEquation(parsedValue);
 
@@ -84,9 +104,17 @@ const Spreadsheet: React.FC = () => {
       );
     } else {
       displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) =>
-          rIdx === rowIndex && cIdx === colIndex ? parsedValue : cell
-        )
+        row.map((cell, cIdx) => {
+          if (rIdx === rowIndex && cIdx === colIndex) return parsedValue;
+          else {
+            if (rawData[rIdx][cIdx].includes("$")) {
+              const parsedValue = parseCellReferences(data, rawData[rIdx][cIdx]);
+              const equationResult = parseEquation(parsedValue);
+              return equationResult;
+            }
+            return cell;
+          }
+        })
       );
     }
 
@@ -114,7 +142,10 @@ const Spreadsheet: React.FC = () => {
               <tr>
                 <th className="border border-gray-400 bg-slate-100"></th>
                 {data[0].map((_, colIndex) => (
-                  <th key={colIndex} className="border border-gray-400 text-black font-semibold bg-slate-100">
+                  <th
+                    key={colIndex}
+                    className="border border-gray-400 text-black font-semibold bg-slate-100"
+                  >
                     {String.fromCharCode(65 + colIndex)}
                   </th>
                 ))}
@@ -123,7 +154,9 @@ const Spreadsheet: React.FC = () => {
             <tbody>
               {data.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">{rowIndex + 1}</td>
+                  <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
+                    {rowIndex + 1}
+                  </td>
                   {row.map((cell, colIndex) => (
                     <td key={colIndex} className="border border-gray-400">
                       <input
