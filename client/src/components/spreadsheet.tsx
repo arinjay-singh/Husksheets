@@ -102,51 +102,32 @@ const Spreadsheet: React.FC = () => {
           rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
         )
       );
-      displayData = displayData.map((row, rIdx) =>
-        row.map((cell, cIdx) => {
-          if (rawData[rIdx][cIdx].includes("$")) {
-            const parsedValue = parseCellReferences(
-              displayData,
-              rawData[rIdx][cIdx]
-            );
-            const equationResult = parseEquation(parsedValue);
-            return equationResult;
-          } else {
-            return cell;
-          }
-        })
-      );
     } else {
-      console.log('here');
-      console.log(data);
-      console.log(rawData);
       displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) => {
-          if (rIdx === rowIndex && cIdx === colIndex) return parsedValue;
-          else {
-            if (rawData[rIdx][cIdx].includes("$")) {
-              const newParsedValue = parseCellReferences(
-                data,
-                rawData[rIdx][cIdx]
-              );
-              const newEquationResult = parseEquation(newParsedValue);
-              return newEquationResult;
-            }
-            return cell;
-          }
-        })
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === colIndex ? parsedValue : cell
+        )
       );
     }
-    // // update equation results of dependent cells
-    // displayData = data.map((row, rIdx) =>
-    //   row.map((cell, cIdx) => {
-    //     if (rawData[rIdx][cIdx].includes("$")) {
-    //       const parsedValue = parseCellReferences(data, rawData[rIdx][cIdx]);
-    //       const equationResult = parseEquation(parsedValue);
-    //       return equationResult;
-    //     }
-    //   })
-    // );
+    let current = displayData;
+    // cascading updates for the results of equation data dependent on the current cell
+    displayData = displayData.map((row, rIdx) =>
+      row.map((cell, cIdx) => {
+        if (rIdx === rowIndex && cIdx === colIndex) return cell;
+        else {
+          if (rawData[rIdx][cIdx].includes("$")) {
+            const newParsedValue = parseCellReferences(
+              current,
+              rawData[rIdx][cIdx]
+            );
+            const newEquationResult = parseEquation(newParsedValue);
+            current[rIdx][cIdx] = newEquationResult;
+            return newEquationResult;
+          }
+          return cell;
+        }
+      })
+    );
     // set the display data state
     setData(displayData);
     // update the local storage of the display data
