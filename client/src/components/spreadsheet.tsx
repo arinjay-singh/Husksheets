@@ -109,9 +109,20 @@ const Spreadsheet: React.FC = () => {
       <div className="relative flex-grow flex-col">
         <div className="flex flex-row">
           <table className="table-auto border-collapse border border-gray-400 w-full">
+            <thead>
+              <tr>
+                <th className="border border-gray-400 bg-slate-100"></th>
+                {data[0].map((_, colIndex) => (
+                  <th key={colIndex} className="border border-gray-400 text-black font-semibold bg-slate-100">
+                    {String.fromCharCode(65 + colIndex)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
             <tbody>
               {data.map((row, rowIndex) => (
                 <tr key={rowIndex}>
+                  <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">{rowIndex + 1}</td>
                   {row.map((cell, colIndex) => (
                     <td key={colIndex} className="border border-gray-400">
                       <input
