@@ -11,7 +11,7 @@ public class CreateSheetService {
 
     public Response createSheet(Publisher publisher, String requestSheet, String requestPublisher) {
         boolean sheetExists = publisher.getSheets().stream()
-                .anyMatch(sheet -> sheet.getSheet().equals(requestSheet));
+                .anyMatch(sheet -> sheet.getSheetName().equals(requestSheet));
         if (sheetExists) {
             return new Response(false, String.format("Sheet already exists: %s", requestSheet));
         }

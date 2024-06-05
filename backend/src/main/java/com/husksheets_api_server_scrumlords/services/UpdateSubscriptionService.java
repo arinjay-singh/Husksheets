@@ -18,7 +18,7 @@ public class UpdateSubscriptionService {
             return new Response(false, "Not found:" + requestPublisher +
                     "/" + requestSheet);
         } else {
-            userSheet.setPayload(requestPayload);
+            //userSheet.setPayload(requestPayload);
             return new Response(true, null);
         }
     }

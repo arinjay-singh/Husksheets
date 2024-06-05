@@ -3,7 +3,9 @@ package com.husksheets_api_server_scrumlords.models;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Publisher Class
@@ -41,6 +43,6 @@ public class Publisher {
      * @return boolean of if the deletion was successfully done, false if there was no matching sheet.
      */
     public boolean deleteSheet(String sheetName) {
-        return sheets.removeIf(sheet -> sheet.getSheet().equals(sheetName));
+        return sheets.removeIf(sheet -> sheet.getSheetName().equals(sheetName));
     }
 }
