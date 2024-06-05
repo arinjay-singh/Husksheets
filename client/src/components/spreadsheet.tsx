@@ -33,26 +33,30 @@ const Spreadsheet: React.FC = () => {
     // set isClient to true when the component mounts
     setIsClient(true);
 
-    // get the raw JSON data from local storage
-    const rawJSONData = localStorage.getItem("spreadsheetData");
+    const displayData = localStorage.getItem("displaySpreadsheetData");
 
-    // if the raw JSON data exists, parse it and set the data state
-    if (rawJSONData) {
-      // parse the raw JSON data and set the data state
-      const parsedData = JSON.parse(rawJSONData);
+    if (displayData) setData(JSON.parse(displayData));
 
-      // derive the display data from the parsed data by
-      // executing any operations in the cells
-      const displayData = parsedData.map((row: string[]) =>
-        row.map((cell: string) => {
-          const operationResult = parseOperation(cell);
-          return operationResult ? operationResult : cell;
-        })
-      );
+    // // get the raw JSON data from local storage
+    // const rawJSONData = localStorage.getItem("spreadsheetData");
 
-      // set the display data state
-      setData(displayData);
-    }
+    // // if the raw JSON data exists, parse it and set the data state
+    // if (rawJSONData) {
+    //   // parse the raw JSON data and set the data state
+    //   const parsedData = JSON.parse(rawJSONData);
+
+    //   // derive the display data from the parsed data by
+    //   // executing any operations in the cells
+    //   const displayData = parsedData.map((row: string[]) =>
+    //     row.map((cell: string) => {
+    //       const operationResult = parseOperation(cell);
+    //       return operationResult ? operationResult : cell;
+    //     })
+    //   );
+
+    //   // set the display data state
+    //   setData(displayData);
+    // }
   }, []);
 
   // save the data to local storage when the data state changes
@@ -95,6 +99,7 @@ const Spreadsheet: React.FC = () => {
       );
 
       setData(displayData);
+      localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
     }
   };
 
