@@ -11,7 +11,7 @@
 export const cellMap = (cell: string): [number, number] => {
     // extract column from letters
     const letterMatch = cell.match(/[a-zA-Z]+/);
-    const letter = letterMatch ? letterMatch[0] : ''; 
+    const letter = letterMatch ? letterMatch[0].toUpperCase() : ''; 
 
     // extract row from numbers
     const numberMatch = cell.match(/\d+/);
