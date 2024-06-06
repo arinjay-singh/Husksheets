@@ -23,6 +23,9 @@ public class Publisher {
      * @param name the name of this publisher.
      */
     public Publisher(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Publisher name cannot be null or empty");
+        }
         this.name = name;
         this.sheets = new ArrayList<>();
     }

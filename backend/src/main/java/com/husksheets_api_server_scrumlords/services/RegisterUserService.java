@@ -22,7 +22,9 @@ public class RegisterUserService  {
      * @return the successful Response object
      */
     public Response register(String username) {
-        addToPublishers(username);
+        if (username != null && !username.isEmpty()) {
+            addToPublishers(username);
+        }
         return new Response(true, null);
     }
 
