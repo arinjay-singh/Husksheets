@@ -5,6 +5,7 @@ import Tests.utils.TestAPIHelpers;
 import com.husksheets_api_server_scrumlords.controllers.UpdateController;
 import com.husksheets_api_server_scrumlords.models.*;
 import com.husksheets_api_server_scrumlords.requests.CreateSheetRequest;
+import com.husksheets_api_server_scrumlords.requests.DeleteSheetRequest;
 import com.husksheets_api_server_scrumlords.requests.GetSheetsRequest;
 import com.husksheets_api_server_scrumlords.services.*;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
@@ -78,7 +79,6 @@ public class TestAPIs {
     }
 
 
-
     /**
      * Test the Register API and Get Publishers API for none to multiple publishers with and without authentication.
      *
@@ -136,20 +136,45 @@ public class TestAPIs {
         testCreateSheetAPI(Constants.createSheetResponseSuccess, Constants.createSheetRequest,
                 Constants.mikeUsername, Constants.mikePassword, Constants.mikeUsername, "mikesheet");
 
-//        // Team5 getSheets from Team5, returns sheet1 & sheet2
-//        testGetSheetsAPI(new Response(true, "add body"), Constants.getSheetsRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username);
+        // Team5 getSheets from Team5
+        testGetSheetsAPI(Constants.getSheetsResponseSuccess, Constants.getSheetsRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username);
+        // Team5 getSheets from Mike
+        testGetSheetsAPI(Constants.getSheetsResponseSuccess, Constants.getSheetsRequest,
+                Constants.team5username, Constants.team5password, Constants.mikeUsername);
+
+        //ERROR: team5 getSheets from non-existent user.
+        testGetSheetsAPI(new Response(false, "Publisher not found: Jason"), Constants.getSheetsRequest,
+                Constants.team5username, Constants.team5password, "Jason");
+
+        //team5 deleteSheet w/ Correct publisher: Team5
+        testDeleteSheetAPI(Constants.deleteSheetResponseSuccess, Constants.deleteSheetRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1");
+
+        // ERROR: team5 deleteSheet w/ Correct Publisher Team5 but non-existent sheet
+        testDeleteSheetAPI(Constants.deleteSheetResponseError, Constants.deleteSheetRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "SheetDNE");
+
+        // ERROR: team5 deleteSheet w/ incorrect publisher
+        testDeleteSheetAPI(new Response(false, "Unauthorized: sender is not owner of sheet"), Constants.deleteSheetRequest,
+                Constants.team5username, Constants.team5password, Constants.mikeUsername, "Sheet2");
+
+        // ERROR: team5 deleteSheet w/ non-existent Publisher
+        testDeleteSheetAPI(new Response(false, "Unauthorized: sender is not owner of sheet"), Constants.deleteSheetRequest,
+                Constants.team5username, Constants.team5password, "UserDNE", "Sheet2");
+
+
 
     }
 
     /**
      * Helper method to register a publisher and update the publishers list.
      *
-     * @param publishers List of values which contain the publishers.
+     * @param publishers            List of values which contain the publishers.
      * @param getPublishersResponse Response object to update the publishers list.
-     * @param username Username of the publisher to register.
-     * @param password Password of the publisher to register.
-     * @param noDocsValue Value object with all null fields aside from publisher.
+     * @param username              Username of the publisher to register.
+     * @param password              Password of the publisher to register.
+     * @param noDocsValue           Value object with all null fields aside from publisher.
      */
     public void registerPublisherHelper(ArrayList<Value> publishers, Response getPublishersResponse,
                                         String username, String password, Value noDocsValue) {
@@ -206,7 +231,7 @@ public class TestAPIs {
     }
 
     public void testGetSheetsAPI(Response expectedResponse, String request, String username,
-                                   String password, String requestedPublisher) throws Exception {
+                                 String password, String requestedPublisher) throws Exception {
         GetSheetsRequest getSheetsRequestBody = new GetSheetsRequest();
         getSheetsRequestBody.setPublisher(requestedPublisher);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -215,12 +240,22 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    public void testDeleteSheetAPI(Response expectedResponse, String request, String username,
+                                   String password, String requestedPublisher, String sheetName) throws Exception {
+        DeleteSheetRequest deleteSheetRequestBody = new DeleteSheetRequest();
+        deleteSheetRequestBody.setSheet(sheetName);
+        deleteSheetRequestBody.setPublisher(requestedPublisher);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(deleteSheetRequestBody);
+        ResultActions resultActions = TestAPIHelpers.performPostRequestWithBasicAuthBody(mockMvc, request, username, password, requestBodyJson);
+        TestAPIHelpers.assertResponse(resultActions, expectedResponse);
+    }
 
 
     /**
      * Test any API, expecting the server to return an unauthorized response.
      *
-     * @param url the route to getPublishers.
+     * @param url the route
      * @throws Exception if an expected value - unauthorizedResponse - value doesn't match the expected typing.
      */
     public void testNoAuth(String url) throws Exception {
@@ -245,45 +280,43 @@ public class TestAPIs {
 
     private void mockCreateSheetService() {
         BDDMockito.given(createSheetService.createSheet(any(Publisher.class), ArgumentMatchers.anyString())).willAnswer(invocation -> {
-                Publisher requestedPublisher = invocation.getArgument(0);
-                String sheetName = invocation.getArgument(1);
+            Publisher requestedPublisher = invocation.getArgument(0);
+            String sheetName = invocation.getArgument(1);
 
-                Publisher publisher = Publishers.getInstance().getPublisher(requestedPublisher.getName());
-                if (publisher == null) { //not valid publisher
-                    return Constants.createSheetForOtherPublisherResponseError;
-                }
-                else if (publisher.hasSheet(invocation.getArgument(1))){ //already exists
-                    return new Response(false, String.format("Sheet already exists: %s", sheetName));
-                }
-                else {
-                    publisher.addSheet(new Sheet(invocation.getArgument(1), publisher.getName()));
-                    return Constants.createSheetResponseSuccess;
-                }
-                });
+            Publisher publisher = Publishers.getInstance().getPublisher(requestedPublisher.getName());
+            if (publisher == null) { //not valid publisher
+                return Constants.createSheetForOtherPublisherResponseError;
+            } else if (publisher.hasSheet(invocation.getArgument(1))) { //already exists
+                return new Response(false, String.format("Sheet already exists: %s", sheetName));
+            } else {
+                publisher.addSheet(new Sheet(invocation.getArgument(1), publisher.getName()));
+                return Constants.createSheetResponseSuccess;
+            }
+        });
 
     }
 
     private void mockDeleteSheetService() {
         BDDMockito.given(deleteSheetService.deleteSheet(any(Publisher.class), ArgumentMatchers.anyString())).willAnswer(invocation -> {
-                Publisher requestedPublisher = invocation.getArgument(0);
-                Publisher publisher = Publishers.getInstance().getPublisher(requestedPublisher.getName());
-                if (publisher != null && publisher.hasSheet(invocation.getArgument(1)))
-                    return Constants.deleteSheetResponseSuccess;
-                else {
-                    return Constants.deleteSheetResponseError;
-                }
-                });
+            Publisher requestedPublisher = invocation.getArgument(0);
+            Publisher publisher = Publishers.getInstance().getPublisher(requestedPublisher.getName());
+            if (publisher != null && publisher.hasSheet(invocation.getArgument(1)))
+                return Constants.deleteSheetResponseSuccess;
+            else {
+                return Constants.deleteSheetResponseError;
+            }
+        });
     }
 
 
     private void mockGetSheetsService() {
         BDDMockito.given(getSheetsService.getSheets(any(Publisher.class))).willAnswer(invocation -> {
-                Publisher publisher = invocation.getArgument(0);
-                if (Publishers.getInstance().getPublisher(publisher.getName()) != null)
-                    return Constants.getSheetsResponseSuccess;
-                else {
-                    return Constants.getSheetsResponseError;
-                }
-                });
+            Publisher publisher = invocation.getArgument(0);
+            if (Publishers.getInstance().getPublisher(publisher.getName()) != null)
+                return Constants.getSheetsResponseSuccess;
+            else {
+                return Constants.getSheetsResponseError;
+            }
+        });
     }
 }
