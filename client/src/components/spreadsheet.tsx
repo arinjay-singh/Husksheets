@@ -124,7 +124,11 @@ const Spreadsheet: React.FC = () => {
         if (rIdx === rowIndex && cIdx === colIndex) return cell;
         else {
           if (rawData[rIdx][cIdx].includes("$")) {
-            const newParsedValue = parseCellReferences(
+            let newParsedValue = parseFunction(current, rawData[rIdx][cIdx]);
+            if (newParsedValue) {
+              return newParsedValue;
+            }
+            newParsedValue = parseCellReferences(
               current,
               rawData[rIdx][cIdx]
             );

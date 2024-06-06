@@ -65,11 +65,22 @@ export const parseFunction = (data: string[][], formula: string) => {
   const commaSeparatedFunction = /=([a-zA-Z]{2,6})\(([^)]+)\)/;
   const commaSeparatedMatch = formula.match(commaSeparatedFunction);
 
-  const rangeFunction = /=([a-zA-Z]{3,6})\(\$[a-zA-Z]+\d+:\$[a-zA-Z]+\d+\)/;
+  const rangeFunction = /=([A-Za-z]{3,6})\(\$[A-Za-z]+\d+:\$[A-Za-z]+\d+\)/;
   const rangeMatch = formula.match(rangeFunction);
 
 
   if (commaSeparatedMatch) {
+    if (formula.includes(":") && rangeMatch) {
+      const cellRange = rangeMatch[0].match(/\(([^)]+)\)/)?.[1];
+      if (!cellRange) {
+        return null;
+      }
+      const [startCell, endCell] = cellRange.split(":");
+      console.log(startCell, endCell);
+      const cellValues = retrieveCellRangeValues(startCell, endCell, data);
+  
+      return computeFunction(rangeMatch[1], cellValues);
+    }
     const functionValues = commaSeparatedMatch[2].split(",").map((value) => value.trim());
     if (!validValues(functionValues)) {
       return null;
@@ -80,13 +91,6 @@ export const parseFunction = (data: string[][], formula: string) => {
     );
 
     return computeFunction(commaSeparatedMatch[1], parsedFunctionValues);
-
-  } else if (rangeMatch) {
-    const cellRange = rangeMatch[2];
-    const [startCell, endCell] = cellRange.split(":");
-    const cellValues = retrieveCellRangeValues(startCell, endCell, data);
-
-    return computeFunction(rangeMatch[1], cellValues);
   }
 
   return null;
