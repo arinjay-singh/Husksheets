@@ -87,6 +87,12 @@ public class UpdateController {
      */
     @PostMapping("api/v1/getUpdatesForPublished")
     public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        String owner = request.getPublisher();
+        if (!owner.equals(username)) {
+            return new Response(false, "Unauthorized: sender is not owner of sheet");
+        }
         return getUpdatesService.getUpdates(
                 request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.PUBLISHED);
     }
