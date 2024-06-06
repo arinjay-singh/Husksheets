@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateSheetService {
 
-    public Response createSheet(Publisher publisher, String requestSheet, String requestPublisher) {
+    public Response createSheet(Publisher publisher, String requestSheet) {
         boolean sheetExists = publisher.getSheets().stream()
                 .anyMatch(sheet -> sheet.getSheetName().equals(requestSheet));
         if (sheetExists) {
             return new Response(false, String.format("Sheet already exists: %s", requestSheet));
         }
 
-        Sheet sheet = new Sheet(requestSheet, requestPublisher);
+        Sheet sheet = new Sheet(requestSheet, publisher.getName());
         publisher.addSheet(sheet);
 
         return new Response(true, null);

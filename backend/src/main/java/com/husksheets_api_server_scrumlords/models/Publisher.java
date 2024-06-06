@@ -45,4 +45,14 @@ public class Publisher {
     public boolean deleteSheet(String sheetName) {
         return sheets.removeIf(sheet -> sheet.getSheetName().equals(sheetName));
     }
+
+    /**
+     * Checks if a specific sheet exists in this Publisher's list of sheets.
+     *
+     * @param sheetName Name of the sheet to check.
+     * @return boolean true if the sheet exists, false otherwise.
+     */
+    public boolean hasSheet(String sheetName) {
+        return sheets.stream().anyMatch(sheet -> sheet.getSheetName().equals(sheetName));
+    }
 }

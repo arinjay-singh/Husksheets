@@ -45,7 +45,7 @@ public class SheetController {
         if (publisher == null) {
             return new Response(false, "Unauthorized: sender is not owner of sheet");
         }
-        return createSheetService.createSheet(publisher, request.getSheet(), request.getPublisher());
+        return createSheetService.createSheet(publisher, request.getSheet());
     }
 
     /**
