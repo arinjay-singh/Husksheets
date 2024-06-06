@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -41,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(controllers = {RegisterController.class, SheetController.class})
+@WebMvcTest(controllers = {RegisterController.class, SheetController.class, UpdateController.class})
 @ContextConfiguration(classes = {RegisterController.class,
         SheetController.class,
         RegisterUserService.class,
@@ -49,6 +50,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         CreateSheetService.class,
         DeleteSheetService.class,
         GetSheetsService.class,
+        UpdateController.class,
+        GetUpdatesService.class,
+        UpdatePublishedService.class,
+        UpdateSubscriptionService.class,
         SpringSecurityConfig.class})
 
 public class TestAPIs {
@@ -64,6 +69,12 @@ public class TestAPIs {
     private DeleteSheetService deleteSheetService;
     @MockBean
     private GetSheetsService getSheetsService;
+    @MockBean
+    private GetUpdatesService getUpdatesService;
+    @MockBean
+    private UpdatePublishedService updatePublishedService;
+    @MockBean
+    private UpdateSubscriptionService updateSubscriptionService;
 
     /**
      * Set up the test environment before each test, clears the shared data store and opens a Mockito mock.
@@ -76,6 +87,9 @@ public class TestAPIs {
         mockCreateSheetService();
         mockDeleteSheetService();
         mockGetSheetsService();
+        mockGetUpdatesService();
+        mockUpdatePublishedService();
+        mockUpdateSubscriptionService();
     }
 
 
@@ -146,6 +160,9 @@ public class TestAPIs {
         //ERROR: team5 getSheets from non-existent user.
         testGetSheetsAPI(new Response(false, "Publisher not found: Jason"), Constants.getSheetsRequest,
                 Constants.team5username, Constants.team5password, "Jason");
+
+        testUpdatePublished(new Response(true, null), Constants.updatePublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "a1: 12");
 
         //team5 deleteSheet w/ Correct publisher: Team5
         testDeleteSheetAPI(Constants.deleteSheetResponseSuccess, Constants.deleteSheetRequest,
@@ -251,6 +268,11 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    public void testUpdatePublished(Response expectedResponse, String request, String username,
+                                   String password, String requestedPublisher, String sheetName, String payload) {
+
+    }
+
 
     /**
      * Test any API, expecting the server to return an unauthorized response.
@@ -318,5 +340,25 @@ public class TestAPIs {
                 return Constants.getSheetsResponseError;
             }
         });
+    }
+
+    private void mockGetUpdatesService() {
+        BDDMockito.given(getUpdatesService.getUpdates(ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyInt(),
+                argThat(argument -> argument == GetUpdatesService.UpdateType.SUBSCRIPTION || argument == GetUpdatesService.UpdateType.PUBLISHED)))
+                .willAnswer(invocation -> {
+            String requestPublisher = invocation.getArgument(0);
+            String requestSheet = invocation.getArgument(1);
+            int id = invocation.getArgument(2);
+            GetUpdatesService.UpdateType updateType = invocation.getArgument(3);
+            return null;
+        });
+    }
+    private void mockUpdatePublishedService() {
+
+    }
+    private void mockUpdateSubscriptionService() {
+
     }
 }
