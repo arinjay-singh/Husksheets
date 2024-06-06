@@ -16,10 +16,10 @@ import java.util.List;
 public class GetSheetsService {
     public Response getSheets(Publisher publisher) {
         List<Value> values = publisher.getSheets().stream()
-                .map(sheet -> new Value(sheet.getPublisherName(), sheet.getSheet(), null, null))
+                .map(sheet -> new Value(sheet.getPublisherName(), sheet.getSheetName(), null, null))
                 .toList();
         for (Sheet sheet : publisher.getSheets()) {
-            System.out.println(sheet.getSheet());
+            System.out.println(sheet.getSheetName());
         }
         Response response = new Response(true, null);
         response.setValues(values);
