@@ -17,6 +17,7 @@ public final class Constants {
     public static final String getPublishersRequest = "/api/v1/getPublishers";
     public static final String createSheetRequest = "/api/v1/createSheet";
     public static final String getSheetsRequest = "/api/v1/getSheets";
+    public static final String deleteSheetRequest = "/api/v1/deleteSheet";
     public static final String unauthorizedResponse = "Unauthorized";
     public static final Response registerResponseSuccess = new Response(true, null);
     public static final Value Team5PublisherNoDocsValue = new Value("Team5", null, null, null);
