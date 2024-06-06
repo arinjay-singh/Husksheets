@@ -6,6 +6,11 @@ import com.husksheets_api_server_scrumlords.models.Sheet;
 import com.husksheets_api_server_scrumlords.requests.CreateSheetRequest;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * Create Sheet Service class:
+ * author : Kaan Tural, Nicholas O'Sullivan
+ */
 @Service
 public class CreateSheetService {
 
