@@ -6,6 +6,9 @@
  * @author Arinjay Singh
  */
 
+import { parse } from "path";
+import { parseCellReferences, retrieveCellRangeValues } from "./cell-referencing";
+
 // function to parse and evaluate a standard mathematical operation
 export const parseEquation = (equation: string) => {
   // ensure the operation is in the correct format
@@ -39,4 +42,92 @@ export const parseEquation = (equation: string) => {
 
   // return the result as a string
   return funcResult.toString();
+};
+
+const validValues = (values: string[]): boolean => {
+  // define the regex formats
+  const regexFormats: RegExp[] = [
+    /^\$[A-Z]+\d+$/, // cell reference format
+    /^\d+(\.\d+)?$/, // number format (integer or decimal)
+  ];
+
+  return values.every((value) =>
+    regexFormats.some((regex) => regex.test(value))
+  );
+};
+
+// function to parse and evaluate a function
+export const parseFunction = (data: string[][], formula: string) => {
+  // ensure the operation is in the correct format
+  if (!formula.startsWith("=") || formula.length < 4) {
+    return null;
+  }
+
+  const commaSeparatedFunction = /=([a-zA-Z]{2,6})\(([^)]+)\)/;
+  const commaSeparatedMatch = formula.match(commaSeparatedFunction);
+
+  const rangeFunction = /=([a-zA-Z]{3,6})\(\$[a-zA-Z]+\d+:\$[a-zA-Z]+\d+\)/;
+  const rangeMatch = formula.match(rangeFunction);
+
+
+  if (commaSeparatedMatch) {
+    const functionValues = commaSeparatedMatch[2].split(",").map((value) => value.trim());
+    if (!validValues(functionValues)) {
+      return null;
+    }
+
+    const parsedFunctionValues = functionValues.map((value) =>
+      parseCellReferences(data, value)
+    );
+
+    return computeFunction(commaSeparatedMatch[1], parsedFunctionValues);
+
+  } else if (rangeMatch) {
+    const cellRange = rangeMatch[2];
+    const [startCell, endCell] = cellRange.split(":");
+    const cellValues = retrieveCellRangeValues(startCell, endCell, data);
+    
+    return computeFunction(rangeMatch[1], cellValues);
+  }
+
+  return "ERROR";
+};
+
+const computeFunction = (func: string, values: string[]) => {
+  let nums: number[];
+  if (values.length === 0) {
+    return "NO DATA";
+  }
+  try {
+    switch (func) {
+      case "SUM":
+        nums = values.map((value) => parseFloat(value));
+        return nums.reduce((acc, curr) => acc + curr, 0);
+      case "AVG":
+        nums = values.map((value) => parseFloat(value));
+        return nums.reduce((acc, curr) => acc + curr, 0) / nums.length;
+      case "MAX":
+        nums = values.map((value) => parseFloat(value));
+        return Math.max(...nums);
+      case "MIN":
+        nums = values.map((value) => parseFloat(value));
+        return Math.min(...nums);
+      case "CONCAT":
+        return values.join("");
+      case "IF":
+        if (values.length !== 3) {
+          return "ERROR";
+        }
+        return (parseFloat(values[0]) !== 0) ? values[1] : values[2];
+      case "DEBUG":
+        if (values.length !== 1) {
+          return "ERROR";
+        }
+        return values[0];
+      default:
+        return "";
+    }
+  } catch (e) {
+    return "ERROR";
+  }
 };

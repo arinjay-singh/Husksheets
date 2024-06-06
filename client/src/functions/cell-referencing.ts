@@ -71,7 +71,9 @@ export const retrieveCellRangeValues = (
   for (let i = startCoords[0]; i <= endCoords[0]; i++) {
     for (let j = startCoords[1]; j <= endCoords[1]; j++) {
       try {
-        cellRangeValues.push(data[i][j]);
+        if (data[i][j] !== undefined) {
+          cellRangeValues.push(data[i][j]);
+        }
       } catch (e) {
         alert("Error: Invalid cell reference");
         return [];
