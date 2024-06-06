@@ -53,3 +53,32 @@ export const parseCellReferences = (data: string[][], expression: string) => {
     }
   });
 };
+
+// function to retrieve the values for a range of cells given a start and end cell
+export const retrieveCellRangeValues = (
+  startCell: string,
+  endCell: string,
+  data: string[][]
+) => {
+  // get the start and end cell coordinates
+  const startCoords = cellMap(startCell);
+  const endCoords = cellMap(endCell);
+
+  // get the range of cells
+  const cellRangeValues = [];
+  for (let i = startCoords[0]; i <= endCoords[0]; i++) {
+    for (let j = startCoords[1]; j <= endCoords[1]; j++) {
+      try {
+        if (data[i][j] !== undefined) {
+          cellRangeValues.push(data[i][j]);
+        }
+      } catch (e) {
+        alert("Error: Invalid cell reference");
+        return [];
+      }
+    }
+  }
+
+  // return the range of cell values
+  return cellRangeValues;
+};
