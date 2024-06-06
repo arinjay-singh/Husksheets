@@ -51,7 +51,7 @@ public class Sheet {
     }
 
     public int getLatestUpdateID() {
-        return updatesForSubscription.size() - 1;
+        return updatesForSubscription.size();
     }
 
     public String getUpdatesForSubscriptionAfterGivenID(int id) {
