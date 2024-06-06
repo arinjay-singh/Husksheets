@@ -29,14 +29,17 @@ public class TestAPIHelpers {
     }
 
     // do a POST request w/ Basic Auth
-    public static ResultActions performPostRequestWithBasicAuth(MockMvc mockMvc,
+    public static ResultActions performPostRequestWithBasicAuthBody(MockMvc mockMvc,
                                                                 String url,
                                                                 String username,
-                                                                String password) throws Exception {
+                                                                String password,
+                                                                String requestBodyJson) throws Exception {
         String auth = username + ":" + password;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
         return mockMvc.perform(MockMvcRequestBuilders.post(url)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
+            .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+            .contentType("application/json")
+            .content(requestBodyJson));
     }
 
     // do a GET request w/o Basic Auth
