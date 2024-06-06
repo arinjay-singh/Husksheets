@@ -13,6 +13,8 @@ import {
 
 // function to parse and evaluate a standard mathematical operation
 export const parseEquation = (equation: string) => {
+  // remove all spaces from the equation
+  equation = equation.replace(/\s/g, "");
   // ensure the operation is in the correct format
   if (!equation.startsWith("=") || equation.length < 4) {
     return null;
@@ -82,6 +84,8 @@ const validValues = (values: string[]): boolean => {
 
 // function to parse and evaluate a function
 export const parseFunction = (data: string[][], formula: string) => {
+  // remove all spaces from the formula
+  formula = formula.replace(/\s/g, "");
   // ensure the operation is in the correct format
   if (!formula.startsWith("=") || formula.length < 4) {
     return null;
