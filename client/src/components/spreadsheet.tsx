@@ -109,8 +109,8 @@ const Spreadsheet: React.FC = () => {
         )
       );
     }
-    let current = displayData;
     // cascading updates for the results of equation data dependent on the current cell
+    let current = displayData;
     displayData = displayData.map((row, rIdx) =>
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) return cell;

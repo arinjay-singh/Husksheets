@@ -6,6 +6,8 @@
  * @author Arinjay Singh
  */
 
+import { start } from "repl";
+
 // function to convert a cell reference code to a row and column index
 // returns a 0-indexed row and column index
 export const cellMap = (cell: string): [number, number] => {
@@ -52,4 +54,31 @@ export const parseCellReferences = (data: string[][], expression: string) => {
       return match;
     }
   });
+};
+
+// function to retrieve the values for a range of cells given a start and end cell
+export const retrieveCellRangeValues = (
+  startCell: string,
+  endCell: string,
+  data: string[][]
+) => {
+  // get the start and end cell coordinates
+  const startCoords = cellMap(startCell);
+  const endCoords = cellMap(endCell);
+
+  // get the range of cells
+  const cellRangeValues = [];
+  for (let i = startCoords[0]; i <= endCoords[0]; i++) {
+    for (let j = startCoords[1]; j <= endCoords[1]; j++) {
+      try {
+        cellRangeValues.push(data[i][j]);
+      } catch (e) {
+        alert("Error: Invalid cell reference");
+        return [];
+      }
+    }
+  }
+
+  // return the range of cell values
+  return cellRangeValues;
 };
