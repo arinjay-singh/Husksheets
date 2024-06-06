@@ -20,6 +20,9 @@ public class GetUpdatesService {
     public Response getUpdates(String requestPublisher, String requestSheet, int id, UpdateType updateType) {
         Publishers publishers = Publishers.getInstance();
         Publisher publisher = publishers.getPublisher(requestPublisher);
+        if (publisher == null) {
+            return new Response(false, "Publisher not found: " + requestPublisher);
+        }
         Sheet userSheet = publisher.getSheets().stream()
                 .filter(s -> requestSheet.equals(s.getSheetName())).findAny().orElse(null);
         if (userSheet == null) {

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /*
 Update sheet APIs
-author:  Nicholas O'Sullivan, Parnika Jain
+author:  Nicholas O'Sullivan
  */
 @RestController
 public class UpdateController {
@@ -54,7 +54,15 @@ public class UpdateController {
      * @return returns a response with the payload set to all updates called by Publisher
      */
     @PostMapping("api/v1/getUpdatesForSubscription")
-    public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
+    public Response getUpdatesForSubscription(@RequestBody GetUpdatesRequest request) {
+
+//        //add checking for NULL ARGUMENTS!!!!
+//        {
+//    "success": false,
+//    "message": "Id is null",
+//    "value": [],
+//    "time": 1717697010987
+//        }
         return getUpdatesService.getUpdates(
                 request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.SUBSCRIPTION);
     }
@@ -67,16 +75,20 @@ public class UpdateController {
      */
     @PostMapping("api/v1/updateSubscription")
     public Response updateSubscription(@RequestBody UpdateRequest request) {
-        String owner = request.getPublisher();
-        Publisher publisher = publishers.getPublisher(owner);
-        if (publisher == null) {
-            return new Response(false, "Not found:" + request.getPublisher() +
-                    "/" + request.getSheet());
-        }
-        return updateSubscriptionService.updateSubscription(publisher,
-                request.getSheet(),
+        return updateSubscriptionService.updateSubscription(
                 request.getPublisher(),
+                request.getSheet(),
                 request.getPayload());
+    }
+
+    /**
+     * @param request the body of the request given to the server.
+     * @return returns a response with the payload set to all updates called by Publisher
+     */
+    @PostMapping("api/v1/getUpdatesForPublished")
+    public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
+        return getUpdatesService.getUpdates(
+                request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.PUBLISHED);
     }
 
 }

@@ -137,7 +137,58 @@ Content-Type: application/json
 
 }
 ###
+POST localhost:8080/api/v1/updatePublished
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
 
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1",
+    "payload": "aaa"
+}
+###
+
+###
+POST localhost:8080/api/v1/getUpdatesForSubscription
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1",
+    "id": "0"
+
+}
+###
+POST localhost:8080/api/v1/updateSubscription
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1",
+    "payload": "aaa"
+}
+###
+POST localhost:8080/api/v1/updateSubscription
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1",
+    "payload": "bbb"
+}
+###
+POST localhost:8080/api/v1/getUpdatesForPublished
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1",
+    "id": "0"
+}
 
 
 #### DELETE SHEETS ####

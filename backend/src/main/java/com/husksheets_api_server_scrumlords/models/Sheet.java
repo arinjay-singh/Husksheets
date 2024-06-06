@@ -43,8 +43,11 @@ public class Sheet {
         System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
     }
 
-    public void addNewUpdate(String update) {
+    public void addNewUpdateSubscription(String update) {
         updatesForSubscription.add(update);
+    }
+    public void addNewUpdatePublished(String update) {
+        updatesForPublished.add(update);
     }
 
     public int getLatestUpdateID() {
