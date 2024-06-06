@@ -6,7 +6,6 @@
  * @author Arinjay Singh
  */
 
-import { parse } from "path";
 import { parseCellReferences, retrieveCellRangeValues } from "./cell-referencing";
 
 // function to parse and evaluate a standard mathematical operation
@@ -86,48 +85,48 @@ export const parseFunction = (data: string[][], formula: string) => {
     const cellRange = rangeMatch[2];
     const [startCell, endCell] = cellRange.split(":");
     const cellValues = retrieveCellRangeValues(startCell, endCell, data);
-    
+
     return computeFunction(rangeMatch[1], cellValues);
   }
 
-  return "ERROR";
+  return null;
 };
 
-const computeFunction = (func: string, values: string[]) => {
+const computeFunction = (func: string, values: string[]): string | null => {
   let nums: number[];
   if (values.length === 0) {
-    return "NO DATA";
+    return null;
   }
   try {
     switch (func) {
       case "SUM":
         nums = values.map((value) => parseFloat(value));
-        return nums.reduce((acc, curr) => acc + curr, 0);
+        return nums.reduce((acc, curr) => acc + curr, 0).toString();
       case "AVG":
         nums = values.map((value) => parseFloat(value));
-        return nums.reduce((acc, curr) => acc + curr, 0) / nums.length;
+        return (nums.reduce((acc, curr) => acc + curr, 0) / nums.length).toString();
       case "MAX":
         nums = values.map((value) => parseFloat(value));
-        return Math.max(...nums);
+        return Math.max(...nums).toString();
       case "MIN":
         nums = values.map((value) => parseFloat(value));
-        return Math.min(...nums);
+        return Math.min(...nums).toString();
       case "CONCAT":
         return values.join("");
       case "IF":
         if (values.length !== 3) {
-          return "ERROR";
+          return null;
         }
         return (parseFloat(values[0]) !== 0) ? values[1] : values[2];
       case "DEBUG":
         if (values.length !== 1) {
-          return "ERROR";
+          return null;
         }
         return values[0];
       default:
         return "";
     }
   } catch (e) {
-    return "ERROR";
+    return null;
   }
 };
