@@ -30,7 +30,7 @@ export const parseEquation = (equation: string) => {
     const nonstandardFormat = /^(\d+|\w+)(=|<>|&|\|)(\d+|\w+)$/;
     const nonstandardMatch = expression.match(nonstandardFormat);
     if (!nonstandardMatch) {
-      return null;
+      return 'ERROR';
     }
     // check that both elements are of the same type
     const [, e1, operator, e2] =nonstandardMatch;
