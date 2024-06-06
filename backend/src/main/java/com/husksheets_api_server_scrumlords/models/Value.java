@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  * Value class
- * author: Kaan Tural and Parnika Jain
+ * author: Kaan Tural Parnika Jain Nicholas O'Sullivan
  */
 public class Value {
     @Getter

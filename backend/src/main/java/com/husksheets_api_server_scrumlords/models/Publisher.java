@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Publisher Class
- * author: Kaan Tural and Parnika Jain
+ * author: Kaan Tural and Parnika Jain, Nicholas O'Sullivan
  */
 public class Publisher {
     @Getter

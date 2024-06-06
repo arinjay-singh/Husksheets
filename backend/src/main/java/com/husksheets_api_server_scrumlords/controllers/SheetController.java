@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * SheetController Class
- * author: Kaan Tural
+ * author: Kaan Tural, Nicholas O'Sullivan
  */
 @RestController
 public class SheetController {
