@@ -61,16 +61,18 @@ export const parseFunction = (data: string[][], formula: string) => {
   if (!formula.startsWith("=") || formula.length < 4) {
     return null;
   }
-
+  // comma-separated function format
   const commaSeparatedFunction = /=([a-zA-Z]{2,6})\(([^)]+)\)/;
   const commaSeparatedMatch = formula.match(commaSeparatedFunction);
-
+  // range function format
   const rangeFunction = /=([A-Za-z]{3,6})\(\$[A-Za-z]+\d+:\$[A-Za-z]+\d+\)/;
   const rangeMatch = formula.match(rangeFunction);
 
-
+  // check if the formula is a function
   if (commaSeparatedMatch) {
+    // check if a range function
     if (formula.includes(":") && rangeMatch) {
+      // execute the range function
       const cellRange = rangeMatch[0].match(/\(([^)]+)\)/)?.[1];
       if (!cellRange) {
         return null;
@@ -78,30 +80,32 @@ export const parseFunction = (data: string[][], formula: string) => {
       const [startCell, endCell] = cellRange.split(":");
       console.log(startCell, endCell);
       const cellValues = retrieveCellRangeValues(startCell, endCell, data);
-  
       return computeFunction(rangeMatch[1], cellValues);
     }
+    // execute the comma-separated function
     const functionValues = commaSeparatedMatch[2].split(",").map((value) => value.trim());
     if (!validValues(functionValues)) {
       return null;
     }
-
     const parsedFunctionValues = functionValues.map((value) =>
       parseCellReferences(data, value)
     );
-
     return computeFunction(commaSeparatedMatch[1], parsedFunctionValues);
   }
-
+  // return null if the formula is not a function
   return null;
 };
 
+// function to compute the result of a function
 const computeFunction = (func: string, values: string[]): string | null => {
+  // store the numbers for the function
   let nums: number[];
+  // if there are no values, return null
   if (values.length === 0) {
     return null;
   }
   try {
+    // switch statement to determine the function
     switch (func) {
       case "SUM":
         nums = values.map((value) => parseFloat(value));

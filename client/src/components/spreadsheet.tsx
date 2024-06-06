@@ -92,6 +92,7 @@ const Spreadsheet: React.FC = () => {
       alert("Cannot execute empty cell");
       return;
     }
+    // parse for a possible function in the value
     let parsedValue = parseFunction(data, value);
     let equationResult;
     if (!parsedValue) {

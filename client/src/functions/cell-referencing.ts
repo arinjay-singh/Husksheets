@@ -6,8 +6,6 @@
  * @author Arinjay Singh
  */
 
-import { start } from "repl";
-
 // function to convert a cell reference code to a row and column index
 // returns a 0-indexed row and column index
 export const cellMap = (cell: string): [number, number] => {
