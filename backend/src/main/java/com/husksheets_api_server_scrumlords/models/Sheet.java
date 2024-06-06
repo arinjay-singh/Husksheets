@@ -5,11 +5,10 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Sheet Class
- * author: Kaan Tural
+ * author: Nicholas O'Sullivan Kaan Tural
  */
 public class Sheet {
     @Getter
@@ -18,9 +17,10 @@ public class Sheet {
     @Getter
     private final String publisherName;
     @Getter
-    private List<Value> publisherUpdates;
+    private List<String> updatesForSubscription;
     @Getter
-    private List<Value> subscriberUpdates;
+    private List<String> updatesForPublished;
+
 
 
     /**
@@ -38,15 +38,34 @@ public class Sheet {
         }
         this.sheetName = name;
         this.publisherName = publisherName;
-        this.publisherUpdates = new ArrayList<>();
-        this.subscriberUpdates = new ArrayList<>();
+        this.updatesForSubscription = new ArrayList<>();
+        this.updatesForPublished = new ArrayList<>();
         System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
     }
 
-    public void addPublisherUpdate(Value value) {
-        publisherUpdates.add(value);
+    public void addNewUpdate(String update) {
+        updatesForSubscription.add(update);
     }
-    public void addSubscriberUpdate(Value value) {
-        subscriberUpdates.add(value);
+
+    public int getLatestUpdateID() {
+        return updatesForSubscription.size() - 1;
+    }
+
+    public String getUpdatesForSubscriptionAfterGivenID(int id) {
+        return getUpdates(id, updatesForSubscription);
+    }
+
+    public String getUpdatesForPublishedAfterGivenID(int id) {
+        return getUpdates(id, updatesForPublished);
+    }
+
+    private String getUpdates(int id, List<String> updates) {
+        StringBuilder concatenatedUpdates = new StringBuilder();
+        if (id < updates.size()) {
+            for (int i = updates.size() - 1; i >= id ; i--) {
+                 concatenatedUpdates.append(updates.get(i)).append("\n");
+            }
+        }
+        return concatenatedUpdates.toString();
     }
 }

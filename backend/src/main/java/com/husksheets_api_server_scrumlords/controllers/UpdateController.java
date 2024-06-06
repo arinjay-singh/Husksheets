@@ -1,7 +1,9 @@
 package com.husksheets_api_server_scrumlords.controllers;
 
 import com.husksheets_api_server_scrumlords.models.*;
+import com.husksheets_api_server_scrumlords.requests.GetUpdatesRequest;
 import com.husksheets_api_server_scrumlords.requests.UpdateRequest;
+import com.husksheets_api_server_scrumlords.services.GetUpdatesService;
 import com.husksheets_api_server_scrumlords.services.UpdatePublishedService;
 import com.husksheets_api_server_scrumlords.services.UpdateSubscriptionService;
 import org.springframework.security.core.Authentication;
@@ -12,17 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 /*
 Update sheet APIs
-author: Parnika Jain, Nicholas O'Sullivan
+author:  Nicholas O'Sullivan, Parnika Jain
  */
 @RestController
 public class UpdateController {
     private final UpdatePublishedService updatePublishedService; //inject service
     private final UpdateSubscriptionService updateSubscriptionService;
+    private final GetUpdatesService getUpdatesService;
     private final Publishers publishers;
 
-    public UpdateController(UpdatePublishedService updatePublishedService, UpdateSubscriptionService updateSubscriptionService) {
+    public UpdateController(UpdatePublishedService updatePublishedService, UpdateSubscriptionService updateSubscriptionService, GetUpdatesService getUpdatesService) {
         this.updatePublishedService = updatePublishedService;
         this.updateSubscriptionService = updateSubscriptionService;
+        this.getUpdatesService = getUpdatesService;
         this.publishers = Publishers.getInstance();
     }
 
@@ -40,9 +44,19 @@ public class UpdateController {
         if (!owner.equals(username)) { //ensure connected user is the owner of the sheet.
             return new Response(false, "Unauthorized: sender is not owner of sheet");
         }
-        return updatePublishedService.updatePublished(username, request.getPublisher(),
+        return updatePublishedService.updatePublished(request.getPublisher(),
                 request.getSheet(),
                 request.getPayload());
+    }
+
+    /**s
+     * @param request the body of the request given to the server.
+     * @return returns a response with the payload set to all updates called by Publisher
+     */
+    @PostMapping("api/v1/getUpdatesForSubscription")
+    public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
+        return getUpdatesService.getUpdates(
+                request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.SUBSCRIPTION);
     }
 
     /**

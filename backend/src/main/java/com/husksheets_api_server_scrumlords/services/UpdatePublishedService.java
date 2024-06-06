@@ -1,9 +1,6 @@
 package com.husksheets_api_server_scrumlords.services;
 
-import com.husksheets_api_server_scrumlords.models.Publisher;
-import com.husksheets_api_server_scrumlords.models.Publishers;
-import com.husksheets_api_server_scrumlords.models.Response;
-import com.husksheets_api_server_scrumlords.models.Sheet;
+import com.husksheets_api_server_scrumlords.models.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,21 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdatePublishedService {
 
-    public Response updatePublished(String username, String requestPublisher, String requestSheet, String requestPayload) {
+    public Response updatePublished(String requestPublisher, String requestSheet, String requestPayload) {
         Publishers publishers = Publishers.getInstance();
-        Publisher publisher = publishers.getPublisher(username);
-        if (publisher == null) {
-            return new Response(false, "Not found:" + requestPublisher +
-                    "/" + requestSheet);
-        }
+        Publisher publisher = publishers.getPublisher(requestPublisher);
         Sheet userSheet = publisher.getSheets().stream()
                 .filter(s -> requestSheet.equals(s.getSheetName())).findAny().orElse(null);
         if (userSheet == null) {
-            return new Response(false, "Not found:" + requestPublisher +
+            return new Response(false, "Sheet not found:" + requestPublisher +
                     "/" + requestSheet);
         } else {
-            //userSheet.addPublisherUpdate();
-           // userSheet.setPayload(requestPayload);
+            userSheet.addNewUpdate(requestPayload);
             return new Response(true, null);
         }
     }
