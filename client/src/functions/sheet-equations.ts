@@ -6,7 +6,10 @@
  * @author Arinjay Singh
  */
 
-import { parseCellReferences, retrieveCellRangeValues } from "./cell-referencing";
+import {
+  parseCellReferences,
+  retrieveCellRangeValues,
+} from "./cell-referencing";
 
 // function to parse and evaluate a standard mathematical operation
 export const parseEquation = (equation: string) => {
@@ -18,15 +21,37 @@ export const parseEquation = (equation: string) => {
   // extract the arithmetic expression
   const expression = equation.slice(1).trim();
 
-  // check if the expression is a simple operation
-  if (
-    expression.includes("=") ||
-    expression.includes("<>") ||
-    expression.includes(":") ||
-    expression.includes("&") ||
-    expression.includes("|")
-  ) {
-    return null;
+  // list of non-standard operations
+  const nonstandardOperations = ["=", "<>", "|", "&"];
+  // check if the expression is a non-standard operation
+  if (nonstandardOperations.some((op) => expression.includes(op))) {
+    const nonstandardFormat = /^(\d+|\w+)(=|<>|&|\|)(\d+|\w+)$/;
+    const nonstandardMatch = expression.match(nonstandardFormat);
+    if (!nonstandardMatch) {
+      return null;
+    }
+    // check that both elements are of the same type
+    const [, e1, operator, e2] =nonstandardMatch;
+    const isNumber = (str: string) => /^\d+$/.test(str);
+    const isString = (str: string) => /^[a-zA-Z]+$/.test(str);
+    if (!(isNumber(e1) && isNumber(e2)) && !(isString(e1) && isString(e2))) {
+      return 'ERROR';
+    }
+    // evaluate the non-standard operation
+    switch (operator) {
+      case "=":
+        return e1 === e2 ? "1" : "0";
+      case "<>":
+        return e1 !== e2 ? "1" : "0";
+      case "|":
+        if (isString(e1)) return "ERROR";
+        return parseFloat(e1) === 1 || parseFloat(e2) === 1 ? "1" : "0";
+      case "&":
+        if (isString(e1)) return "ERROR";
+        return parseFloat(e1) !== 0 && parseFloat(e2) !== 0 ? "1" : "0";
+      default:
+        return "ERROR";
+    }
   }
 
   // check if the expression contains anything other than numbers and operators
@@ -83,7 +108,9 @@ export const parseFunction = (data: string[][], formula: string) => {
       return computeFunction(rangeMatch[1], cellValues);
     }
     // execute the comma-separated function
-    const functionValues = commaSeparatedMatch[2].split(",").map((value) => value.trim());
+    const functionValues = commaSeparatedMatch[2]
+      .split(",")
+      .map((value) => value.trim());
     if (!validValues(functionValues)) {
       return null;
     }
@@ -112,7 +139,9 @@ const computeFunction = (func: string, values: string[]): string | null => {
         return nums.reduce((acc, curr) => acc + curr, 0).toString();
       case "AVG":
         nums = values.map((value) => parseFloat(value));
-        return (nums.reduce((acc, curr) => acc + curr, 0) / nums.length).toString();
+        return (
+          nums.reduce((acc, curr) => acc + curr, 0) / nums.length
+        ).toString();
       case "MAX":
         nums = values.map((value) => parseFloat(value));
         return Math.max(...nums).toString();
@@ -125,7 +154,7 @@ const computeFunction = (func: string, values: string[]): string | null => {
         if (values.length !== 3) {
           return null;
         }
-        return (parseFloat(values[0]) !== 0) ? values[1] : values[2];
+        return parseFloat(values[0]) !== 0 ? values[1] : values[2];
       case "DEBUG":
         if (values.length !== 1) {
           return null;
