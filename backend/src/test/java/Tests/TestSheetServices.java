@@ -31,7 +31,6 @@ public class TestSheetServices {
             deleteSheetService = new DeleteSheetService();
             getSheetsService = new GetSheetsService();
             Publishers.getInstance().getPublisherMap().clear();
-
     }
 
     @Test
@@ -93,7 +92,6 @@ public class TestSheetServices {
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
 
-
         //delete sheet team5: sheet2 error, sheet2 doesnt exist anymore
         actualResponse = deleteSheetService.deleteSheet(team5Publisher, "Sheet2");
         Assertions.assertEquals(new Response(false, "Sheet does not exist: Sheet2"), actualResponse);
@@ -110,8 +108,5 @@ public class TestSheetServices {
         //getSheets team5, no more sheets
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
-
-
     }
-
 }
