@@ -399,10 +399,6 @@ Content-Type: application/json
 }
 ###
 
-###
-
-### add null case checks for everything
-
 #### DELETE SHEETS ####
 
 ### team5 deleteSheet w/ Correct Publisher Team5

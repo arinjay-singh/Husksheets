@@ -24,7 +24,8 @@ public class UpdateController {
     private final GetUpdatesService getUpdatesService;
     private final Publishers publishers;
 
-    public UpdateController(UpdatePublishedService updatePublishedService, UpdateSubscriptionService updateSubscriptionService, GetUpdatesService getUpdatesService) {
+    public UpdateController(UpdatePublishedService updatePublishedService,
+                            UpdateSubscriptionService updateSubscriptionService, GetUpdatesService getUpdatesService) {
         this.updatePublishedService = updatePublishedService;
         this.updateSubscriptionService = updateSubscriptionService;
         this.getUpdatesService = getUpdatesService;

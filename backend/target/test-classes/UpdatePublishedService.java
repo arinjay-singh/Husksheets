@@ -1,10 +1,9 @@
 package com.husksheets_api_server_scrumlords.services;
 
-import com.husksheets_api_server_scrumlords.models.Publisher;
-import com.husksheets_api_server_scrumlords.models.Publishers;
-import com.husksheets_api_server_scrumlords.models.Response;
-import com.husksheets_api_server_scrumlords.models.Sheet;
+import com.husksheets_api_server_scrumlords.models.*;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * Update Published Service class
@@ -13,21 +12,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdatePublishedService {
 
-    public Response updatePublished(String username, String requestPublisher, String requestSheet, String requestPayload) {
-        Publishers publishers = Publishers.getInstance();
-        Publisher publisher = publishers.getPublisher(username);
-        if (publisher == null) {
-            return new Response(false, "Not found:" + requestPublisher +
-                    "/" + requestSheet);
+    /**
+     * Update published for the given publisher and sheet with passed in payload.
+     *
+     * @param requestPublisher the publisher which owns the sheet we edit published for.
+     * @param requestSheet the sheet to update the published for.
+     * @param requestPayload the payload to update the published with.
+     * @return A response with the result of the update.
+     */
+    public Response updatePublished(String requestPublisher, String requestSheet, String requestPayload) {
+        Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                requestPublisher, requestSheet);
+        if (validationResponse.containsKey(null)) {
+            return validationResponse.get(null);
         }
-        Sheet userSheet = publisher.getSheets().stream()
-                .filter(s -> requestSheet.equals(s.getSheet())).findAny().orElse(null);
-        if (userSheet == null) {
-            return new Response(false, "Not found:" + requestPublisher +
-                    "/" + requestSheet);
-        } else {
-            userSheet.setPayload(requestPayload);
-            return new Response(true, null);
+        if (!ValidationUtils.validatePayload(requestPayload).isSuccess()) {
+            return ValidationUtils.validatePayload(requestPayload);
         }
+        Sheet userSheet = validationResponse.keySet().iterator().next();
+        userSheet.addNewUpdateSubscription(requestPayload);
+        return new Response(true, null);
     }
 }
