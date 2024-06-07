@@ -21,17 +21,17 @@ import java.util.List;
  */
 @RestController
 public class SheetController {
-    private final CreateSheetService createSheetService; //inject service into controller.
+    private final CreateSheetService createSheetService;
     private final DeleteSheetService deleteSheetService;
     private final GetSheetsService getSheetsService;
     private final Publishers publishers;
-    public SheetController(CreateSheetService createSheetService, DeleteSheetService deleteSheetService, GetSheetsService getSheetsService) {
+    public SheetController(CreateSheetService createSheetService, DeleteSheetService deleteSheetService,
+                           GetSheetsService getSheetsService) {
         this.createSheetService = createSheetService;
         this.deleteSheetService = deleteSheetService;
         this.getSheetsService = getSheetsService;
         this.publishers = Publishers.getInstance();
     }
-
 
     /**
      * API route to create a sheet and assign it to the current publisher.
@@ -41,9 +41,9 @@ public class SheetController {
      */
     @PostMapping("api/v1/createSheet")
     public Response createSheet(@RequestBody CreateSheetRequest request) {
-        Publisher publisher = checkAuthentication(request);
+        Publisher publisher = checkAuthentication(request, request.getSheet());
         if (publisher == null) {
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
+            return errorResponseHelper(request, request.getSheet());
         }
         return createSheetService.createSheet(publisher, request.getSheet());
     }
@@ -56,9 +56,9 @@ public class SheetController {
      */
     @PostMapping("api/v1/deleteSheet")
     public Response deleteSheet(@RequestBody DeleteSheetRequest request) {
-        Publisher publisher = checkAuthentication(request);
+        Publisher publisher = checkAuthentication(request, request.getSheet());
         if (publisher == null) {
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
+            return errorResponseHelper(request, request.getSheet());
         }
         return deleteSheetService.deleteSheet(publisher, request.getSheet());
     }
@@ -79,7 +79,6 @@ public class SheetController {
         return getSheetsService.getSheets(publisher);
     }
 
-
     /**
      * Helper function to check if the current request is a Publisher that exists and
      * is the one currently making the request.
@@ -87,15 +86,31 @@ public class SheetController {
      * @param request the API call's body of the request.
      * @return the current instance of the publisher being dealt with or null if invalid.
      */
-    public Publisher checkAuthentication(AbstractPublisherRequest request) {
+    public Publisher checkAuthentication(AbstractPublisherRequest request, String sheet) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Publisher publisher = publishers.getPublisher(username);
-
-        if (!username.equals(request.getPublisher()) || publisher == null) {
+        if (!username.equals(request.getPublisher()) || publisher == null || sheet == null) {
             return null;
         } else {
             return publisher;
+        }
+    }
+
+    /**
+     * Helper function to return a response for different types of errors in the request.
+     *
+     * @param request the API call's body of the request.
+     * @param sheet the sheet name to check if it exists.
+     * @return a response with the error message.
+     */
+    public Response errorResponseHelper(AbstractPublisherRequest request, String sheet) {
+        if (request.getPublisher() == null) {
+            return new Response(false, "Publisher is null");
+        } else if (sheet == null) {
+            return new Response(false, "Sheet not found");
+        } else {
+            return new Response(false, "Unauthorized: sender is not owner of sheet");
         }
     }
 }

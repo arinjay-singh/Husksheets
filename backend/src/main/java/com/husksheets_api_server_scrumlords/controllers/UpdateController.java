@@ -1,6 +1,7 @@
 package com.husksheets_api_server_scrumlords.controllers;
 
 import com.husksheets_api_server_scrumlords.models.*;
+import com.husksheets_api_server_scrumlords.requests.AbstractPublisherRequest;
 import com.husksheets_api_server_scrumlords.requests.GetUpdatesRequest;
 import com.husksheets_api_server_scrumlords.requests.UpdateRequest;
 import com.husksheets_api_server_scrumlords.services.GetUpdatesService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /*
 Update sheet APIs
-author:  Nicholas O'Sullivan
+author: Nicholas O'Sullivan, Kaan Tural
  */
 @RestController
 public class UpdateController {
@@ -38,13 +39,9 @@ public class UpdateController {
      */
     @PostMapping("api/v1/updatePublished")
     public Response updatePublished(@RequestBody UpdateRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        String owner = request.getPublisher();
-        if (!owner.equals(username)) { //ensure connected user is the owner of the sheet.
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
-        }
-        return updatePublishedService.updatePublished(request.getPublisher(),
+        Response response = publishedVerification(request);
+        return response != null ? response : updatePublishedService.updatePublished(
+                request.getPublisher(),
                 request.getSheet(),
                 request.getPayload());
     }
@@ -55,16 +52,8 @@ public class UpdateController {
      */
     @PostMapping("api/v1/getUpdatesForSubscription")
     public Response getUpdatesForSubscription(@RequestBody GetUpdatesRequest request) {
-
-//        //add checking for NULL ARGUMENTS!!!!
-//        {
-//    "success": false,
-//    "message": "Id is null",
-//    "value": [],
-//    "time": 1717697010987
-//        }
         return getUpdatesService.getUpdates(
-                request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.SUBSCRIPTION);
+                request.getPublisher(), request.getSheet(), request.getId(), GetUpdatesService.UpdateType.SUBSCRIPTION);
     }
 
     /**
@@ -87,14 +76,26 @@ public class UpdateController {
      */
     @PostMapping("api/v1/getUpdatesForPublished")
     public Response getUpdatesForPublished(@RequestBody GetUpdatesRequest request) {
+        Response response = publishedVerification(request);
+        return response != null ? response : getUpdatesService.getUpdates(
+                request.getPublisher(), request.getSheet(), request.getId(),
+                GetUpdatesService.UpdateType.PUBLISHED);
+    }
+
+    /**
+     * Check if the publisher is the owner of the sheet.
+     *
+     * @param request the request to check.
+     * @return a response if the publisher is not the owner of the sheet, null if they are.
+     */
+    public Response publishedVerification(AbstractPublisherRequest request) {
+        if (request.getPublisher() == null) {
+            return new Response(false, "Publisher is null");
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         String owner = request.getPublisher();
-        if (!owner.equals(username)) {
-            return new Response(false, "Unauthorized: sender is not owner of sheet");
-        }
-        return getUpdatesService.getUpdates(
-                request.getPublisher(), request.getSheet(), Integer.parseInt(request.getId()), GetUpdatesService.UpdateType.PUBLISHED);
+        return !owner.equals(username) ? new Response(false,
+                "Unauthorized: sender is not owner of sheet") : null;
     }
-
 }

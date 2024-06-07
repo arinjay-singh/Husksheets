@@ -76,6 +76,4 @@ public class Response {
                 (Objects.equals(values, otherResponse.values)) &&
                 otherResponse.time != null;
     }
-
-
 }

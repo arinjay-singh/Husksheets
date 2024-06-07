@@ -344,9 +344,9 @@ public class TestAPIs {
 
     private void mockGetUpdatesService() {
         BDDMockito.given(getUpdatesService.getUpdates(ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyInt(),
-                argThat(argument -> argument == GetUpdatesService.UpdateType.SUBSCRIPTION || argument == GetUpdatesService.UpdateType.PUBLISHED)))
+                ArgumentMatchers.anyString(), String.valueOf(ArgumentMatchers.anyInt()),
+                argThat(argument -> argument == GetUpdatesService.UpdateType.SUBSCRIPTION ||
+                        argument == GetUpdatesService.UpdateType.PUBLISHED)))
                 .willAnswer(invocation -> {
             String requestPublisher = invocation.getArgument(0);
             String requestSheet = invocation.getArgument(1);
