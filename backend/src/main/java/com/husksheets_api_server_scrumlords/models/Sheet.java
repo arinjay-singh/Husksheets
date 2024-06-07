@@ -21,8 +21,6 @@ public class Sheet {
     @Getter
     private List<String> updatesForPublished;
 
-
-
     /**
      * Constructor for a single instance of a sheet.
      *

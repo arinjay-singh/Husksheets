@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegisterUserService  {
     private final Publishers publishers = Publishers.getInstance();
-
     /**
      * Register a user as a publisher.
      *
@@ -23,11 +22,10 @@ public class RegisterUserService  {
      * @return the successful Response object
      */
     public Response register(String username) {
-        if (username != null && !username.isEmpty()) {
-            addToPublishers(username);
-        }
+        addToPublishers(username);
         return new Response(true, null);
     }
+
 
     /**
      * Add a new publisher to the list of publishers.

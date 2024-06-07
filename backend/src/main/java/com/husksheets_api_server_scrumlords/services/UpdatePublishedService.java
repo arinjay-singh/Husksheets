@@ -3,6 +3,8 @@ package com.husksheets_api_server_scrumlords.services;
 import com.husksheets_api_server_scrumlords.models.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Update Published Service class
  * Authors: Nicholas O'Sullivan, Parnika Jain
@@ -10,20 +12,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdatePublishedService {
 
+    /**
+     * Update published for the given publisher and sheet with passed in payload.
+     *
+     * @param requestPublisher the publisher which owns the sheet we edit published for.
+     * @param requestSheet the sheet to update the published for.
+     * @param requestPayload the payload to update the published with.
+     * @return A response with the result of the update.
+     */
     public Response updatePublished(String requestPublisher, String requestSheet, String requestPayload) {
-        Publishers publishers = Publishers.getInstance();
-        Publisher publisher = publishers.getPublisher(requestPublisher);
-        if (publisher == null) {
-            return new Response(false, "Publisher not found: " + requestPublisher);
+        Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                requestPublisher, requestSheet);
+        if (validationResponse.containsKey(null)) {
+            return validationResponse.get(null);
         }
-        Sheet userSheet = publisher.getSheets().stream()
-                .filter(s -> requestSheet.equals(s.getSheetName())).findAny().orElse(null);
-        if (userSheet == null) {
-            return new Response(false, "Sheet not found:" + requestPublisher +
-                    "/" + requestSheet);
-        } else {
-            userSheet.addNewUpdateSubscription(requestPayload);
-            return new Response(true, null);
+        if (!ValidationUtils.validatePayload(requestPayload).isSuccess()) {
+            return ValidationUtils.validatePayload(requestPayload);
         }
+        Sheet userSheet = validationResponse.keySet().iterator().next();
+        userSheet.addNewUpdateSubscription(requestPayload);
+        return new Response(true, null);
     }
 }
