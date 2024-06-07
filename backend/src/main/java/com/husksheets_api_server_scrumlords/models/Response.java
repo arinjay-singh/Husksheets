@@ -35,13 +35,6 @@ public class Response {
         this.time = System.currentTimeMillis();
     }
 
-    public Response(Boolean success, String message, ArrayList<Value> values) {
-        this.success = success;
-        this.message = message;
-        this.values = new ArrayList<>();
-        this.time = System.currentTimeMillis();
-    }
-
     /**
      * toString implementation to display response in proper formatting to user.
      *
