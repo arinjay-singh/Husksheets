@@ -4,9 +4,7 @@ import Tests.utils.Constants;
 import Tests.utils.TestAPIHelpers;
 import com.husksheets_api_server_scrumlords.controllers.UpdateController;
 import com.husksheets_api_server_scrumlords.models.*;
-import com.husksheets_api_server_scrumlords.requests.CreateSheetRequest;
-import com.husksheets_api_server_scrumlords.requests.DeleteSheetRequest;
-import com.husksheets_api_server_scrumlords.requests.GetSheetsRequest;
+import com.husksheets_api_server_scrumlords.requests.*;
 import com.husksheets_api_server_scrumlords.services.*;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
@@ -24,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,6 +31,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -161,8 +163,81 @@ public class TestAPIs {
         testGetSheetsAPI(new Response(false, "Publisher not found: Jason"), Constants.getSheetsRequest,
                 Constants.team5username, Constants.team5password, "Jason");
 
-        testUpdatePublished(new Response(true, null), Constants.updatePublishedRequest,
-                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "a1: 12");
+        // Successful updatePublished
+        testUpdatePublishedAPI(Constants.updatePublishedResponseSuccess, Constants.updatePublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "aaa");
+
+        // Attempting updatePublished with empty payload and empty sheet
+        testUpdatePublishedAPI(Constants.updateSheetNotFound, Constants.updatePublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "", "");
+
+        // Attempting updatePublished with empty payload
+        testUpdatePublishedAPI(Constants.updatePublishedResponseSuccess, Constants.updatePublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "");
+
+//        // Attempting updatePublished with null values
+//        testUpdatePublishedAPI(Constants.updatePublishedPayloadNullError, Constants.updatePublishedRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
+
+//        // Attempting updatePublished with id instead of payload
+//        testUpdatePublishedAPI(Constants.updatePublishedPayloadNullError, Constants.updatePublishedRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", null);
+
+        // Team5 tries to use getUpdatesForPublished on Mike's sheet
+        testUpdatePublishedAPI(Constants.publisherNotOwnerError, Constants.updatePublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.mikeUsername, "MikeSheet", "bbb");
+
+        // Successful updateSubscription
+        testUpdateSubscriptionAPI(Constants.updateSubscriptionResponseSuccess, Constants.updateSubscriptionRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "aaa");
+
+        // Attempting updateSubscription with empty payload and empty sheet
+        testUpdateSubscriptionAPI(Constants.updateSheetNotFound, Constants.updateSubscriptionRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "", "");
+
+        // Attempting updateSubscription with empty payload
+        testUpdateSubscriptionAPI(Constants.updateSubscriptionResponseSuccess, Constants.updateSubscriptionRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "");
+
+//        // Attempting updateSubscription with null values
+//        testUpdateSubscriptionAPI(Constants.updateSubscriptionPayloadNullError, Constants.updateSubscriptionRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
+
+//        // Attempting updateSubscription with id instead of payload
+//        testUpdateSubscriptionAPI(Constants.updateSubscriptionPayloadNullError, Constants.updateSubscriptionRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", null);
+
+        // Mike successfully uses updateSubscription to Team5's Sheet
+        testUpdateSubscriptionAPI(Constants.updateSubscriptionResponseSuccess, Constants.updateSubscriptionRequest,
+                Constants.mikeUsername, Constants.mikePassword, Constants.team5username, "Sheet1", "$A1 51.0\n$B2 \"Bing Bong\"");
+
+        // Successful getUpdatesForSubscription
+        testGetUpdatesForSubscriptionAPI(Constants.getUpdatesForSubscriptionResponseSuccess, Constants.getUpdatesForSubscriptionRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "0");
+
+//        // Attempting getUpdatesForSubscription with null values
+//        testGetUpdatesForSubscriptionAPI(Constants.getUpdatesForSubscriptionIdNullError, Constants.getUpdatesForSubscriptionRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
+
+        // Successful getUpdatesForPublished
+        testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedResponseSuccess, Constants.getUpdatesForPublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "1");
+
+        // Team5 tries to use getUpdatesForPublished on Mike's sheet
+        testGetUpdatesForPublishedAPI(Constants.publisherNotOwnerError, Constants.getUpdatesForPublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.mikeUsername, "MikeSheet", "0");
+
+        // Attempting getUpdatesForPublished on a non-existent sheet
+        testGetUpdatesForPublishedAPI(Constants.getSheetsResponseError2, Constants.getUpdatesForPublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "MikeTypeSheet", "0");
+
+        // Attempting getUpdatesForPublished with a non-existent id
+        testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedResponseSuccess, Constants.getUpdatesForPublishedRequest,
+                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "10");
+
+//        // Attempting getUpdatesForPublished with null values
+//        testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedIdNullError, Constants.getUpdatesForPublishedRequest,
+//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
 
         //team5 deleteSheet w/ Correct publisher: Team5
         testDeleteSheetAPI(Constants.deleteSheetResponseSuccess, Constants.deleteSheetRequest,
@@ -179,9 +254,6 @@ public class TestAPIs {
         // ERROR: team5 deleteSheet w/ non-existent Publisher
         testDeleteSheetAPI(new Response(false, "Unauthorized: sender is not owner of sheet"), Constants.deleteSheetRequest,
                 Constants.team5username, Constants.team5password, "UserDNE", "Sheet2");
-
-
-
     }
 
     /**
@@ -268,11 +340,53 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
-    public void testUpdatePublished(Response expectedResponse, String request, String username,
-                                   String password, String requestedPublisher, String sheetName, String payload) {
-
+    public void testUpdatePublishedAPI(Response expectedResponse, String request, String username,
+                                       String password, String requestedPublisher, String sheetName, String payload) throws Exception {
+        UpdateRequest updateRequestBody = new UpdateRequest();
+        updateRequestBody.setPublisher(requestedPublisher);
+        updateRequestBody.setSheet(sheetName);
+        updateRequestBody.setPayload(payload);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(updateRequestBody);
+        ResultActions resultActions = TestAPIHelpers.performPostRequestWithBasicAuthBody(mockMvc, request, username, password, requestBodyJson);
+        TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    public void testUpdateSubscriptionAPI(Response expectedResponse, String request, String username,
+                                          String password, String requestedPublisher, String sheetName, String payload) throws Exception {
+        UpdateRequest updateRequestBody = new UpdateRequest();
+        updateRequestBody.setPublisher(requestedPublisher);
+        updateRequestBody.setSheet(sheetName);
+        updateRequestBody.setPayload(payload);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(updateRequestBody);
+        ResultActions resultActions = TestAPIHelpers.performPostRequestWithBasicAuthBody(mockMvc, request, username, password, requestBodyJson);
+        TestAPIHelpers.assertResponse(resultActions, expectedResponse);
+    }
+
+    public void testGetUpdatesForSubscriptionAPI(Response expectedResponse, String request, String username,
+                                                 String password, String requestedPublisher, String sheetName, String id) throws Exception {
+        GetUpdatesRequest getUpdatesRequestBody = new GetUpdatesRequest();
+        getUpdatesRequestBody.setPublisher(requestedPublisher);
+        getUpdatesRequestBody.setSheet(sheetName);
+        getUpdatesRequestBody.setId(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(getUpdatesRequestBody);
+        ResultActions resultActions = TestAPIHelpers.performPostRequestWithBasicAuthBody(mockMvc, request, username, password, requestBodyJson);
+        TestAPIHelpers.assertResponse(resultActions, expectedResponse);
+    }
+
+    public void testGetUpdatesForPublishedAPI(Response expectedResponse, String request, String username,
+                                              String password, String requestedPublisher, String sheetName, String id) throws Exception {
+        GetUpdatesRequest getUpdatesRequestBody = new GetUpdatesRequest();
+        getUpdatesRequestBody.setPublisher(requestedPublisher);
+        getUpdatesRequestBody.setSheet(sheetName);
+        getUpdatesRequestBody.setId(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(getUpdatesRequestBody);
+        ResultActions resultActions = TestAPIHelpers.performPostRequestWithBasicAuthBody(mockMvc, request, username, password, requestBodyJson);
+        TestAPIHelpers.assertResponse(resultActions, expectedResponse);
+    }
 
     /**
      * Test any API, expecting the server to return an unauthorized response.
@@ -343,22 +457,135 @@ public class TestAPIs {
     }
 
     private void mockGetUpdatesService() {
-        BDDMockito.given(getUpdatesService.getUpdates(ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(), String.valueOf(ArgumentMatchers.anyInt()),
-                argThat(argument -> argument == GetUpdatesService.UpdateType.SUBSCRIPTION ||
-                        argument == GetUpdatesService.UpdateType.PUBLISHED)))
+        // Mock for SUBSCRIPTION updates
+        BDDMockito.given(getUpdatesService.getUpdates(
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        argThat(argument -> argument == GetUpdatesService.UpdateType.SUBSCRIPTION)))
                 .willAnswer(invocation -> {
-            String requestPublisher = invocation.getArgument(0);
-            String requestSheet = invocation.getArgument(1);
-            int id = invocation.getArgument(2);
-            GetUpdatesService.UpdateType updateType = invocation.getArgument(3);
-            return null;
-        });
+                    String requestPublisher = invocation.getArgument(0);
+                    String requestSheet = invocation.getArgument(1);
+                    String id = invocation.getArgument(2);
+                    GetUpdatesService.UpdateType updateType = invocation.getArgument(3);
+
+                    Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                            requestPublisher, requestSheet);
+                    if (validationResponse.containsKey(null)) {
+                        return validationResponse.get(null);
+                    }
+
+                    Response idValidationResponse = ValidationUtils.validateId(id);
+                    if (!idValidationResponse.isSuccess()) {
+                        return idValidationResponse;
+                    }
+                    int idInt = Integer.parseInt(id);
+
+                    Sheet userSheet = validationResponse.keySet().iterator().next();
+                    String payload = userSheet.getUpdatesForSubscriptionAfterGivenID(idInt);
+                    Value returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
+                    List<Value> returnValues = new ArrayList<>();
+                    returnValues.add(returnValue);
+
+                    Response returnResponse = new Response(true, null);
+                    returnResponse.setValues(returnValues);
+                    return returnResponse;
+                });
+
+        // Mock for PUBLISHED updates
+        BDDMockito.given(getUpdatesService.getUpdates(
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        argThat(argument -> argument == GetUpdatesService.UpdateType.PUBLISHED)))
+                .willAnswer(invocation -> {
+                    String requestPublisher = invocation.getArgument(0);
+                    String requestSheet = invocation.getArgument(1);
+                    String id = invocation.getArgument(2);
+                    GetUpdatesService.UpdateType updateType = invocation.getArgument(3);
+
+                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                    String username = auth.getName();
+                    if (!requestPublisher.equals(username)) {
+                        return new Response(false, "Unauthorized: sender is not owner of sheet");
+                    }
+
+                    Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                            requestPublisher, requestSheet);
+                    if (validationResponse.containsKey(null)) {
+                        return validationResponse.get(null);
+                    }
+
+                    Response idValidationResponse = ValidationUtils.validateId(id);
+                    if (!idValidationResponse.isSuccess()) {
+                        return idValidationResponse;
+                    }
+                    int idInt = Integer.parseInt(id);
+
+                    Sheet userSheet = validationResponse.keySet().iterator().next();
+                    String payload = userSheet.getUpdatesForPublishedAfterGivenID(idInt);
+                    Value returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
+                    List<Value> returnValues = new ArrayList<>();
+                    returnValues.add(returnValue);
+
+                    Response returnResponse = new Response(true, null);
+                    returnResponse.setValues(returnValues);
+                    return returnResponse;
+                });
     }
+
+
     private void mockUpdatePublishedService() {
+        BDDMockito.given(updatePublishedService.updatePublished(
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString()))
+                .willAnswer(invocation -> {
+                    String requestPublisher = invocation.getArgument(0);
+                    String requestSheet = invocation.getArgument(1);
+                    String requestPayload = invocation.getArgument(2);
 
+                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                    String username = auth.getName();
+                    if (!requestPublisher.equals(username)) {
+                        return new Response(false, "Unauthorized: sender is not owner of sheet");
+                    }
+                    Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                            requestPublisher, requestSheet);
+                    if (validationResponse.containsKey(null)) {
+                        return validationResponse.get(null);
+                    }
+                    Response payloadValidationResponse = ValidationUtils.validatePayload(requestPayload);
+                    if (!payloadValidationResponse.isSuccess()) {
+                        return payloadValidationResponse;
+                    }
+                    Sheet userSheet = validationResponse.keySet().iterator().next();
+                    userSheet.addNewUpdateSubscription(requestPayload);
+                    return new Response(true, null);
+                });
     }
-    private void mockUpdateSubscriptionService() {
 
+    private void mockUpdateSubscriptionService() {
+        BDDMockito.given(updateSubscriptionService.updateSubscription(
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString(),
+                        ArgumentMatchers.anyString()))
+                .willAnswer(invocation -> {
+                    String requestPublisher = invocation.getArgument(0);
+                    String requestSheet = invocation.getArgument(1);
+                    String requestPayload = invocation.getArgument(2);
+
+                    Map<Sheet, Response> validationResponse = ValidationUtils.validatePublisherAndSheet(
+                            requestPublisher, requestSheet);
+                    if (validationResponse.containsKey(null)) {
+                        return validationResponse.get(null);
+                    }
+                    if (!ValidationUtils.validatePayload(requestPayload).isSuccess()) {
+                        return ValidationUtils.validatePayload(requestPayload);
+                    }
+                    Sheet userSheet = validationResponse.keySet().iterator().next();
+                    userSheet.addNewUpdatePublished(requestPayload);
+                    return new Response(true, null);
+                });
     }
 }

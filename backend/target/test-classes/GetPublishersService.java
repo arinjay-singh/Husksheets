@@ -15,6 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class GetPublishersService {
         Publishers publishers = Publishers.getInstance();
+
+        /**
+         * Get all publishers currently registered in the system.
+         *
+         * @return A response with all publishers
+         */
         public Response getPublishers() {
             ArrayList<String> allPublishers = new ArrayList<>(this.publishers.getPublisherMap().keySet());
             System.out.println("All publishers: " + allPublishers);
@@ -27,5 +33,4 @@ public class GetPublishersService {
             response.setValues(values);
             return response;
         }
-
 }
