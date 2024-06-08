@@ -1,4 +1,4 @@
-import axios from "axios";
+/*import axios from "axios";
 
 const axiosClient = axios.create();
 
@@ -11,3 +11,4 @@ export async function getRequest(URL: string) {
 
     return response.data
 }
+*/
