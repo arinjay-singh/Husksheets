@@ -12,11 +12,13 @@ import type { NextPage } from "next";
 import Spreadsheet from "../components/spreadsheet";
 import {ProtectedRoute} from "@/components/protected-route";
 import { useAuth } from "@/context/auth-context";
+import { useApi } from "./api/api";
 
 // home page component
 const Home: NextPage = () => {
   // get the logout function from the auth context
   const { logout } = useAuth();
+  const { register } = useApi();
 
   // render the home page
   return (
@@ -29,6 +31,12 @@ const Home: NextPage = () => {
               className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
             >
               Logout
+            </button>
+            <button
+              onClick={register}
+              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+            >
+              Register
             </button>
           </div>
           <h1 className="text-2xl font-bold mb-4 text-black text-center">
