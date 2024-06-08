@@ -3,9 +3,11 @@ package com.husksheets_api_server_scrumlords.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 /**
  * Value class
- * author: Kaan Tural and Parnika Jain
+ * author: Kaan Tural Parnika Jain Nicholas O'Sullivan
  */
 public class Value {
     @Getter
@@ -38,16 +40,13 @@ public class Value {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof Value)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
         Value value = (Value) obj;
-        return value.getPublisher().equals(this.getPublisher()) &&
-                value.getSheet().equals(this.getSheet()) &&
-                value.getId().equals(this.getId()) &&
-                value.getPayload().equals(this.getPayload());
+        if (!Objects.equals(publisher, value.publisher)) return false;
+        if (!Objects.equals(sheet, value.sheet)) return false;
+        if (!Objects.equals(id, value.id)) return false;
+        return Objects.equals(payload, value.payload);
     }
 }

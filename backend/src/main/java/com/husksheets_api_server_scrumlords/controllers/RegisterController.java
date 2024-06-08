@@ -1,15 +1,11 @@
 package com.husksheets_api_server_scrumlords.controllers;
-import com.husksheets_api_server_scrumlords.helpers.RegisterUserService;
-import com.husksheets_api_server_scrumlords.models.Publishers;
+import com.husksheets_api_server_scrumlords.services.GetPublishersService;
+import com.husksheets_api_server_scrumlords.services.RegisterUserService;
 import com.husksheets_api_server_scrumlords.models.Response;
-import com.husksheets_api_server_scrumlords.models.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 /*
@@ -19,6 +15,8 @@ author: nicholas o'sullivan and Kaan Tural
 @RestController
 public class RegisterController {
     private final RegisterUserService registerUserService; //inject service into controller.
+    private final GetPublishersService getPublishersService;
+
 
     /**
      * Constructor for a RegisterController.
@@ -26,8 +24,9 @@ public class RegisterController {
      * @param registerUserService the current instance of RegisterUserServices which has helper methods
      *                           for the controller.
      */
-    public RegisterController(RegisterUserService registerUserService) {
+    public RegisterController(RegisterUserService registerUserService, GetPublishersService getPublishersService) {
         this.registerUserService = registerUserService;
+        this.getPublishersService = getPublishersService;
     }
 
     /**
@@ -51,16 +50,6 @@ public class RegisterController {
      */
     @GetMapping("api/v1/getPublishers")
     public Response getPublishers() {
-        Publishers publishers = Publishers.getInstance();
-        ArrayList<String> allPublishers = new ArrayList<>(publishers.getPublisherMap().keySet());
-        System.out.println("All publishers: " + allPublishers);
-
-        ArrayList<Value> values = (ArrayList<Value>) allPublishers.stream()
-                .map(publisher -> new Value(publisher, null, null, null))
-                .collect(Collectors.toList());
-
-        Response response = new Response(true, null);
-        response.setValues(values);
-        return response;
+        return getPublishersService.getPublishers();
     }
 }

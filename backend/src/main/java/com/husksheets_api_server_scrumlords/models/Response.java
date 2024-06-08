@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Response class
- * author: Kaan Tural and Parnika Jain
+ * author: Kaan Tural Parnika Jain Nicholas O'Sullivan
  */
 public class Response {
     @Getter
@@ -59,15 +60,22 @@ public class Response {
     }
 
     /**
-     * Equals command to be able to test Responses making sure they are equivalent for our
+     * Equals method to be able to test Responses making sure they are equivalent for our
      * implementation testing.
      *
-     * @param otherResponse The response to be compared to: thisResponse.equals(otherResponse)
+     * @param obj The object to be compared to: thisResponse.equals(otherResponse)
      * @return Boolean of if the Responses are similar or not
      */
-    public boolean equals(Response otherResponse) {
-        return (this.success == otherResponse.success) &&
-                (this.message.equals(otherResponse.message)) &&
-                (this.values.equals(otherResponse.values));
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Response otherResponse = (Response) obj;
+        return success == otherResponse.success &&
+                (Objects.equals(message, otherResponse.message)) &&
+                (Objects.equals(values, otherResponse.values)) &&
+                otherResponse.time != null;
     }
+
+
 }

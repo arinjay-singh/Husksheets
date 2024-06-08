@@ -1,25 +1,172 @@
+#team5 authorization: Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+#Mike authorization: Authorization: Basic TWlrZToxMjM0NXBhc3N3b3Jk
+
+### unauthorized register, return error
 GET localhost:8080/api/v1/register
 
-### GET request to example server
+### Register team5
 GET localhost:8080/api/v1/register
 Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
 
 
-###
-
-
+### GetPublishers w/ team5 registered
 GET localhost:8080/api/v1/getPublishers
 Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
-
 ###
+
+### Register Mike
+GET localhost:8080/api/v1/register
+Authorization: Basic TWlrZToxMjM0NXBhc3N3b3Jk
+###
+
+### GetPublishers w/ team5 & mike register
+GET localhost:8080/api/v1/getPublishers
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+###
+
 
 POST localhost:8080/api/v1/createSheet
 Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
 {
     "publisher": "Team5",
-    "sheetName": "Sheet1"
+    "sheet": "Sheet1"
 }
 
 ###
 
+### ERROR: team5 createSheet w/ non-existent publisher
 POST localhost:8080/api/v1/createSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team4",
+    "sheet": "Sheet1"
+}
+###
+
+### ERROR: team5 createSheet w/ wrong publisher
+POST localhost:8080/api/v1/createSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Mike",
+    "sheet": "Sheet1"
+}
+###
+
+### ERROR: team5 Duplicate createSheet w/ Correct Publisher team5
+POST localhost:8080/api/v1/createSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1"
+}
+###
+
+### team5 second createSheet w/ Correct Publisher team5
+POST localhost:8080/api/v1/createSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet2"
+}
+###
+
+#### GET SHEETS ####
+
+### team5 getSheets from Team5, should return sheet1 & sheet2
+POST localhost:8080/api/v1/getSheets
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5"
+}
+###
+
+### team5 getSheets from Mike, should return no sheets but proper response
+POST localhost:8080/api/v1/getSheets
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Mike"
+}
+###
+
+### ERROR team5 getSheets from non-existent user
+POST localhost:8080/api/v1/getSheets
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Jason"
+}
+###
+
+#### DELETE SHEETS ####
+
+### team5 deleteSheet w/ Correct Publisher Team5
+POST localhost:8080/api/v1/deleteSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1"
+}
+###
+
+### ERROR: team5 deleteSheet w/ Correct Publisher Team5 but non-existent sheet
+POST localhost:8080/api/v1/deleteSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team5",
+    "sheet": "Sheet1"
+}
+###
+
+### ERROR: team5 deleteSheet w/ incorrect publisher
+POST localhost:8080/api/v1/deleteSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Mike",
+    "sheet": "Sheet1"
+}
+###
+
+### ERROR: team5 deleteSheet w/ non-existent Publisher
+POST localhost:8080/api/v1/deleteSheet
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+Content-Type: application/json
+
+{
+    "publisher": "Team10",
+    "sheet": "Sheet1"
+}
+###
+
+#### updatePublished ####
+
+POST localhost:8080/api/v1/updatePublished
+Authorization: Basic dGVhbTU6NXBhc3N3b3Jk
+
+Content-Type: application/json
+
+{
+    "publisher": "Team10",
+    "sheet": "Sheet1"
+    "payload": "
+}
