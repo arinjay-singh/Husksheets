@@ -1,7 +1,7 @@
 package com.husksheets_api_server_scrumlords.models;
 
 import lombok.Getter;
-
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +11,14 @@ import java.util.Map;
  * Publisher Class
  * author: Kaan Tural and Parnika Jain, Nicholas O'Sullivan
  */
+@Entity
 public class Publisher {
     @Getter
+    @Id
     private final String name;
+
     @Getter
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL) //one to many relationship publisher->sheets
     private List<Sheet> sheets;
 
     /**

@@ -3,6 +3,8 @@ package com.husksheets_api_server_scrumlords.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,10 @@ import java.util.List;
  * Sheet Class
  * author: Nicholas O'Sullivan Kaan Tural
  */
+@Entity
 public class Sheet {
+    @Id
+    private String id;
     @Getter
     @Setter
     private String sheetName;
@@ -36,6 +41,7 @@ public class Sheet {
         }
         this.sheetName = name;
         this.publisherName = publisherName;
+        this.id = publisherName + "/" + name;
         this.updatesForSubscription = new ArrayList<>();
         this.updatesForPublished = new ArrayList<>();
         System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
