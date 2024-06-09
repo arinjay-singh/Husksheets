@@ -1,6 +1,5 @@
 package com.husksheets_api_server_scrumlords.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Http basic authentication config + user/pass loader
@@ -33,7 +31,9 @@ public class SpringSecurityConfig {
      * PasswordEncoder bean to encode passwords for security.
      */
     @Bean
-    public PasswordEncoder encoder() { return new BCryptPasswordEncoder();}
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     /**
      * InMemoryUserDetailsManager bean to store user details in memory.
@@ -64,17 +64,17 @@ public class SpringSecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-    return httpSecurity
-        .csrf(AbstractHttpConfigurer::disable)  //disable front-end cross site request forgery.
-        .authorizeHttpRequests(auth -> auth
-            //.requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
-                //any authenticated user can register
-            //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
-            .anyRequest().authenticated()
-        )
-        .httpBasic(Customizer.withDefaults())
-        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
-        .build();
+        return httpSecurity
+                .cors(Customizer.withDefaults())  // Enable CORS with default settings
+                .csrf(AbstractHttpConfigurer::disable)  // Disable front-end cross site request forgery
+                .authorizeHttpRequests(auth -> auth
+                        //.requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
+                        // Any authenticated user can register
+                        //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
+                .build();
     }
 }
-
