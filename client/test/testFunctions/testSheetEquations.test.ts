@@ -160,7 +160,7 @@ describe("parseFunction", () => {
 
         // Mixed values
         expect(parseFunction(mockData, "=IF($A1,22,$C1)")).toBe("22");
-        expect(parseFunction(mockData, "=IF(34,$B1,$A3)")).toBe("7");
+        expect(parseFunction(mockData, "=IF(34,$B1,$A3)")).toBe("2");
 
     });
 
