@@ -83,18 +83,22 @@ const validValues = (values: string[]): boolean => {
 };
 
 export const parseFunction = (data: string[][], formula: string): string | null => {
-  // check if the formula contains nested functions
-  const nestedFunction = /([a-zA-Z]{2,6})\(([^)]+)\)/;
-  const nestedMatch = formula.match(nestedFunction);
-  if (nestedMatch) {
-    const innerFunction = nestedMatch[0];
-    const innerResult = parseFunction(data, innerFunction);
-    if (innerResult === null) {
-      return null;
-    }
-    formula = formula.replace(innerFunction, innerResult);
-    return parseFunction(data, `=${formula}`);
-  }
+  // // check if the formula contains nested functions
+  // const nestedFunction = /([a-zA-Z]{2,6})\(([^)]+)\)/;
+  // const nestedMatch = formula.match(nestedFunction);
+  // if (nestedMatch) {
+  //   const innerFunction = nestedMatch[nestedMatch.length - 1];
+  //   const openParentheses = innerFunction.match(/\(/g);
+  //   const count = openParentheses ? openParentheses.length : 0;
+  //   const adjustedInnerFunction =  innerFunction + ")".repeat(count);
+  //   console.log(adjustedInnerFunction);
+  //   const innerResult = parseFunction(data, adjustedInnerFunction);
+  //   if (innerResult === null) {
+  //     return null;
+  //   }
+  //   formula = formula.replace(innerFunction, innerResult);
+  //   return parseFunction(data, `=${formula}`);
+  // }
 
   // remove all spaces from the formula
   formula = formula.replace(/\s/g, "");
