@@ -1,11 +1,14 @@
 package com.husksheets_api_server_scrumlords.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -16,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,14 +28,6 @@ import java.util.List;
  */
 @Configuration
 public class SpringSecurityConfig {
-
-    /**
-     * CustomAuthenticationEntryPoint bean to handle unauthorized requests to the server.
-     */
-    @Bean
-    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
-    }
 
     /**
      * PasswordEncoder bean to encode passwords for security.
@@ -46,17 +42,33 @@ public class SpringSecurityConfig {
      */
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails Team5User = User.builder()
-                .username("Team5")
-                .password(encoder().encode("5password"))
-                //.roles("")
-                .build();
-        UserDetails MikeUser = User.builder()
-                .username("Mike")
-                .password(encoder().encode("12345password"))
-                //.roles("")
-                .build();
+        UserDetails Team5User = new CustomUserDetails(
+                "Team5",
+                encoder().encode("5password"),
+                Collections.emptyList()
+        );
+        UserDetails MikeUser = new CustomUserDetails(
+                "Mike",
+                encoder().encode("12345password"),
+                Collections.emptyList()
+        );
         return new InMemoryUserDetailsManager(Team5User, MikeUser);
+    }
+
+    /**
+     * AuthenticationProvider bean to authenticate users with case-sensitive usernames.
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        return new CaseSensitiveAuthenticationProvider(userDetailsService(), encoder());
+    }
+
+    /**
+     * CustomAuthenticationEntryPoint bean to handle unauthorized requests to the server.
+     */
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     /**
@@ -69,31 +81,31 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .cors(c->c.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)  //disable front-end cross site request forgery.
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers(new AntPathRequestMatcher("/api/v1/register/**")).authenticated()
-                        //any authenticated user can register
-                        //.requestMatchers("/api/v1/deleteSheet").hasRole("publisher") <- example
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint()))
+                .authenticationProvider(authenticationProvider())
                 .build();
     }
 
+    /**
+     * CorsConfigurationSource bean to configure CORS settings.
+     *
+     * @return CorsConfigurationSource configured with our CORS settings
+     */
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        // configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
 
