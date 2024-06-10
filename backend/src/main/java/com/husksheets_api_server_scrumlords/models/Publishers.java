@@ -1,13 +1,17 @@
 package com.husksheets_api_server_scrumlords.models;
 import lombok.Getter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Publishers class constructor
  * @author nicholas o'sullivan
  */
-public class Publishers {
+public class Publishers implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Getter
     private HashMap<String, Publisher> publisherMap; //map username -> Publisher Class
     private Publishers() {

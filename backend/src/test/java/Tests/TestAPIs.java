@@ -5,6 +5,7 @@ import Tests.utils.TestAPIHelpers;
 import com.husksheets_api_server_scrumlords.controllers.UpdateController;
 import com.husksheets_api_server_scrumlords.models.*;
 import com.husksheets_api_server_scrumlords.requests.*;
+import com.husksheets_api_server_scrumlords.serialize.SerializationUtil;
 import com.husksheets_api_server_scrumlords.services.*;
 import com.husksheets_api_server_scrumlords.config.SpringSecurityConfig;
 import com.husksheets_api_server_scrumlords.controllers.RegisterController;
@@ -86,6 +87,7 @@ public class TestAPIs {
      */
     @BeforeEach
     public void setUp() {
+        SerializationUtil.clearSerializedData("publishers.ser");
         MockitoAnnotations.openMocks(this);
         Publishers.getInstance().getPublisherMap().clear();
         mockRegisterService();

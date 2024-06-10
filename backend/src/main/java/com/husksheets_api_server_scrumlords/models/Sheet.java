@@ -3,6 +3,8 @@ package com.husksheets_api_server_scrumlords.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Sheet Class constructor
  * @author Nicholas O'Sullivan, Kaan Tural
  */
-public class Sheet {
+public class Sheet implements Serializable {
     @Getter
     @Setter
     private String sheetName;
@@ -20,6 +22,9 @@ public class Sheet {
     private List<String> updatesForSubscription;
     @Getter
     private List<String> updatesForPublished;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
 
     /**
      * Constructor for a single instance of a sheet.

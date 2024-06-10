@@ -11,7 +11,8 @@ import com.husksheets_api_server_scrumlords.services.ValidationUtils;
 
 /**
  * Get updates service class
- * Author: Nicholas O'Sullivan
+ * @author main implementation: Nicholas O'Sullivan
+ * @author null/empty validator: Kaan Tural
  */
 @Service
 public class GetUpdatesService {

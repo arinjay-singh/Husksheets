@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Delete Sheet service
- *
- * Authors: Kaan Tural, Nicholas O'Sullivan
+ * @author Main functionality: Kaan Tural
+ * @author Refactor into an injected service: Nicholas O'Sullivan
  */
 @Service
 public class DeleteSheetService {
