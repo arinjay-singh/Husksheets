@@ -8,7 +8,7 @@ import java.util.Objects;
 
 /**
  * CustomUserDetails class: Custom implementation of UserDetails for Spring Security.
- * author: Kaan Tural
+ * @author Kaan Tural
  */
 public class CustomUserDetails implements UserDetails {
     private final String username;

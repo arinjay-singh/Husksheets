@@ -10,7 +10,8 @@ import java.util.Map;
 
 /**
  * Update Subscription Service class
- * Author: Nicholas O'Sullivan, Parnika Jain
+ * @author main implementation: Nicholas O'Sullivan
+ * @author null/empty validator: Kaan Tural
  */
 @Service
 public class UpdateSubscriptionService {

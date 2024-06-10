@@ -7,12 +7,12 @@
 import { useApi } from './apiService';
 import {useAuth} from "@/context/auth-context";
 
-//requires publishername
+//requires publishername (user decides publishername in UI)
 export const useGetSheets = () => {
     const { post } = useApi();
 
     const getSheets = async (publisher: string) => {
-        return await post('/getSheets', { publisher: "Team5" });
+        return await post('/getSheets', { publisher });
     };
     return { getSheets };
 };
@@ -24,7 +24,7 @@ export const useCreateSheet = () => {
     const publisher = auth?.username
 
     const createSheet = async (sheet: string) => {
-        return await post('/createSheet', {publisher, sheet: "testingNoMore" });
+        return await post('/createSheet', { publisher, sheet });
     };
     return { createSheet };
 };
@@ -37,7 +37,7 @@ export const useDeleteSheet = () => {
     const publisher = auth?.username
 
     const deleteSheet = async (sheet: string) => {
-        return await post('/deleteSheet', {publisher, sheet: "testingNoMore" });
+        return await post('/deleteSheet', {publisher, sheet});
     };
     return { deleteSheet };
 };

@@ -6,8 +6,8 @@ import lombok.Setter;
 import java.util.Objects;
 
 /**
- * Value class
- * author: Kaan Tural Parnika Jain Nicholas O'Sullivan
+ * Value class constructor
+ * @author Kaan Tural, Parnika Jain
  */
 public class Value {
     @Getter
@@ -34,6 +34,12 @@ public class Value {
         this.payload = payload;
     }
 
+    /**
+     * override equals for testing
+     * @author Kaan Tural
+     * @param obj compared to :
+     * @return bool
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

@@ -24,6 +24,11 @@ import {useState} from "react";
 const Home: NextPage = () => {
   // get the logout function from the auth context
   const { logout } = useAuth();
+
+  /**
+   * API service calls.
+   * @author: Nicholas O'Sullivan
+   */
   const { register } = useRegister();
   const { getPublishers } = useGetPublishers();
   const { getSheets } = useGetSheets();
@@ -85,11 +90,12 @@ const Home: NextPage = () => {
             </button>
 
 
-            <div>
+            <div className="flex flex-col my-2">
               <input
                   type="text"
                   value={publisher}
                   onChange={(e) => setPublisher(e.target.value)}
+                  className = "border-2 border-black text-black mr-2 rounded-xl p-2"
               />
               <button
                   onClick={handleGetSheets}
@@ -97,30 +103,30 @@ const Home: NextPage = () => {
                 Get Sheets
               </button>
             </div>
+
             <div>
               <input
                   type="text"
                   value={sheet}
                   onChange={(e) => setSheet(e.target.value)}
+                  className="border-2 border-black text-black mr-2 rounded-xl p-2"
               />
-              <button
-                  onClick={handleCreateSheet}
-                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                Create Sheet
-              </button>
+
+              <div className="flex flex-col my-2">
+                <button
+                    onClick={handleCreateSheet}
+                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                  Create Sheet
+                </button>
+                <button
+                    onClick={handleDeleteSheet}
+                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                  Delete Sheet
+                </button>
+              </div>
+
             </div>
-             <div>
-              <input
-                  type="text"
-                  value={sheet}
-                  onChange={(e) => setSheet(e.target.value)}
-              />
-              <button
-                  onClick={handleDeleteSheet}
-                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                Delete Sheet
-              </button>
-            </div>
+
 
           </div>
           <h1 className="text-2xl font-bold mb-4 text-black text-center">

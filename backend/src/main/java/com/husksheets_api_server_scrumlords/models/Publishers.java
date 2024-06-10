@@ -4,8 +4,8 @@ import lombok.Getter;
 import java.util.HashMap;
 
 /**
- * Publishers class
- * author: nicholas o'sullivan
+ * Publishers class constructor
+ * @author nicholas o'sullivan
  */
 public class Publishers {
     @Getter
@@ -16,6 +16,7 @@ public class Publishers {
 
     /**
      * Singleton pattern for publishers
+     * @author Nicholas O'Sullivan
      */
     private static final class InstanceHolder {
         private static final Publishers instance = new Publishers();
@@ -26,7 +27,7 @@ public class Publishers {
 
     /**
      * Adds a new publisher with the given username to the publisherMap if they don't already exist.
-     *
+     * @author Nicholas O'Sullivan
      * @param username The username of the new publisher.
      */
     public void addNewPublisher(String username) {
@@ -38,7 +39,7 @@ public class Publishers {
 
     /**
      * Gets the instance of the publisher associated with the given username.
-     *
+     * @author Nicholas O'Sullivan
      * @param username name of the publisher to get.
      * @return Publisher instance associated with the given username.
      */

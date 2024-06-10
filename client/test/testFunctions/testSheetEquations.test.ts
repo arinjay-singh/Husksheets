@@ -46,14 +46,6 @@ describe("parseEquation", () => {
         // Invalid 'a'
         expect(parseEquation("=2<>a")).toBe("ERROR");
     });
-
-    // test("should return null if the equation is shorter than 4 characters", () => {
-    //     // 3 characters
-    //     expect(parseEquation("=a3")).toBeNull();
-
-    //     // 3 characters
-    //     expect(parseEquation("=22")).toBeNull();
-    // });
 });
 
 describe("parseFunction", () => {

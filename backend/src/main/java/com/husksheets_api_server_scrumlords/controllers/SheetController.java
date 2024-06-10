@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * SheetController Class
- * author: Kaan Tural, Nicholas O'Sullivan
+ * SheetController Class constructor
+ * @author Kaan Tural
  */
 @RestController
 public class SheetController {
@@ -35,7 +35,7 @@ public class SheetController {
 
     /**
      * API route to create a sheet and assign it to the current publisher.
-     *
+     * @author: Kaan Tural
      * @param request the body of the API call.
      * @return A response with the publisher and sheet being assigned to that publisher
      */
@@ -50,7 +50,7 @@ public class SheetController {
 
     /**
      * API route to delete a sheet with the given name from the current publisher.
-     *
+     * @author Kaan tural
      * @param request the body of the API call, containing the sheet to delete and publisher.
      * @return A response to show the action has been done successfully or information if not.
      */
@@ -65,7 +65,7 @@ public class SheetController {
 
     /**
      * API route to get all the sheets associated with publisher given in the call's body.
-     *
+     * @author Kaan Tural
      * @param request the body of the API call, containing the publisher to get sheets from.
      * @return A response with the sheets associated with the publisher or an error message.
      */
@@ -82,7 +82,7 @@ public class SheetController {
     /**
      * Helper function to check if the current request is a Publisher that exists and
      * is the one currently making the request.
-     *
+     * @author Kaan tural
      * @param request the API call's body of the request.
      * @return the current instance of the publisher being dealt with or null if invalid.
      */
@@ -99,7 +99,7 @@ public class SheetController {
 
     /**
      * Helper function to return a response for different types of errors in the request.
-     *
+     * @author Kaan Tural
      * @param request the API call's body of the request.
      * @param sheet the sheet name to check if it exists.
      * @return a response with the error message.

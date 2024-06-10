@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Publisher Class
- * author: Kaan Tural and Parnika Jain, Nicholas O'Sullivan
+ * Publisher Class constructor
+ * author: Kaan Tural
  */
 public class Publisher {
     @Getter
@@ -32,7 +32,7 @@ public class Publisher {
 
     /**
      * Adds a sheet to this specific Publisher's list of sheets.
-     *
+     * @author Kaan tural
      * @param sheet The sheet to be assigned to this Publisher.
      */
     public void addSheet(Sheet sheet) {
@@ -41,7 +41,7 @@ public class Publisher {
 
     /**
      * Deletes a specific sheet matching the naming convention of the passed in sheet.
-     *
+     * @author Kaan Tural
      * @param sheetName Name of the sheet to delete.
      * @return boolean of if the deletion was successfully done, false if there was no matching sheet.
      */
@@ -51,7 +51,7 @@ public class Publisher {
 
     /**
      * Checks if a specific sheet exists in this Publisher's list of sheets.
-     *
+     * @author Nicholas O'Sullivan
      * @param sheetName Name of the sheet to check.
      * @return boolean true if the sheet exists, false otherwise.
      */

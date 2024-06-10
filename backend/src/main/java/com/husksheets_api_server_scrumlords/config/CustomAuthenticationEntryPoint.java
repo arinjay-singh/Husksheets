@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  * CustomAuthenticationEntryPoint class: Handle unauthorized requests to the server.
- * author: Nicholas O'Sullivan
+ * @author Nicholas O'Sullivan
  */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {

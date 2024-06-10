@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Response class
- * author: Kaan Tural Parnika Jain Nicholas O'Sullivan
+ * Response class constructor
+ * @author Kaan Tural, Parnika Jain
  */
 public class Response {
     @Getter
@@ -37,7 +37,7 @@ public class Response {
 
     /**
      * toString implementation to display response in proper formatting to user.
-     *
+     * @author Kaan Tural
      * @return Server Response formatted.
      */
     @Override
@@ -55,7 +55,7 @@ public class Response {
     /**
      * Equals method to be able to test Responses making sure they are equivalent for our
      * implementation testing.
-     *
+     * @author Nicholas O'Sullivan
      * @param obj The object to be compared to: thisResponse.equals(otherResponse)
      * @return Boolean of if the Responses are similar or not
      */
