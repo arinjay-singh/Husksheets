@@ -8,16 +8,43 @@ import { useApi } from './apiService';
 import {useAuth} from "@/context/auth-context";
 
 
-//requires publisher (we get from ss context), sheet (we get from ss context), payload (get from updates localfile)
-export const useUpdatePublished = () => {
+/**
+ * @args publisher (owner of sheet open), sheet (sheet open), payload (get from updates localfile),
+ * isOwner (if owner use updatePublished, if subscriber use updateSubscription).
+ */
+export const useUpdate = () => {
     const { post } = useApi();
-    const { auth } = useAuth();
-    const publisher = auth?.username
 
-    const updatePublished = async (sheet: string) => {
-        return await post('/updatePublished', {publisher, sheet});
+    const updatePublished = async (publisher: string, sheet: string, payload: string, isOwner: boolean) => {
+        if (isOwner) {
+            return await post('/updatePublished', {publisher, sheet, payload});
+        } else {
+            return await post('/updateSubscription', {publisher, sheet, payload});
+        }
     };
     return { updatePublished };
+};
+
+/**
+ * @args publisher (owner of sheet open), sheet (sheet open), id (retrieve updates from version 'id' to latest)
+ */
+export const useGetUpdatesForSubscription = () => {
+    const { post } = useApi();
+    const getUpdatesForSubscription = async (publisher: string, sheet: string, id: number) => {
+        return await post('/getUpdatesForSubscription', {publisher, sheet, id});
+    };
+    return { getUpdatesForSubscription };
+};
+
+/**
+ * @args publisher (owner of sheet open), sheet (sheet open), id (retrieve updates from version 'id' to latest)
+ */
+export const useGetUpdatesForPublished = () => {
+    const { post } = useApi();
+    const getUpdatesForPublished = async (publisher: string, sheet: string, id: number) => {
+        return await post('/getUpdatesForPublished', {publisher, sheet, id});
+    };
+    return { getUpdatesForPublished };
 };
 
 
