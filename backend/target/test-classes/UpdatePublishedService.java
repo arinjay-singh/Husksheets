@@ -7,7 +7,8 @@ import java.util.Map;
 
 /**
  * Update Published Service class
- * Authors: Nicholas O'Sullivan, Parnika Jain
+ * @author main implementation: Nicholas O'Sullivan
+ * @author null/empty validator: Kaan Tural
  */
 @Service
 public class UpdatePublishedService {

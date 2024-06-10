@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * Create Sheet Service class:
- * author : Kaan Tural, Nicholas O'Sullivan
+ * Create Sheet Service class
+ * @author Main functionality: Kaan Tural
+ * @author Refactor into an injected service: Nicholas O'Sullivan
  */
 @Service
 public class CreateSheetService {
@@ -27,7 +28,6 @@ public class CreateSheetService {
         if (sheetExists) {
             return new Response(false, String.format("Sheet already exists: %s", requestSheet));
         }
-
         Sheet sheet = new Sheet(requestSheet, publisher.getName());
         publisher.addSheet(sheet);
 

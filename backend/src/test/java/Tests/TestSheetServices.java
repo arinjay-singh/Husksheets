@@ -5,6 +5,7 @@ import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
+import com.husksheets_api_server_scrumlords.serialize.SerializationUtil;
 import com.husksheets_api_server_scrumlords.services.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +26,13 @@ public class TestSheetServices {
     private GetSheetsService getSheetsService;
     @BeforeEach
     public void setUp() {
-            registerUserService = new RegisterUserService();
-            getPublishersService = new GetPublishersService();
-            createSheetService = new CreateSheetService();
-            deleteSheetService = new DeleteSheetService();
-            getSheetsService = new GetSheetsService();
-            Publishers.getInstance().getPublisherMap().clear();
+        SerializationUtil.clearSerializedData("publishers.ser");
+        registerUserService = new RegisterUserService();
+        getPublishersService = new GetPublishersService();
+        createSheetService = new CreateSheetService();
+        deleteSheetService = new DeleteSheetService();
+        getSheetsService = new GetSheetsService();
+        Publishers.getInstance().getPublisherMap().clear();
     }
 
     @Test

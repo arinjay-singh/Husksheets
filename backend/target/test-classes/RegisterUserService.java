@@ -10,14 +10,15 @@ import org.springframework.stereotype.Service;
 
 /**
  * RegisterUserService class: Register a user as a publisher
- * author: Nicholas O'Sullivan
  */
+
 @Service
 public class RegisterUserService  {
     private final Publishers publishers = Publishers.getInstance();
 
     /**
      * Register a user as a publisher.
+     * @author Nicholas O'Sullivan
      *
      * @param username the username of the user to register
      * @return the successful Response object
@@ -31,7 +32,7 @@ public class RegisterUserService  {
 
     /**
      * Add a new publisher to the list of publishers.
-     *
+     * @author Kaan Tural
      * @param username the username of the new publisher
      */
     public void addToPublishers(String username) {
