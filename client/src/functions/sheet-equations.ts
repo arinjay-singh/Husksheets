@@ -30,14 +30,14 @@ export const parseEquation = (equation: string) => {
     const nonstandardFormat = /^(\d+|\w+)(=|<>|&|\|)(\d+|\w+)$/;
     const nonstandardMatch = expression.match(nonstandardFormat);
     if (!nonstandardMatch) {
-      return 'ERROR';
+      return "ERROR";
     }
     // check that both elements are of the same type
-    const [, e1, operator, e2] =nonstandardMatch;
+    const [, e1, operator, e2] = nonstandardMatch;
     const isNumber = (str: string) => /^\d+$/.test(str);
     const isString = (str: string) => /^[a-zA-Z]+$/.test(str);
     if (!(isNumber(e1) && isNumber(e2)) && !(isString(e1) && isString(e2))) {
-      return 'ERROR';
+      return "ERROR";
     }
     // evaluate the non-standard operation
     switch (operator) {
@@ -82,21 +82,34 @@ const validValues = (values: string[]): boolean => {
   );
 };
 
-// function to parse and evaluate a function
-export const parseFunction = (data: string[][], formula: string) => {
+export const parseFunction = (data: string[][], formula: string): string | null => {
+  // check if the formula contains nested functions
+  const nestedFunction = /([a-zA-Z]{2,6})\(([^)]+)\)/;
+  const nestedMatch = formula.match(nestedFunction);
+  if (nestedMatch) {
+    const innerFunction = nestedMatch[0];
+    const innerResult = parseFunction(data, innerFunction);
+    if (innerResult === null) {
+      return null;
+    }
+    formula = formula.replace(innerFunction, innerResult);
+    return parseFunction(data, `=${formula}`);
+  }
+
   // remove all spaces from the formula
   formula = formula.replace(/\s/g, "");
   // ensure the operation is in the correct format
   if (!formula.startsWith("=") || formula.length < 4) {
     return null;
   }
+  // remove the equals sign from the formula
+  formula = formula.slice(1);
   // comma-separated function format
-  const commaSeparatedFunction = /=([a-zA-Z]{2,6})\(([^)]+)\)/;
+  const commaSeparatedFunction = /([a-zA-Z]{2,6})\(([^)]+)\)/;
   const commaSeparatedMatch = formula.match(commaSeparatedFunction);
   // range function format
-  const rangeFunction = /=([A-Za-z]{3,6})\(\$[A-Za-z]+\d+:\$[A-Za-z]+\d+\)/;
+  const rangeFunction = /([A-Za-z]{3,6})\(\$[A-Za-z]+\d+:\$[A-Za-z]+\d+\)/;
   const rangeMatch = formula.match(rangeFunction);
-
   // check if the formula is a function
   if (commaSeparatedMatch) {
     // check if a range function
@@ -107,7 +120,6 @@ export const parseFunction = (data: string[][], formula: string) => {
         return null;
       }
       const [startCell, endCell] = cellRange.split(":");
-      console.log(startCell, endCell);
       const cellValues = retrieveCellRangeValues(startCell, endCell, data);
       return computeFunction(rangeMatch[1], cellValues);
     }
@@ -123,6 +135,7 @@ export const parseFunction = (data: string[][], formula: string) => {
     );
     return computeFunction(commaSeparatedMatch[1], parsedFunctionValues);
   }
+
   // return null if the formula is not a function
   return null;
 };
