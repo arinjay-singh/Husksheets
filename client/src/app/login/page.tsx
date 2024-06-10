@@ -27,7 +27,6 @@ const LoginPage = () => {
     // Perform authentication logic here
     login();
   };
-
   // render the login form
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
