@@ -27,7 +27,7 @@ export const api = axios.create({
 
 
 /**
- * @author Nicholas O'Sullivan
+ * @author Nicholas O'Sullivan, Parnika Jaan
  * Hook to use API methods
  */
 //set expected in/out

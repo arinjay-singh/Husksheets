@@ -15,6 +15,8 @@ import { useAuth } from "@/context/auth-context";
 import { useRegister } from "./api/api/register";
 import { useGetPublishers } from "./api/api/register";
 import { useGetSheets } from "./api/api/sheets";
+import { useCreateSheet } from "./api/api/sheets";
+
 import {useState} from "react";
 
 // home page component
@@ -25,11 +27,21 @@ const Home: NextPage = () => {
   const { getPublishers } = useGetPublishers();
   const { getSheets } = useGetSheets();
   const [publisher, setPublisher] = useState('');
-
   const handleGetSheets = async () => {
     try {
       // Call getSheets with the publisher state
       await getSheets(publisher);
+    } catch (error) {
+      console.error('Error retrieving sheets:', error);
+      alert('Error retrieving sheets. See console for details.');
+    }
+  };
+  const { createSheet } = useCreateSheet();
+  const [sheet, setSheet] = useState('');
+  const handleCreateSheet = async () => {
+    try {
+      // Call getSheets with the publisher state
+      await createSheet(sheet);
     } catch (error) {
       console.error('Error retrieving sheets:', error);
       alert('Error retrieving sheets. See console for details.');
@@ -72,6 +84,18 @@ const Home: NextPage = () => {
                   onClick={handleGetSheets}
                   className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
                 Get Sheets
+              </button>
+            </div>
+            <div>
+              <input
+                  type="text"
+                  value={sheet}
+                  onChange={(e) => setSheet(e.target.value)}
+              />
+              <button
+                  onClick={handleCreateSheet}
+                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                Create Sheet
               </button>
             </div>
 
