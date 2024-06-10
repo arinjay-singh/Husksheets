@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * CaseSensitiveAuthenticationProvider class: Authenticate users with case-sensitive usernames.
- * author: Kaan Tural
+ * @author Kaan Tural
  */
 public class CaseSensitiveAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;

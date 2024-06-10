@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Sheet Class
- * author: Nicholas O'Sullivan Kaan Tural
+ * Sheet Class constructor
+ * @author Nicholas O'Sullivan, Kaan Tural
  */
 public class Sheet {
     @Getter
@@ -41,6 +41,11 @@ public class Sheet {
         System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
     }
 
+    /**
+     * Update Subscription/Published methods
+     * @author Nicholas O'Sullivan
+     * @param update
+     */
     public void addNewUpdateSubscription(String update) {
         updatesForSubscription.add(update);
     }
@@ -48,10 +53,21 @@ public class Sheet {
         updatesForPublished.add(update);
     }
 
+    /**
+     * Get latest update ID
+     * @author Nicholas O'Sullivan
+     * @return int (latest ID)
+     */
     public int getLatestUpdateID() {
         return updatesForSubscription.size();
     }
 
+    /**
+     * Get updates "parent" methods
+     * @author: Nicholas O'Sullivan
+     * @param id
+     * @return String (Updates)
+     */
     public String getUpdatesForSubscriptionAfterGivenID(int id) {
         return getUpdates(id, updatesForSubscription);
     }
@@ -60,6 +76,13 @@ public class Sheet {
         return getUpdates(id, updatesForPublished);
     }
 
+    /**
+     * Get updates helper method.
+     * @author Nicholas O'Sullivan
+     * @param id starting ID
+     * @param updates series of updates to iterate through (either subscribed or published).
+     * @return String (updates)
+     */
     private String getUpdates(int id, List<String> updates) {
         StringBuilder concatenatedUpdates = new StringBuilder();
         if (id < updates.size()) {

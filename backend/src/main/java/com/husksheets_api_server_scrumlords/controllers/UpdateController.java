@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-/*
-Update sheet APIs
-author: Nicholas O'Sullivan, Kaan Tural
+/**
+Update sheet APIs constructor
+@author Nicholas O'Sullivan
  */
 @RestController
 public class UpdateController {
@@ -34,7 +34,7 @@ public class UpdateController {
 
     /**
      * Update the payload of a sheet directly from the publisher themselves in a request.
-     *
+     * @author: Nicholas O'Sullivan
      * @param request the body of the request given to the server.
      * @return Success response or failure with a message why it failed.
      */
@@ -50,6 +50,7 @@ public class UpdateController {
     /**s
      * @param request the body of the request given to the server.
      * @return returns a response with the payload set to all updates called by Publisher
+     * @author Nicholas O'Sullivan
      */
     @PostMapping("api/v1/getUpdatesForSubscription")
     public Response getUpdatesForSubscription(@RequestBody GetUpdatesRequest request) {
@@ -72,6 +73,7 @@ public class UpdateController {
     }
 
     /**
+     * @author Nicholas O'Sullivan
      * @param request the body of the request given to the server.
      * @return returns a response with the payload set to all updates called by Publisher
      */
@@ -85,7 +87,7 @@ public class UpdateController {
 
     /**
      * Check if the publisher is the owner of the sheet.
-     *
+     * @author Kaan Tural
      * @param request the request to check.
      * @return a response if the publisher is not the owner of the sheet, null if they are.
      */

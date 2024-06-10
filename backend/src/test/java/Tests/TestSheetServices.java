@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Test create, get, and delete sheets services
- * author: Nicholas O'Sullivan
+ * @author Nicholas O'Sullivan
  */
 public class TestSheetServices {
     private RegisterUserService registerUserService;

@@ -13,11 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * TestAPIHelpers class: Consolidate reusable test methods
- * author: Nicholas O'Sullivan and Kaan Tural
+ *
  */
 public class TestAPIHelpers {
 
-    // do a GET request w/ Basic Auth
+
+    /**
+     * do a GET request w/ basic auth
+     * @author Nicholas O'Sullivan
+      */
     public static ResultActions performGetRequestWithBasicAuth(MockMvc mockMvc,
                                                                String url,
                                                                String username,
@@ -28,7 +32,10 @@ public class TestAPIHelpers {
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth));
     }
 
-    // do a POST request w/ Basic Auth
+    /**
+     *     do a POST request w/ Basic Auth
+     *     @author Nicholas O'Sullivan
+      */
     public static ResultActions performPostRequestWithBasicAuthBody(MockMvc mockMvc,
                                                                 String url,
                                                                 String username,
@@ -42,19 +49,28 @@ public class TestAPIHelpers {
             .content(requestBodyJson));
     }
 
-    // do a GET request w/o Basic Auth
+    /**
+     * do a GET request w/o Basic Auth
+     * @author Nicholas O'Sullivan
+      */
     public static ResultActions performGetRequestNoAuth(MockMvc mockMvc, String url) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.get(url));
     }
 
-
+    /**
+     * Assert expected response vs actual.
+     */
     public static void assertResponse(ResultActions resultActions, Response expectedOutput) throws Exception {
+        /**
+         * @author Nicholas O'Sullivan
+         */
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(expectedOutput.isSuccess()))
                 .andExpect(jsonPath("$.message").value(expectedOutput.getMessage()))
                 .andExpect(jsonPath("$.time").exists());
-
-        // Assert each element in the values list
+        /**
+         * @author Kaan Tural
+         */
         if (expectedOutput.getValues() != null) {
             for (int i = 0; i < expectedOutput.getValues().size(); i++) {
                 Value expectedValue = expectedOutput.getValues().get(i);
@@ -68,6 +84,10 @@ public class TestAPIHelpers {
         }
     }
 
+    /**
+     * Convert an obj to JSON
+     * @author Kaan Tural.
+     */
     private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

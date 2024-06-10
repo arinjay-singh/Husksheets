@@ -5,7 +5,7 @@ import com.husksheets_api_server_scrumlords.models.Value;
 
 /**
  * Static Vars class: Store static variables to avoid refactoring issues
- * author: Nicholas O'Sullivan and Kaan Tural
+ * @author Nicholas O'Sullivan and Kaan Tural
  */
 public final class Constants {
     public static final String team5username = "Team5";

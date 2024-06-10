@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Http basic authentication config + user/pass loader
- * author: nicholas o'sullivan, Parnika Jain
+ *
  */
 @Configuration
 public class SpringSecurityConfig {
@@ -37,7 +37,7 @@ public class SpringSecurityConfig {
 
     /**
      * InMemoryUserDetailsManager bean to store user details in memory.
-     *
+     * @author Nicholas O'Sullivan
      * @return InMemoryUserDetailsManager created with our created users
      */
     @Bean
@@ -57,6 +57,7 @@ public class SpringSecurityConfig {
 
     /**
      * AuthenticationProvider bean to authenticate users with case-sensitive usernames.
+     * @author Kaan tural
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -65,6 +66,7 @@ public class SpringSecurityConfig {
 
     /**
      * CustomAuthenticationEntryPoint bean to handle unauthorized requests to the server.
+     * @author Nicholas O'Sullivan
      */
     @Bean
     public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
@@ -77,6 +79,7 @@ public class SpringSecurityConfig {
      * @param httpSecurity the HttpSecurity object to configure
      * @return SecurityFilterChain configured with our security settings
      * @throws Exception if an exception occurs
+     * @author Nicholas O'Sullivan
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -94,7 +97,7 @@ public class SpringSecurityConfig {
 
     /**
      * CorsConfigurationSource bean to configure CORS settings.
-     *
+     * @author Parnika Jaan
      * @return CorsConfigurationSource configured with our CORS settings
      */
     public CorsConfigurationSource corsConfigurationSource() {

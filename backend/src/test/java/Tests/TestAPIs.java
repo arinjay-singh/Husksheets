@@ -40,9 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Test API layer functionality
- * author: Nicholas O'Sullivan and Kaan Tural
  */
 
+/**
+ * Class Setup + Mockito + Bean/Context setup:
+ * @author Nicholas O'Sullivan
+ */
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers = {RegisterController.class, SheetController.class, UpdateController.class})
 @ContextConfiguration(classes = {RegisterController.class,
@@ -97,7 +100,8 @@ public class TestAPIs {
 
     /**
      * Test the Register API and Get Publishers API for none to multiple publishers with and without authentication.
-     *
+     * @author register/getpublishers, 'sheets' tests: Nicholas O'Sullivan
+     * @author all 'Updates' tests, refactoring: Kaan Turral
      * @throws Exception if an expected value - isUnauthorized - value doesn't match the expected typing.
      */
     @Test
@@ -258,7 +262,7 @@ public class TestAPIs {
 
     /**
      * Helper method to register a publisher and update the publishers list.
-     *
+     * @author Kaan Tural
      * @param publishers            List of values which contain the publishers.
      * @param getPublishersResponse Response object to update the publishers list.
      * @param username              Username of the publisher to register.
@@ -281,7 +285,7 @@ public class TestAPIs {
 
     /**
      * Test the Register API, expecting the server to return a success response.
-     *
+     * @author Nicholas O'Sullivan
      * @param request  the request to register a publisher.
      * @param username the username of the publisher to register.
      * @param password the password of the publisher to register.
@@ -296,7 +300,7 @@ public class TestAPIs {
     /**
      * Test the Get Publishers API, expecting the server to return a success response with the given publishers in
      * expectedResponse after an API call.
-     *
+     * @author Nicholas O'Sullivan
      * @param expectedResponse the expected response from the server with added publishers.
      * @param request          the request to get publishers.
      * @param username         the username of the user making the request.
@@ -308,6 +312,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Create Sheet API
+     * @author Nicholas O'Sullivan
+     */
     public void testCreateSheetAPI(Response expectedResponse, String request, String username,
                                    String password, String requestedPublisher, String sheetName) throws Exception {
         CreateSheetRequest createSheetRequestBody = new CreateSheetRequest();
@@ -319,6 +327,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Get Sheets API
+     * @author Nicholas O'Sullivan
+     */
     public void testGetSheetsAPI(Response expectedResponse, String request, String username,
                                  String password, String requestedPublisher) throws Exception {
         GetSheetsRequest getSheetsRequestBody = new GetSheetsRequest();
@@ -329,6 +341,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Delete Sheet API
+     * @author Nicholas O'Sullivan
+     */
     public void testDeleteSheetAPI(Response expectedResponse, String request, String username,
                                    String password, String requestedPublisher, String sheetName) throws Exception {
         DeleteSheetRequest deleteSheetRequestBody = new DeleteSheetRequest();
@@ -340,6 +356,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Update Published API
+     * @author Kaan Tural
+     */
     public void testUpdatePublishedAPI(Response expectedResponse, String request, String username,
                                        String password, String requestedPublisher, String sheetName, String payload) throws Exception {
         UpdateRequest updateRequestBody = new UpdateRequest();
@@ -352,6 +372,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Update Subscription API
+     * @author Kaan Tural
+     */
     public void testUpdateSubscriptionAPI(Response expectedResponse, String request, String username,
                                           String password, String requestedPublisher, String sheetName, String payload) throws Exception {
         UpdateRequest updateRequestBody = new UpdateRequest();
@@ -364,6 +388,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Get Updates For Subscription API
+     * @author Kaan Tural
+     */
     public void testGetUpdatesForSubscriptionAPI(Response expectedResponse, String request, String username,
                                                  String password, String requestedPublisher, String sheetName, String id) throws Exception {
         GetUpdatesRequest getUpdatesRequestBody = new GetUpdatesRequest();
@@ -376,6 +404,10 @@ public class TestAPIs {
         TestAPIHelpers.assertResponse(resultActions, expectedResponse);
     }
 
+    /**
+     * Test the Get Updates for Published API
+     * @author Kaan Tural
+     */
     public void testGetUpdatesForPublishedAPI(Response expectedResponse, String request, String username,
                                               String password, String requestedPublisher, String sheetName, String id) throws Exception {
         GetUpdatesRequest getUpdatesRequestBody = new GetUpdatesRequest();
@@ -390,7 +422,7 @@ public class TestAPIs {
 
     /**
      * Test any API, expecting the server to return an unauthorized response.
-     *
+     * @author Nicholas O'Sullivan
      * @param url the route
      * @throws Exception if an expected value - unauthorizedResponse - value doesn't match the expected typing.
      */
@@ -404,6 +436,7 @@ public class TestAPIs {
     /**
      * Mock the Register Service to simulate the registration of a publisher, allows values to be added to the
      * shared data store.
+     * @author Nicholas O'Sullivan, Kaan Tural
      */
     private void mockRegisterService() {
         BDDMockito.given(registerUserService.register(ArgumentMatchers.anyString())).willAnswer(invocation -> {
@@ -414,6 +447,10 @@ public class TestAPIs {
         });
     }
 
+    /**
+     * Mock the create Sheet service.
+     * @author Nicholas O'Sullivan
+     */
     private void mockCreateSheetService() {
         BDDMockito.given(createSheetService.createSheet(any(Publisher.class), ArgumentMatchers.anyString())).willAnswer(invocation -> {
             Publisher requestedPublisher = invocation.getArgument(0);
@@ -432,6 +469,10 @@ public class TestAPIs {
 
     }
 
+    /**
+     * Mock the delete Sheet service.
+     * @author Nicholas O'Sullivan
+     */
     private void mockDeleteSheetService() {
         BDDMockito.given(deleteSheetService.deleteSheet(any(Publisher.class), ArgumentMatchers.anyString())).willAnswer(invocation -> {
             Publisher requestedPublisher = invocation.getArgument(0);
@@ -445,6 +486,10 @@ public class TestAPIs {
     }
 
 
+    /**
+     * Mock the get sheets service.
+     * @author Nicholas O'Sullivan
+     */
     private void mockGetSheetsService() {
         BDDMockito.given(getSheetsService.getSheets(any(Publisher.class))).willAnswer(invocation -> {
             Publisher publisher = invocation.getArgument(0);
@@ -456,6 +501,10 @@ public class TestAPIs {
         });
     }
 
+   /**
+     * Mock the get updates service.
+     * @author Kaan Tural
+     */
     private void mockGetUpdatesService() {
         // Mock for SUBSCRIPTION updates
         BDDMockito.given(getUpdatesService.getUpdates(
@@ -535,6 +584,10 @@ public class TestAPIs {
     }
 
 
+   /**
+     * Mock the update published service.
+     * @author Kaan Tural
+     */
     private void mockUpdatePublishedService() {
         BDDMockito.given(updatePublishedService.updatePublished(
                         ArgumentMatchers.anyString(),
@@ -565,6 +618,10 @@ public class TestAPIs {
                 });
     }
 
+    /**
+     * Mock the update subscription service.
+     * @author Kaan Tural
+     */
     private void mockUpdateSubscriptionService() {
         BDDMockito.given(updateSubscriptionService.updateSubscription(
                         ArgumentMatchers.anyString(),

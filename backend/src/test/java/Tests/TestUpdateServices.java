@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test all 'Update' Services
+ * @author Kaan Tural
+ */
 public class TestUpdateServices {
     private UpdateSubscriptionService updateSubscriptionService;
     private UpdatePublishedService updatePublishedService;
