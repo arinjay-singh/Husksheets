@@ -13,11 +13,11 @@ export const base64Convert = async (username: string | undefined, password: stri
 
 export const useApi = () => {
     const { auth } = useAuth();
-    const token = base64Convert(auth?.username, auth?.password);
     //console.log(auth);
     const register = async () => {
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        await api.get('/register', {auth});
+        const token = await base64Convert(auth?.username, auth?.password);
+        const headers = token ? { Authorization: `Basic ${token}` } : {};
+        await api.get('/register', { headers });
     }
     return {register};
 };
