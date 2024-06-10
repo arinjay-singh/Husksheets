@@ -25,7 +25,7 @@ const LoginPage = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Perform authentication logic here
-    login();
+    login({username, password});
   };
   // render the login form
   return (

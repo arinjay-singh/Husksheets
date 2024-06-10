@@ -14,7 +14,7 @@ import { Loading } from "./loading";
 // protected route component
 export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   // get the authentication state and loading state from the auth context
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, auth, loading } = useAuth();
 
   // get the router and pathname from the next navigation
   const router = useRouter();
@@ -23,10 +23,11 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   // redirect to the login page if the user is not authenticated,
   // the current path is not the login page, and the loading state is false
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/login" && !loading) {
+    if (!isAuthenticated() && pathname !== "/login" && !loading) {
       router.push("/login");
+      console.log("protected route going to login");
     }
-  }, [isAuthenticated, pathname, router, loading]);
+  }, [auth, pathname, router, loading]);
 
   // render the loading component if the loading state is true
   if (loading) {
