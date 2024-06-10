@@ -82,6 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log("auth context going to login");
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthenticated = () => !!auth?.username && !!auth?.password;
 
   // context value to provide the authentication state and functions
@@ -94,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       login,
       logout
     }),
-    [auth, login, logout, loading]
+    [auth, login, logout, loading, isAuthenticated]
   );
 
   // render the authentication context provider based on the context value

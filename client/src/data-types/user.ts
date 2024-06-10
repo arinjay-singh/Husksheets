@@ -7,8 +7,8 @@
  */
 
 enum Role {
-    Admin,
-    Collaborator
+    Publisher,
+    Subscriber,
 }
 
 class User {

@@ -12,7 +12,7 @@ import type { NextPage } from "next";
 import Spreadsheet from "../components/spreadsheet";
 import {ProtectedRoute} from "@/components/protected-route";
 import { useAuth } from "@/context/auth-context";
-import { useApi } from "./api/api/api";
+import { useApi } from "./api/api/register";
 
 // home page component
 const Home: NextPage = () => {
