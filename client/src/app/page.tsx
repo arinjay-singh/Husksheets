@@ -12,13 +12,13 @@ import type { NextPage } from "next";
 import Spreadsheet from "../components/spreadsheet";
 import {ProtectedRoute} from "@/components/protected-route";
 import { useAuth } from "@/context/auth-context";
-import { useApi } from "./api/api/register";
+import { useRegister } from "./api/api/register";
 
 // home page component
 const Home: NextPage = () => {
   // get the logout function from the auth context
   const { logout } = useAuth();
-  const { register } = useApi();
+  const { register } = useRegister();
 
   // render the home page
   return (
