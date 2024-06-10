@@ -1,25 +1,27 @@
-import { useAuth } from "@/context/auth-context";
-import axios from "axios";
+/**
+ * @file sheets.ts
+ * @brief services to call 'Sheets' APIs
+ * @author Nicholas O'Sullivan
+ */
 
-export const api = axios.create({ // added export
-    baseURL: 'http://localhost:8080/api/v1' // Replace with your backend URL
-});
+import { useApi } from './apiService';
 
-export const base64Convert = async (username: string | undefined, password: string | undefined): Promise<string> => {
-    const credentials = `${username}:${password}`;
-    const encodedCredentials = btoa(credentials);
-    return `${encodedCredentials}`;
+//requires publishername
+export const useGetSheets = () => {
+    const { post } = useApi();
+
+    const getSheets = async (publisher: string) => {
+        return await post('/getSheets', { publisher });
+    };
+    return { getSheets };
 };
 
-export const useApi = () => {
-    const { auth } = useAuth();
-    //console.log(auth);
-    const register = async () => {
-        const token = await base64Convert(auth?.username, auth?.password);
-        const headers = token ? { Authorization: `Basic ${token}` } : {};
-        await api.get('/register', { headers });
-    }
-    return {register};
+//requires publishername, sheetname
+export const useCreateSheet = () => {
+    const { post } = useApi();
+
+    const getSheets = async (publisher: string) => {
+        return await post('/getSheets', { publisher });
+    };
+    return { getSheets };
 };
-
-

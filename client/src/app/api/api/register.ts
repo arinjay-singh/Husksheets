@@ -1,3 +1,7 @@
+/**
+ * @author Nicholas O'Sullivan, Parnika Jain
+ * Register, getPublishers api call
+ */
 
 import { useApi } from './apiService';
 
@@ -9,4 +13,14 @@ export const useRegister = () => {
     };
 
     return { register };
+};
+
+export const useGetPublishers = () => {
+    const { get } = useApi();
+
+    const getPublishers = async () => {
+        return await get('/getPublishers');
+    };
+
+    return { getPublishers };
 };

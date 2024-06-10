@@ -13,12 +13,28 @@ import Spreadsheet from "../components/spreadsheet";
 import {ProtectedRoute} from "@/components/protected-route";
 import { useAuth } from "@/context/auth-context";
 import { useRegister } from "./api/api/register";
+import { useGetPublishers } from "./api/api/register";
+import { useGetSheets } from "./api/api/sheets";
+import {useState} from "react";
 
 // home page component
 const Home: NextPage = () => {
   // get the logout function from the auth context
   const { logout } = useAuth();
   const { register } = useRegister();
+  const { getPublishers } = useGetPublishers();
+  const { getSheets } = useGetSheets();
+  const [publisher, setPublisher] = useState('');
+
+  const handleGetSheets = async () => {
+    try {
+      // Call getSheets with the publisher state
+      await getSheets(publisher);
+    } catch (error) {
+      console.error('Error retrieving sheets:', error);
+      alert('Error retrieving sheets. See console for details.');
+    }
+  };
 
   // render the home page
   return (
@@ -27,22 +43,43 @@ const Home: NextPage = () => {
         <div className="bg-white p-6 rounded shadow-lg">
           <div className="flex flex-row-reverse">
             <button
-              onClick={logout}
-              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+                onClick={logout}
+                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
             >
               Logout
             </button>
             <button
-              onClick={register}
-              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+                onClick={register}
+                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
             >
               Register
             </button>
+            <button
+                onClick={getPublishers}
+                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+            >
+              getPublishers
+            </button>
+
+
+            <div>
+              <input
+                  type="text"
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+              />
+              <button
+                  onClick={handleGetSheets}
+                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                Get Sheets
+              </button>
+            </div>
+
           </div>
           <h1 className="text-2xl font-bold mb-4 text-black text-center">
             HuskSheets
           </h1>
-          <Spreadsheet />
+          <Spreadsheet/>
         </div>
       </div>
     </ProtectedRoute>

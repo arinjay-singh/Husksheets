@@ -2,13 +2,16 @@
  * @file apiService.ts
  * @brief Abstracted api service calls
  * @date 06-10-2024
- * @author Nicholas O'Sullivan
  */
 
 import axios from 'axios';
 import { useAuth } from '@/context/auth-context';
 
-// Function to convert credentials to Base64
+
+/**
+@author Parnika Jain
+ Function to convert credentials to Base64
+ */
 export const base64Convert = async (username: string | undefined, password: string | undefined): Promise<string> => {
     const credentials = `${username}:${password}`;
     const encodedCredentials = btoa(credentials);
@@ -20,15 +23,19 @@ export const api = axios.create({
     baseURL: 'http://localhost:8080/api/v1' // Replace with your backend URL
 });
 
+
+
+
+/**
+ * @author Nicholas O'Sullivan
+ * Hook to use API methods
+ */
 //set expected in/out
 interface ApiMethods {
     get: (url: string) => Promise<any>;
     post: (url: string, data: any) => Promise<any>;
-    put: (url: string, data: any) => Promise<any>;
-    del: (url: string) => Promise<any>;
 }
 
-// Hook to use API methods
 export const useApi = (): ApiMethods => {
     const { auth } = useAuth();
 
@@ -47,15 +54,6 @@ export const useApi = (): ApiMethods => {
         return api.post(url, data, { headers });
     };
 
-    const put = async (url: string, data: any) => {
-        const headers = await getAuthHeaders();
-        return api.put(url, data, { headers });
-    };
 
-    const del = async (url: string) => {
-        const headers = await getAuthHeaders();
-        return api.delete(url, { headers });
-    };
-
-    return { get, post, put, del };
+    return { get, post };
 };
