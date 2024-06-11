@@ -1,3 +1,4 @@
+# @author Kaan Tural
 FROM openjdk:21-jdk
 
 WORKDIR /app
