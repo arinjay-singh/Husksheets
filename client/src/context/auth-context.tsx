@@ -24,7 +24,8 @@ import { useRouter } from "next/navigation";
 // loading state to prevent being kicked out of the app while checking authentication
 interface AuthContextType {
   auth: AuthData | undefined;
-  login: (a: AuthData) => void;
+  setAuthData: (a: AuthData) => void;
+  login: () => void;
   logout: () => void;
   isAuthenticated: () => boolean;
   loading: boolean;
@@ -64,14 +65,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // login function to authenticate user and redirect to the home page
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const login = (data: AuthData) => {
-    if (!!data) {
-      setAuth(data);
+  const login = () => {
       setLoading(false);
-      localStorage.setItem(localStorageKey, JSON.stringify(data));
       router.push("/");
       console.log("logged in");
-    }
   };
 
   // logout function to deauthenticate user and redirect to the login page
@@ -86,11 +83,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isAuthenticated = () => !!auth?.username && !!auth?.password;
 
+  // set auth data
+  const setAuthData = (data: AuthData) => {
+    setAuth(data);
+    localStorage.setItem(localStorageKey, JSON.stringify(data));
+  }
+
   // context value to provide the authentication state and functions
   // dependencies: isAuthenticated, login, logout
   const contextValue = useMemo(
     () => ({
       auth,
+      setAuthData,
       loading,
       isAuthenticated,
       login,

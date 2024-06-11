@@ -27,6 +27,7 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
       router.push("/login");
       console.log("protected route going to login");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, pathname, router, loading]);
 
   // render the loading component if the loading state is true

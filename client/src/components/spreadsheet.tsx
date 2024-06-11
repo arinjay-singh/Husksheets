@@ -12,6 +12,8 @@ import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/shee
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
+import { useRouter } from "next/navigation";
+import { set } from "lodash";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -51,6 +53,7 @@ const Spreadsheet: React.FC = () => {
     publishers.then((publisherData: string[]) => {
       localStorage.setItem("publishers",JSON.stringify(publisherData));
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
