@@ -63,10 +63,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         SpringSecurityConfig.class})
 
 public class TestAPIs {
-
     @Autowired
     public MockMvc mockMvc;
-
     @MockBean
     private RegisterUserService registerUserService;
     @MockBean
@@ -103,7 +101,7 @@ public class TestAPIs {
     /**
      * Test the Register API and Get Publishers API for none to multiple publishers with and without authentication.
      * @author register/getpublishers, 'sheets' tests: Nicholas O'Sullivan
-     * @author all 'Updates' tests, refactoring: Kaan Turral
+     * @author all 'Updates' tests, refactoring: Kaan Tural
      * @throws Exception if an expected value - isUnauthorized - value doesn't match the expected typing.
      */
     @Test
@@ -132,7 +130,6 @@ public class TestAPIs {
         // Get publishers with 2 publishers registered
         testGetPublishersAPI(successResponse, Constants.getPublishersRequest,
                 Constants.team5username, Constants.team5password);
-
 
         // Team5 createSheet: sheet1
         testCreateSheetAPI(Constants.createSheetResponseSuccess, Constants.createSheetRequest,
@@ -181,14 +178,6 @@ public class TestAPIs {
         testUpdatePublishedAPI(Constants.updatePublishedResponseSuccess, Constants.updatePublishedRequest,
                 Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "");
 
-//        // Attempting updatePublished with null values
-//        testUpdatePublishedAPI(Constants.updatePublishedPayloadNullError, Constants.updatePublishedRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
-
-//        // Attempting updatePublished with id instead of payload
-//        testUpdatePublishedAPI(Constants.updatePublishedPayloadNullError, Constants.updatePublishedRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", null);
-
         // Team5 tries to use getUpdatesForPublished on Mike's sheet
         testUpdatePublishedAPI(Constants.publisherNotOwnerError, Constants.updatePublishedRequest,
                 Constants.team5username, Constants.team5password, Constants.mikeUsername, "MikeSheet", "bbb");
@@ -205,14 +194,6 @@ public class TestAPIs {
         testUpdateSubscriptionAPI(Constants.updateSubscriptionResponseSuccess, Constants.updateSubscriptionRequest,
                 Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "");
 
-//        // Attempting updateSubscription with null values
-//        testUpdateSubscriptionAPI(Constants.updateSubscriptionPayloadNullError, Constants.updateSubscriptionRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
-
-//        // Attempting updateSubscription with id instead of payload
-//        testUpdateSubscriptionAPI(Constants.updateSubscriptionPayloadNullError, Constants.updateSubscriptionRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", null);
-
         // Mike successfully uses updateSubscription to Team5's Sheet
         testUpdateSubscriptionAPI(Constants.updateSubscriptionResponseSuccess, Constants.updateSubscriptionRequest,
                 Constants.mikeUsername, Constants.mikePassword, Constants.team5username, "Sheet1", "$A1 51.0\n$B2 \"Bing Bong\"");
@@ -220,10 +201,6 @@ public class TestAPIs {
         // Successful getUpdatesForSubscription
         testGetUpdatesForSubscriptionAPI(Constants.getUpdatesForSubscriptionResponseSuccess, Constants.getUpdatesForSubscriptionRequest,
                 Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "0");
-
-//        // Attempting getUpdatesForSubscription with null values
-//        testGetUpdatesForSubscriptionAPI(Constants.getUpdatesForSubscriptionIdNullError, Constants.getUpdatesForSubscriptionRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
 
         // Successful getUpdatesForPublished
         testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedResponseSuccess, Constants.getUpdatesForPublishedRequest,
@@ -240,10 +217,6 @@ public class TestAPIs {
         // Attempting getUpdatesForPublished with a non-existent id
         testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedResponseSuccess, Constants.getUpdatesForPublishedRequest,
                 Constants.team5username, Constants.team5password, Constants.team5username, "Sheet1", "10");
-
-//        // Attempting getUpdatesForPublished with null values
-//        testGetUpdatesForPublishedAPI(Constants.getUpdatesForPublishedIdNullError, Constants.getUpdatesForPublishedRequest,
-//                Constants.team5username, Constants.team5password, Constants.team5username, null, null);
 
         //team5 deleteSheet w/ Correct publisher: Team5
         testDeleteSheetAPI(Constants.deleteSheetResponseSuccess, Constants.deleteSheetRequest,
