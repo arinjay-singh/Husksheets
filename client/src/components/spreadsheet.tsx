@@ -35,7 +35,6 @@ const Spreadsheet: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
 
   const { getPublishers } = useGetPublishers();
-  const router = useRouter();
 
   // load the data from local storage when the component mounts
   useEffect(() => {
@@ -53,10 +52,8 @@ const Spreadsheet: React.FC = () => {
     let publishers = getPublishers();
     publishers.then((publisherData: string[]) => {
       localStorage.setItem("publishers",JSON.stringify(publisherData));
-    }).catch((error: any) => {
-      router.push("/login");
-      // alert("You are not an authorized user.");
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

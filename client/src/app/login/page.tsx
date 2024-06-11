@@ -30,7 +30,6 @@ const LoginPage = () => {
     // Perform authentication logic here
     setAuthData({ username: username, password: password });
     let response = getPublishers();
-
     response.then(() => {
       setInvalidAuth(false);
       login();
