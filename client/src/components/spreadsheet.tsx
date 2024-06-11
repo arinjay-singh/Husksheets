@@ -121,26 +121,6 @@ const Spreadsheet: React.FC = () => {
         rIdx === rowIndex && cIdx === colIndex ? equationResult || functionResult || value : cell
       )
     );
-    // if (equationResult) {
-    //   displayData = data.map((row, rIdx) =>
-    //     row.map((cell, cIdx) =>
-    //       rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
-    //     )
-    //   );
-    // } else if (functionResult) {
-    //   displayData = data.map((row, rIdx) =>
-    //     row.map((cell, cIdx) =>
-    //       rIdx === rowIndex && cIdx === colIndex ? functionResult : cell
-    //     )
-    //   );
-    // } else {
-    //   displayData = data.map((row, rIdx) =>
-    //     row.map((cell, cIdx) =>
-    //       rIdx === rowIndex && cIdx === colIndex ? value : cell
-    //     )
-    //   );
-    // }
-
 
     // cascading updates for the results of equation data dependent on the current cell
     let current = displayData;
