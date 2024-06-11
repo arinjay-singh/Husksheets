@@ -14,6 +14,7 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { useRouter } from "next/navigation";
 import { set } from "lodash";
+import { saveArrayAsCSV } from "@/functions/save-csv";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -219,143 +220,146 @@ const Spreadsheet: React.FC = () => {
 
   // render the spreadsheet component
   return (
-    <div className="p-4 flex-col">
-       <div className="flex flex-col my-2">
-              <button
-                  onClick={handleGetSheets}
-                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                Get Sheets
-              </button>
-            </div>
+      <div className="p-4 flex-col">
+        <div className="flex flex-col my-2">
+          <button
+              onClick={handleGetSheets}
+              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+            Get Sheets
+          </button>
+        </div>
 
-            <div>
-              <input
-                  type="text"
-                  value={sheet}
-                  onChange={(e) => setSheet(e.target.value)}
-                  className="border-2 border-black text-black mr-2 rounded-xl p-2"
-              />
+        <div>
+          <input
+              type="text"
+              value={sheet}
+              onChange={(e) => setSheet(e.target.value)}
+              className="border-2 border-black text-black mr-2 rounded-xl p-2"
+          />
 
-              <div className="flex flex-col my-2">
-                <button
-                    onClick={handleCreateSheet}
-                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                  Create Sheet
-                </button>
-                <button
-                    onClick={handleDeleteSheet}
-                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                  Delete Sheet
-                </button>
-              </div>
+          <div className="flex flex-col my-2">
+            <button
+                onClick={handleCreateSheet}
+                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+              Create Sheet
+            </button>
+            <button
+                onClick={handleDeleteSheet}
+                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+              Delete Sheet
+            </button>
+          </div>
 
-            </div>
-      <div className="relative flex-grow flex-col">
-        <div className="flex flex-row">
-          <table className="table-auto border-collapse border border-gray-400 w-full">
-            <thead>
+        </div>
+        <div className="relative flex-grow flex-col">
+          <div className="flex flex-row">
+            <table className="table-auto border-collapse border border-gray-400 w-full">
+              <thead>
               <tr>
                 <th className="border border-gray-400 bg-slate-100"></th>
                 {data[0].map((_, colIndex) => (
-                  <th
-                    key={colIndex}
-                    className="border border-gray-400 text-black font-semibold bg-slate-100"
-                  >
-                    {String.fromCharCode(65 + colIndex)}
-                  </th>
+                    <th
+                        key={colIndex}
+                        className="border border-gray-400 text-black font-semibold bg-slate-100"
+                    >
+                      {String.fromCharCode(65 + colIndex)}
+                    </th>
                 ))}
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {data.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                  <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
-                    {rowIndex + 1}
-                  </td>
-                  {row.map((cell, colIndex) => (
-                    <td key={colIndex} className="border border-gray-400">
-                      <input
-                        type="text"
-                        value={cell}
-                        onChange={(e) =>
-                          handleInputChange(rowIndex, colIndex, e.target.value)
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            executeCell(
-                              rowIndex,
-                              colIndex,
-                              (e.target as HTMLInputElement).value
-                            );
-                          }
-                        }}
-                        className="w-full text-black p-2"
-                      />
+                  <tr key={rowIndex}>
+                    <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
+                      {rowIndex + 1}
                     </td>
-                  ))}
-                </tr>
+                    {row.map((cell, colIndex) => (
+                        <td key={colIndex} className="border border-gray-400">
+                          <input
+                              type="text"
+                              value={cell}
+                              onChange={(e) =>
+                                  handleInputChange(rowIndex, colIndex, e.target.value)
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  executeCell(
+                                      rowIndex,
+                                      colIndex,
+                                      (e.target as HTMLInputElement).value
+                                  );
+                                }
+                              }}
+                              className="w-full text-black p-2"
+                          />
+                        </td>
+                    ))}
+                  </tr>
               ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+            <button
+                onClick={addColumn}
+                className="bg-gray-300 text-black rounded-full p-3 flex items-center justify-center self-stretch ml-2 hover:shadow-md"
+            >
+              +
+            </button>
+          </div>
+          <div className=" w-full mt-2 flex flex-row">
+            <button
+                onClick={addRow}
+                className="w-full bg-gray-300 text-black rounded-full p-2 hover:shadow-md"
+            >
+              +
+            </button>
+            <div className="p-5"/>
+          </div>
+        </div>
+        <div className=" flex items-center pt-3">
           <button
-            onClick={addColumn}
-            className="bg-gray-300 text-black rounded-full p-3 flex items-center justify-center self-stretch ml-2 hover:shadow-md"
+              onClick={() => {
+                setData([
+                  ["", "", ""],
+                  ["", "", ""],
+                  ["", "", ""],
+                ]);
+                setRawData([
+                  ["", "", ""],
+                  ["", "", ""],
+                  ["", "", ""],
+                ]);
+              }}
+              className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
           >
-            +
+            Reset
+          </button>
+          <button
+              onClick={() => {
+                if (data.length > 1) {
+                  setData(data.slice(0, -1));
+                  setRawData(rawData.slice(0, -1));
+                }
+              }}
+              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+          >
+            Delete Row
+          </button>
+          <button
+              onClick={() => {
+                if (data[0].length > 1)
+                  setData(data.map((row) => row.slice(0, -1)));
+                setRawData(rawData.map((row) => row.slice(0, -1)));
+              }}
+              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+          >
+            Delete Column
           </button>
         </div>
-        <div className=" w-full mt-2 flex flex-row">
-          <button
-            onClick={addRow}
-            className="w-full bg-gray-300 text-black rounded-full p-2 hover:shadow-md"
-          >
-            +
-          </button>
-          <div className="p-5" />
-        </div>
-      </div>
-      <div className=" flex items-center pt-3">
-        <button
-          onClick={() => {
-            setData([
-              ["", "", ""],
-              ["", "", ""],
-              ["", "", ""],
-            ]);
-            setRawData([
-              ["", "", ""],
-              ["", "", ""],
-              ["", "", ""],
-            ]);
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
-        >
-          Reset
-        </button>
-        <button
-          onClick={() => {
-            if (data.length > 1) {
-              setData(data.slice(0, -1));
-              setRawData(rawData.slice(0, -1));
-            }
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-        >
-          Delete Row
-        </button>
-        <button
-          onClick={() => {
-            if (data[0].length > 1)
-              setData(data.map((row) => row.slice(0, -1)));
-            setRawData(rawData.map((row) => row.slice(0, -1)));
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-        >
-          Delete Column
+        <button className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+                onClick={() => saveArrayAsCSV(data)}>Download as CSV
         </button>
       </div>
-    </div>
   );
 };
 
