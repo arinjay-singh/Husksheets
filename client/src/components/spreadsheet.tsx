@@ -12,6 +12,8 @@ import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/shee
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
+import { useRouter } from "next/navigation";
+import { set } from "lodash";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -33,6 +35,7 @@ const Spreadsheet: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
 
   const { getPublishers } = useGetPublishers();
+  const router = useRouter();
 
   // load the data from local storage when the component mounts
   useEffect(() => {
@@ -50,6 +53,9 @@ const Spreadsheet: React.FC = () => {
     let publishers = getPublishers();
     publishers.then((publisherData: string[]) => {
       localStorage.setItem("publishers",JSON.stringify(publisherData));
+    }).catch((error: any) => {
+      router.push("/login");
+      // alert("You are not an authorized user.");
     });
   }, []);
 
