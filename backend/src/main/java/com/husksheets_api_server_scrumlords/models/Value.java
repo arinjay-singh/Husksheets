@@ -35,10 +35,11 @@ public class Value {
     }
 
     /**
-     * override equals for testing
+     * override equals for testing, to compare the values of the object
+     *
      * @author Kaan Tural
-     * @param obj compared to :
-     * @return bool
+     * @param obj the value to be compared to
+     * @return bool true if the objects are equal, false otherwise
      */
     @Override
     public boolean equals(Object obj) {

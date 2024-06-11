@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * Get Sheets Service class
- * {@code @Author:} Kaan Tural, Nicholas O'Sullivan
+ * @author Main functionality: Kaan Tural
+ * @author Refactor into an injected service: Nicholas O'Sullivan
  */
 @Service
 public class GetSheetsService {

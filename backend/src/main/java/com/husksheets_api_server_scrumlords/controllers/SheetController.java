@@ -35,7 +35,7 @@ public class SheetController {
 
     /**
      * API route to create a sheet and assign it to the current publisher.
-     * @author: Kaan Tural
+     * @author Kaan Tural
      * @param request the body of the API call.
      * @return A response with the publisher and sheet being assigned to that publisher
      */

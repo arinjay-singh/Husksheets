@@ -7,6 +7,7 @@ import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
+import com.husksheets_api_server_scrumlords.serialize.SerializationUtil;
 import com.husksheets_api_server_scrumlords.services.GetPublishersService;
 import com.husksheets_api_server_scrumlords.services.RegisterUserService;
 import org.junit.jupiter.api.Assertions;
@@ -18,13 +19,14 @@ import java.util.List;
 
 /**
  * Test register & get publishers service
- * @author: Nicholas O'Sullivan
+ * @author Nicholas O'Sullivan
  */
 public class TestRegisterGetPublishersService {
         private RegisterUserService registerUserService;
         private GetPublishersService getPublishersService;
         @BeforeEach
         public void setUp() {
+                SerializationUtil.clearSerializedData("publishers.ser");
                 registerUserService = new RegisterUserService();
                 getPublishersService = new GetPublishersService();
                 Publishers.getInstance().getPublisherMap().clear();
@@ -78,8 +80,4 @@ public class TestRegisterGetPublishersService {
                 actualResponse = getPublishersService.getPublishers();
                 Assertions.assertEquals(getPublishersResponseSuccess, actualResponse);
         }
-
-
-
-
 }

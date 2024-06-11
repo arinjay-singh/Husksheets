@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * HusksheetsApiServerScrumlordsApplication class: Main class for the Spring Boot application
- * @author: Kaan Tural
+ * @author Kaan Tural
  */
 @SpringBootApplication
 public class HusksheetsApiServerScrumlordsApplication {

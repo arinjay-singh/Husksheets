@@ -24,7 +24,6 @@ import java.util.List;
 
 /**
  * Http basic authentication config + user/pass loader
- *
  */
 @Configuration
 public class SpringSecurityConfig {

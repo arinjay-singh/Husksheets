@@ -10,13 +10,12 @@ import java.util.Map;
 
 /**
  * Validation Utils class
- * Authors: Kaan Tural, Nicholas O'Sullivan
  */
 public class ValidationUtils {
 
     /**
      * Helper method to validate the publisher and sheet, making sure both exist and are not null.
-     *
+     * @author: Kaan Tural, Parnika Jaan
      * @param requestPublisher The publisher to validate.
      * @param requestSheet The sheet to validate.
      * @return A map with the sheet and response of the validation to allow for easy access to both.
@@ -50,7 +49,7 @@ public class ValidationUtils {
 
     /**
      * Validates the payload to make sure it isn't null.
-     *
+     * @author: Kaan Tural
      * @param payload String of text to validate.
      * @return Response object with the result of the validation.
      */
@@ -63,7 +62,7 @@ public class ValidationUtils {
 
     /**
      * Validates the ID to make sure it isn't null.
-     *
+     * @author: Kaan Tural
      * @param id Integer to validate.
      * @return Response object with the result of the validation.
      */

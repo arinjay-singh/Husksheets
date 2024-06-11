@@ -4,6 +4,7 @@ import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Sheet;
+import com.husksheets_api_server_scrumlords.serialize.SerializationUtil;
 import com.husksheets_api_server_scrumlords.services.GetUpdatesService;
 import com.husksheets_api_server_scrumlords.services.UpdatePublishedService;
 import com.husksheets_api_server_scrumlords.services.UpdateSubscriptionService;
@@ -24,6 +25,7 @@ public class TestUpdateServices {
 
     @BeforeEach
     void setUp() {
+        SerializationUtil.clearSerializedData("publishers.ser");
         updateSubscriptionService = new UpdateSubscriptionService();
         updatePublishedService = new UpdatePublishedService();
         getUpdatesService = new GetUpdatesService();

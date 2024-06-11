@@ -5,7 +5,7 @@ import lombok.Setter;
 
 /**
  * CreateSheetRequest class: The format of a Request to create a sheet for a publisher with the given sheet name.
- * Author: Kaan Tural
+ * @author Kaan Tural
  */
 public class CreateSheetRequest extends AbstractPublisherRequest {
     @Getter
