@@ -4,7 +4,7 @@ import java.io.*;
 
 /**
  * SerializationUtil class: Serialize and deserialize objects.
- * Author: Kaan Tural
+ * @author Kaan Tural
  */
 public class SerializationUtil {
     /**
@@ -14,11 +14,9 @@ public class SerializationUtil {
      * @param filename the name of the file to serialize to.
      * @author Kaan Tural
      */
-    public static void serialize(Object object, String filename) {
+    public static void serialize(Object object, String filename) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(object);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -42,6 +40,7 @@ public class SerializationUtil {
      * Clear serialized data by deleting the file.
      *
      * @param filename the name of the file to clear the serialized data from.
+     * @author Kaan Tural
      */
     public static void clearSerializedData(String filename) {
         File file = new File(filename);

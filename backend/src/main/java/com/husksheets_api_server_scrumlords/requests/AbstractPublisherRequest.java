@@ -5,7 +5,7 @@ import lombok.Setter;
 
 /**
  * UpdatePublishedRequest abstract class: The general format of a Request to the server dealing with sheets.
- * Author: Kaan Tural
+ * @author Kaan Tural
  */
 public abstract class AbstractPublisherRequest {
     @Getter

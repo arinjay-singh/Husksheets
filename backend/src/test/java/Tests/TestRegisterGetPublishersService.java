@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Test register & get publishers service
- * @author: Nicholas O'Sullivan
+ * @author Nicholas O'Sullivan
  */
 public class TestRegisterGetPublishersService {
         private RegisterUserService registerUserService;

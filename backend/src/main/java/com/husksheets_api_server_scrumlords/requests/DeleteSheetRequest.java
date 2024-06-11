@@ -5,7 +5,7 @@ import lombok.Setter;
 
 /**
  * DeleteSheetRequest class: The format of a Request to delete a specific sheet from a publisher.
- * Author: Kaan Tural
+ * @author Kaan Tural
  */
 public class DeleteSheetRequest extends AbstractPublisherRequest {
     @Getter

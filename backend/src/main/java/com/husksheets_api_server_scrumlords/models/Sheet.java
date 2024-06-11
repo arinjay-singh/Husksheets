@@ -29,6 +29,7 @@ public class Sheet implements Serializable {
     /**
      * Constructor for a single instance of a sheet.
      *
+     * @author Kaan Tural
      * @param name Name of the given sheet.
      * @param publisherName Name of the publisher for this sheet.
      */
