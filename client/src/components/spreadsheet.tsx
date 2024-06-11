@@ -7,12 +7,10 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { parseEquation, parseFunction } from "../functions/sheet-equations";
-import { parseCellReferences, replaceCellRangesWithValues } from "../functions/cell-referencing";
+import { parseEquation } from "../functions/sheet-equations";
 import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/sheets";
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
-import { AuthData } from '../context/auth-context';
 import { Parser } from "@/functions/sheet-functions";
 
 // spreadsheet component
