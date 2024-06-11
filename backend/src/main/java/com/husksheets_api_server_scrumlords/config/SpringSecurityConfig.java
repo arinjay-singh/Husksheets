@@ -17,7 +17,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +28,17 @@ import java.util.List;
 @Configuration
 public class SpringSecurityConfig {
 
+    @Value("${user.team5.username}")
+    private String team5Username;
+
+    @Value("${user.team5.password}")
+    private String team5Password;
+
+    @Value("${user.mike.username}")
+    private String mikeUsername;
+
+    @Value("${user.mike.password}")
+    private String mikePassword;
     /**
      * PasswordEncoder bean to encode passwords for security.
      */
@@ -42,13 +53,11 @@ public class SpringSecurityConfig {
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails Team5User = new CustomUserDetails(
-                "Team5",
-                encoder().encode("5password"),
+                team5Username, team5Password,
                 Collections.emptyList()
         );
         UserDetails MikeUser = new CustomUserDetails(
-                "Mike",
-                encoder().encode("12345password"),
+                mikeUsername, mikePassword,
                 Collections.emptyList()
         );
         return new InMemoryUserDetailsManager(Team5User, MikeUser);
@@ -109,5 +118,16 @@ public class SpringSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    public static class PasswordEncoderUtil {
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedTeam5Password = encoder.encode("5password");
+        String encodedMikePassword = encoder.encode("12345password");
+        System.out.println("Encoded Team5 Password: " + encodedTeam5Password);
+        System.out.println("Encoded Mike Password: " + encodedMikePassword);
+    }
+}
+
 }
 
