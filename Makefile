@@ -64,7 +64,7 @@ docker-run: docker-run-backend docker-run-frontend
 
 docker-test: docker-test-backend docker-test-frontend
 
-docker: docker-contain docker-run docker-test
+docker: docker-run docker-test
 
 # Test all
 test: backend-test frontend-test
