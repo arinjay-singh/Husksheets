@@ -4,6 +4,7 @@
  * @version 1.0
  * @date 06-02-2024
  * @author Arinjay Singh
+ * @author Parnika Jain
  */
 
 "use client";

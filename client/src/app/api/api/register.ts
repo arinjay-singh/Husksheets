@@ -8,7 +8,9 @@ import { useApi } from './apiService';
 
 
 /**
- * @author Nicholas O'Sullivan, Parnika Jain
+ * @author Nicholas O'Sullivan
+ * @author Parnika Jain
+ * @author Arinjay Singh
  * Register api call
  */
 export const useRegister = () => {
@@ -26,7 +28,13 @@ export const useRegister = () => {
 export const useGetPublishers = () => {
     const { get } = useApi();
     const getPublishers = async () => {
-        return await get('/getPublishers');
+        const publisherData =  await get('/getPublishers');
+        const values =  publisherData.data.values;
+        let publishers: string[] = [];
+        Object.keys(values).forEach(key => {
+            publishers.push(values[key].publisher)
+        })
+        return publishers;
     };
     return { getPublishers };
 };

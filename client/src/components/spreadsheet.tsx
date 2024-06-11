@@ -9,6 +9,10 @@
 import React, { useState, useEffect } from "react";
 import { parseEquation, parseFunction } from "../functions/sheet-equations";
 import { parseCellReferences } from "../functions/cell-referencing";
+import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/sheets";
+import { useGetPublishers } from "@/app/api/api/register";
+import { useAuth } from "@/context/auth-context";
+import { AuthData } from '../context/auth-context';
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -29,6 +33,7 @@ const Spreadsheet: React.FC = () => {
   // state variable to prevent reloading from resetting the data
   const [isClient, setIsClient] = useState(false);
 
+  const { getPublishers } = useGetPublishers();
 
   // load the data from local storage when the component mounts
   useEffect(() => {
@@ -42,6 +47,11 @@ const Spreadsheet: React.FC = () => {
     if (displayData) setData(JSON.parse(displayData));
     // if the raw data exists, set the raw data state to the raw data
     if (rawData) setRawData(JSON.parse(rawData));
+
+    let publishers = getPublishers();
+    publishers.then((publisherData: string[]) => {
+      localStorage.setItem("publishers",JSON.stringify(publisherData));
+    });
   }, []);
 
 
@@ -157,10 +167,89 @@ const Spreadsheet: React.FC = () => {
     setData(data.map((row) => [...row, ""]));
   };
 
+    
+  const { getSheets } = useGetSheets();
+  const [publisher, setPublisher] = useState('');
+  const handleGetSheets = async () => {
+    try {
+      // Call getSheets with the publisher state
+      const publishers = localStorage.getItem("publishers");
+      //console.log(publishers[0]);
+      if (publishers) {
+        const publisherList = JSON.parse(publishers);
+         for (let i = 0; i < publisherList.length; i++) {
+          const sheets = await getSheets(publisherList[i]);
+          console.log(sheets);
+         }
+        
+      }
+      
+    } catch (error) {
+      console.error('Error retrieving sheets:', error);
+      alert('Error retrieving sheets. See console for details.');
+    }
+  };
+  const { createSheet } = useCreateSheet();
+  const {auth} = useAuth()
+  const username = auth?.username;
+  const [sheet, setSheet] = useState('');
+  const handleCreateSheet = async () => {
+    try {
+      // Call getSheets with the publisher state
+      if (sheet && username) {
+        await createSheet(username, sheet);
+        console.log(sheet);
+      }
+    } catch (error) {
+      console.error('Error creating sheet:', error);
+      alert('Error creating sheet. See console for details.');
+    }
+  };
+  const { deleteSheet } = useDeleteSheet();
+  const handleDeleteSheet = async () => {
+    try {
+      // Call deleteSheets with the publisher state
+      await deleteSheet(sheet);
+    } catch (error) {
+      console.error('Error deleting sheets:', error);
+      alert('Error deleting sheets. See console for details.');
+    }
+  };
+
 
   // render the spreadsheet component
   return (
     <div className="p-4 flex-col">
+       <div className="flex flex-col my-2">
+              <button
+                  onClick={handleGetSheets}
+                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                Get Sheets
+              </button>
+            </div>
+
+            <div>
+              <input
+                  type="text"
+                  value={sheet}
+                  onChange={(e) => setSheet(e.target.value)}
+                  className="border-2 border-black text-black mr-2 rounded-xl p-2"
+              />
+
+              <div className="flex flex-col my-2">
+                <button
+                    onClick={handleCreateSheet}
+                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                  Create Sheet
+                </button>
+                <button
+                    onClick={handleDeleteSheet}
+                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
+                  Delete Sheet
+                </button>
+              </div>
+
+            </div>
       <div className="relative flex-grow flex-col">
         <div className="flex flex-row">
           <table className="table-auto border-collapse border border-gray-400 w-full">

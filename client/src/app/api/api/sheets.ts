@@ -2,6 +2,7 @@
  * @file sheets.ts
  * @brief services to call 'Sheets' APIs
  * @author Nicholas O'Sullivan
+ * @author Parnika Jain
  */
 
 import { useApi } from './apiService';
@@ -10,9 +11,14 @@ import {useAuth} from "@/context/auth-context";
 //requires publishername (user decides publishername in UI)
 export const useGetSheets = () => {
     const { post } = useApi();
-
     const getSheets = async (publisher: string) => {
-        return await post('/getSheets', { publisher });
+        const sheetData = await post('/getSheets', { publisher });
+        const values = sheetData.data.values;
+        let sheets: string[] = [];
+        Object.keys(values).forEach(key => {
+            sheets.push(values[key].sheet)
+        })
+        return sheets;
     };
     return { getSheets };
 };
@@ -23,7 +29,7 @@ export const useCreateSheet = () => {
     const { auth } = useAuth();
     const publisher = auth?.username
 
-    const createSheet = async (sheet: string) => {
+    const createSheet = async (publisher:string, sheet: string) => {
         return await post('/createSheet', { publisher, sheet });
     };
     return { createSheet };

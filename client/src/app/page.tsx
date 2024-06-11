@@ -30,39 +30,6 @@ const Home: NextPage = () => {
    * @author: Nicholas O'Sullivan
    */
   const { register } = useRegister();
-  const { getPublishers } = useGetPublishers();
-  const { getSheets } = useGetSheets();
-  const [publisher, setPublisher] = useState('');
-  const handleGetSheets = async () => {
-    try {
-      // Call getSheets with the publisher state
-      await getSheets(publisher);
-    } catch (error) {
-      console.error('Error retrieving sheets:', error);
-      alert('Error retrieving sheets. See console for details.');
-    }
-  };
-  const { createSheet } = useCreateSheet();
-  const [sheet, setSheet] = useState('');
-  const handleCreateSheet = async () => {
-    try {
-      // Call getSheets with the publisher state
-      await createSheet(sheet);
-    } catch (error) {
-      console.error('Error creating sheet:', error);
-      alert('Error creating sheet. See console for details.');
-    }
-  };
-  const { deleteSheet } = useDeleteSheet();
-  const handleDeleteSheet = async () => {
-    try {
-      // Call deleteSheets with the publisher state
-      await deleteSheet(sheet);
-    } catch (error) {
-      console.error('Error deleting sheets:', error);
-      alert('Error deleting sheets. See console for details.');
-    }
-  };
 
   // render the home page
   return (
@@ -78,56 +45,10 @@ const Home: NextPage = () => {
             </button>
             <button
                 onClick={register}
-                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+                className="bg-green-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
             >
               Register
             </button>
-            <button
-                onClick={getPublishers}
-                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-            >
-              getPublishers
-            </button>
-
-
-            <div className="flex flex-col my-2">
-              <input
-                  type="text"
-                  value={publisher}
-                  onChange={(e) => setPublisher(e.target.value)}
-                  className = "border-2 border-black text-black mr-2 rounded-xl p-2"
-              />
-              <button
-                  onClick={handleGetSheets}
-                  className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                Get Sheets
-              </button>
-            </div>
-
-            <div>
-              <input
-                  type="text"
-                  value={sheet}
-                  onChange={(e) => setSheet(e.target.value)}
-                  className="border-2 border-black text-black mr-2 rounded-xl p-2"
-              />
-
-              <div className="flex flex-col my-2">
-                <button
-                    onClick={handleCreateSheet}
-                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                  Create Sheet
-                </button>
-                <button
-                    onClick={handleDeleteSheet}
-                    className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-                  Delete Sheet
-                </button>
-              </div>
-
-            </div>
-
-
           </div>
           <h1 className="text-2xl font-bold mb-4 text-black text-center">
             HuskSheets
