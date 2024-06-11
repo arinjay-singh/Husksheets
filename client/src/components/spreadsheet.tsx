@@ -116,25 +116,30 @@ const Spreadsheet: React.FC = () => {
     let displayData: string[][];
     // if the equation result exists, set the display data to the equation result
     // otherwise, set the display data to the parsed value
-    if (equationResult) {
-      displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) =>
-          rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
-        )
-      );
-    } else if (functionResult) {
-      displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) =>
-          rIdx === rowIndex && cIdx === colIndex ? functionResult : cell
-        )
-      );
-    } else {
-      displayData = data.map((row, rIdx) =>
-        row.map((cell, cIdx) =>
-          rIdx === rowIndex && cIdx === colIndex ? value : cell
-        )
-      );
-    }
+    displayData = data.map((row, rIdx) =>
+      row.map((cell, cIdx) =>
+        rIdx === rowIndex && cIdx === colIndex ? equationResult || functionResult || value : cell
+      )
+    );
+    // if (equationResult) {
+    //   displayData = data.map((row, rIdx) =>
+    //     row.map((cell, cIdx) =>
+    //       rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
+    //     )
+    //   );
+    // } else if (functionResult) {
+    //   displayData = data.map((row, rIdx) =>
+    //     row.map((cell, cIdx) =>
+    //       rIdx === rowIndex && cIdx === colIndex ? functionResult : cell
+    //     )
+    //   );
+    // } else {
+    //   displayData = data.map((row, rIdx) =>
+    //     row.map((cell, cIdx) =>
+    //       rIdx === rowIndex && cIdx === colIndex ? value : cell
+    //     )
+    //   );
+    // }
 
 
     // cascading updates for the results of equation data dependent on the current cell
