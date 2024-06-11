@@ -12,13 +12,16 @@ import {
 } from "./cell-referencing";
 
 // function to parse and evaluate a standard mathematical operation
-export const parseEquation = (equation: string) => {
+export const parseEquation = (data: string[][], equation: string) => {
   // remove all spaces from the equation
   equation = equation.replace(/\s/g, "");
   // ensure the operation is in the correct format
   if (!equation.startsWith("=") || equation.length < 4) {
     return null;
   }
+
+  // parse cell references
+  equation = parseCellReferences(data, equation);
 
   // extract the arithmetic expression
   const expression = equation.slice(1).trim();

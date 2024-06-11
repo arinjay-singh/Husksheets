@@ -8,11 +8,12 @@
 
 import React, { useState, useEffect } from "react";
 import { parseEquation, parseFunction } from "../functions/sheet-equations";
-import { parseCellReferences } from "../functions/cell-referencing";
+import { parseCellReferences, replaceCellRangesWithValues } from "../functions/cell-referencing";
 import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/sheets";
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
 import { AuthData } from '../context/auth-context';
+import { Parser } from "@/functions/sheet-functions";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -102,15 +103,17 @@ const Spreadsheet: React.FC = () => {
       alert("Cannot execute empty cell");
       return;
     }
-    // parse for a possible function in the value
-    let parsedValue = parseFunction(data, value);
-    let equationResult;
-    if (!parsedValue) {
-      // parse the cell references in the value
-      parsedValue = parseCellReferences(data, value);
-      // parse the equation in the value
-      equationResult = parseEquation(parsedValue);
+
+    let equationResult: string | null = null;
+    let functionResult: string | null = null;
+
+    // parse function
+    try {
+      functionResult = new Parser(data, value).parse();
+    } catch (e) {
+      equationResult = parseEquation(data, value);
     }
+
     // create a display data variable
     let displayData: string[][];
     // if the equation result exists, set the display data to the equation result
@@ -121,13 +124,21 @@ const Spreadsheet: React.FC = () => {
           rIdx === rowIndex && cIdx === colIndex ? equationResult : cell
         )
       );
+    } else if (functionResult) {
+      displayData = data.map((row, rIdx) =>
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === colIndex ? functionResult : cell
+        )
+      );
     } else {
       displayData = data.map((row, rIdx) =>
         row.map((cell, cIdx) =>
-          rIdx === rowIndex && cIdx === colIndex ? parsedValue : cell
+          rIdx === rowIndex && cIdx === colIndex ? value : cell
         )
       );
     }
+
+
     // cascading updates for the results of equation data dependent on the current cell
     let current = displayData;
     displayData = displayData.map((row, rIdx) =>
@@ -135,17 +146,20 @@ const Spreadsheet: React.FC = () => {
         if (rIdx === rowIndex && cIdx === colIndex) return cell;
         else {
           if (rawData[rIdx][cIdx].includes("$")) {
-            let newParsedValue = parseFunction(current, rawData[rIdx][cIdx]);
-            if (newParsedValue) {
-              return newParsedValue;
+            let equationResult: string | null = null;
+            let functionResult: string | null = null;
+            try {
+              functionResult = new Parser(current, rawData[rIdx][cIdx]).parse();
+            } catch (e) {
+              equationResult = parseEquation(current, rawData[rIdx][cIdx]);
             }
-            newParsedValue = parseCellReferences(
-              current,
-              rawData[rIdx][cIdx]
-            );
-            const newEquationResult = parseEquation(newParsedValue);
-            current[rIdx][cIdx] = newEquationResult;
-            return newEquationResult;
+            if (equationResult) {
+              current[rIdx][cIdx] = equationResult;
+              return equationResult;
+            } else if (functionResult) {
+              current[rIdx][cIdx] = functionResult;
+              return functionResult;
+            }
           }
           return cell;
         }

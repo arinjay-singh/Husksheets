@@ -74,11 +74,34 @@ export const retrieveCellRangeValues = (
         }
       } catch (e) {
         alert("Error: Invalid cell reference");
-        return [];
+        return "";
       }
     }
   }
 
-  // return the range of cell values
-  return cellRangeValues;
+  // return the range of cell values as comma-separated strings
+  let cellRangeString = "";
+  for (let i = 0; i < cellRangeValues.length; i++) {
+    cellRangeString += cellRangeValues[i];
+    if (i < cellRangeValues.length - 1) {
+      cellRangeString += ",";
+    }
+  }
+  return cellRangeString;
+};
+
+export const replaceCellRangesWithValues = (
+  data: string[][],
+  input: string
+): string => {
+  // Regular expression to match the pattern "$A1:$B4"
+  const cellRangePattern = /\$[A-Za-z]+\d+:\$[A-Za-z]+\d+/g;
+
+  // Function to replace the pattern and collect the cell references
+  const result = input.replace(cellRangePattern, (match) => {
+    const [start, end] = match.split(":");
+    return retrieveCellRangeValues(start, end, data);
+  });
+
+  return result;
 };
