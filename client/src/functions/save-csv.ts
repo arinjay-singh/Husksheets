@@ -35,7 +35,7 @@ export function downloadFile(content: string, filename: string) {
  * @param data - The 2D array spreadsheet.
  * @param filename - The name of the file.
  */
-export function saveArrayAsCSV(data: string[][], filename: string = 'spreadsheet.csv') {
+export function saveArrayAsCSV(data: string[][], filename: string = 'Husksheet.csv') {
     const csv = arrayToCSV(data);
     downloadFile(csv, filename);
 }
