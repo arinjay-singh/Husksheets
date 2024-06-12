@@ -1,180 +1,338 @@
 /**
  * @file testSheetEquations.test.ts
- * @brief Tests for the parseEquation and parseFunction functions
+ * @brief Tests for the parsers
  * @version 1.0
- * @date 06-06-2024
+ * @date 06-12-2024
  * @author Troy Caron
  */
 
-import { parseEquation, parseFunction } from "../../src/functions/sheet-equations";
+import { parseEquation } from "../../src/functions/sheet-equations";
 
 describe("parseEquation", () => {
+
+    const mockData = [
+        ["1", "2", "3"],
+        ["4", "5", "6"],
+        ["7", "8", "9"],
+    ];
+    
     test("should return null for invalid equations", () => {
         // No leading '='s
-        expect(parseEquation("")).toBeNull();
-        expect(parseEquation("2")).toBeNull();
-        expect(parseEquation("123")).toBeNull();
-        expect(parseEquation("SUM(1, 2)")).toBeNull();
+        expect(parseEquation(mockData, "")).toBeNull();
+        expect(parseEquation(mockData, "2")).toBeNull();
+        expect(parseEquation(mockData, "123")).toBeNull();
+        expect(parseEquation(mockData, "SUM(1, 2)")).toBeNull();
     });
 
+
     test("should correctly evaluate simple equations", () => {
-        expect(parseEquation("=1+2")).toBe("3");
-        expect(parseEquation("=2*3")).toBe("6");
-        expect(parseEquation("=6/2")).toBe("3");
-        expect(parseEquation("=10-4")).toBe("6");
+        expect(parseEquation(mockData, "=1+2")).toBe("3");
+        expect(parseEquation(mockData, "=2*3")).toBe("6");
+        expect(parseEquation(mockData, "=6/2")).toBe("3");
+        expect(parseEquation(mockData, "=10-4")).toBe("6");
 
         // Testing order of operations
-        expect(parseEquation("=2+3*4")).toBe("14");
+        expect(parseEquation(mockData, "=2+3*4")).toBe("14");
 
         // Testing equations with extra spaces
-        expect(parseEquation("= 2 + 3")).toBe("5");
-        expect(parseEquation("=     6     - 4")).toBe("2");
+        expect(parseEquation(mockData, "= 2 + 3")).toBe("5");
+        expect(parseEquation(mockData, "=     6     - 4")).toBe("2");
     });
 
     test("should produce 'ERROR' for non-standard operations that don't fit the expected pattern", () => {
         // Invalid '&' after '|'
-        expect(parseEquation("=2|&4")).toBe("ERROR");
+        expect(parseEquation(mockData, "=2|&4")).toBe("ERROR");
 
         // Invalid '#' after '&'
-        expect(parseEquation("=2&#3")).toBe("ERROR");
+        expect(parseEquation(mockData, "=2&#3")).toBe("ERROR");
     });
 
     test("should produce 'ERROR' when both elements in a non-standard operation are not of the same type", () => {
         // Invalid '&' after '|'
-        expect(parseEquation("=a|4")).toBe("ERROR");
+        expect(parseEquation(mockData, "=a|4")).toBe("ERROR");
 
         // Invalid 'a'
-        expect(parseEquation("=2<>a")).toBe("ERROR");
+        expect(parseEquation(mockData, "=2<>a")).toBe("ERROR");
     });
 });
 
-describe("parseFunction", () => {
+
+
+
+
+
+import { Parser } from "../../src/functions/sheet-functions";
+
+describe("Parser", () => {
     const mockData = [
         ["1", "2", "3"],
         ["4", "5", "6"],
         ["7", "8", "9"],
     ];
 
-    test("should return null for invalid functions", () => {
-        // No leading '='s
-        expect(parseFunction(mockData, "")).toBeNull();
-        expect(parseFunction(mockData, "13")).toBeNull();
-        expect(parseFunction(mockData, "*3, 3")).toBeNull();
-        expect(parseFunction(mockData, "SUM(1, 2, 3")).toBeNull();
-        expect(parseFunction(mockData, "123")).toBeNull();
+    test("should correctly parse and evaluate SUM function", () => {
+        const parser = new Parser(mockData, "=SUM(1, 2, 3)");
+        expect(parser.parse()).toBe(6);
+
+        const parser1 = new Parser(mockData, "=SUM(99, 4, 2)");
+        expect(parser1.parse()).toBe(105);
+
+        const parser2 = new Parser(mockData, "=SUM(3.3, 15, 9.2)");
+        expect(parser2.parse()).toBe(27.5);
     });
 
-    test("should correctly evaluate SUM function", () => {
-        // Direct values
-        expect(parseFunction(mockData, "=SUM(1,2,3)")).toBe("6");
+    test("should correctly parse and evaluate IF function", () => {
+        const parser = new Parser(mockData, '=IF(1, "true", "false")');
+        expect(parser.parse()).toBe("true");
 
-        // Cell references
-        expect(parseFunction(mockData, "=SUM($A1,$B1,$C1)")).toBe("6");
+        const parser1 = new Parser(mockData, '=IF(0, "true", "false")');
+        expect(parser1.parse()).toBe("false");
+
+        expect(() => {
+            const parser2 = new Parser(mockData, '=IF("hello", "true", "false")');
+            parser2.parse();
+        }).toThrow("IF function first argument must be a number");
+
+        const parser3 = new Parser(mockData, '=IF(1, "33", "false")');
+        expect(parser3.parse()).toBe("33");
+
+        const parser4 = new Parser(mockData, '=IF(0, "33", "34")');
+        expect(parser4.parse()).toBe("34");
     });
 
-    test("should correctly evaluate AVG function", () => {
-        // Direct values
-        expect(parseFunction(mockData, "=AVG(3,6,9)")).toBe("6");
-        expect(parseFunction(mockData, "=AVG(4,4,3)")).toBe("3.6666666666666665");
-        expect(parseFunction(mockData, "=AVG(3,7)")).toBe("5");
-        expect(parseFunction(mockData, "=AVG(3,6,9,14)")).toBe("8");
+    test("should correctly parse and evaluate nested functions", () => {
+        const parser = new Parser(mockData, '=IF(SUM(1, 2), "yes", "no")');
+        expect(parser.parse()).toBe("yes");
+        
+        const parser1 = new Parser(mockData, '=SUM(IF(1, 2, 3), IF(0, 4, 5))');
+        // SUM(2, 5)
+        expect(parser1.parse()).toBe(7);  
 
-        // Cell references
-        expect(parseFunction(mockData, "=AVG($C3,$B1)")).toBe("5.5");
-        expect(parseFunction(mockData, "=AVG($C2,$B1,$A3)")).toBe("5");
-        expect(parseFunction(mockData, "=AVG($A1,$C1,$A3,$C3)")).toBe("5");
+        const parser3 = new Parser(mockData, '=MAX(IF(1, 2, 3), IF(0, 4, 1))');
+        // MAX(2, 1)
+        expect(parser3.parse()).toBe(2);  
 
-        // Mixed values
-        expect(parseFunction(mockData, "=AVG($A1,5,$C1, 3)")).toBe("3");
+        const parser4 = new Parser(mockData, '=AVG(IF(1, 2, 3), IF(0, 4, 1))');
+        // AVG(2, 1)
+        expect(parser4.parse()).toBe(1.5);  
+
+        const parser5 = new Parser(mockData, '=CONCAT(IF(1, "yes", "no"), IF(0, "yes", "no"))');
+        // CONCAT("yes", "no")
+        expect(parser5.parse()).toBe("yesno");  
+
+        const parser6 = new Parser(mockData, '=IF($A1, IF($B1, "yes", "no"), "no")');
+        // IF(1, IF(2, "yes", "no"), "no")
+        expect(parser6.parse()).toBe("yes");  
+
+        const parser7 = new Parser(mockData, '=SUM(AVG($A1, $B1), AVG($A2, $B2))');
+        // SUM(AVG(1, 2), AVG(4, 5))
+        expect(parser7.parse()).toBe(6);  
     });
 
-    test("should correctly evaluate MAX function", () => {
-        // Direct values
-        expect(parseFunction(mockData, "=MAX(4,22,3)")).toBe("22");
-        expect(parseFunction(mockData, "=MAX(5,3)")).toBe("5");
-        expect(parseFunction(mockData, "=MAX(4,7, 1, 0)")).toBe("7");
-        expect(parseFunction(mockData, "=MAX(4,3.9,3,9.999)")).toBe("9.999");
-        expect(parseFunction(mockData, "=MAX(5,5,5,5)")).toBe("5");
-
-        // Cell references
-        expect(parseFunction(mockData, "=MAX($B3,$B2,$B1)")).toBe("8");
-        expect(parseFunction(mockData, "=MAX($A1,$B2,$C3)")).toBe("9");
-        expect(parseFunction(mockData, "=MAX($B2,$A1)")).toBe("5");
-
-        // Mixed values
-        expect(parseFunction(mockData, "=MAX($C1,5,$B2, 3)")).toBe("5");
+    // Test for expressions not starting with '='
+    test("should throw an error for expressions not starting with '='", () => {
+        expect(() => new Parser(mockData, "SUM(1, 2, 3)").parse()).toThrow('Expression must start with "="');
     });
 
-    test("should correctly evaluate MIN function", () => {
-        // Direct values
-        expect(parseFunction(mockData, "=MIN(4,22,3)")).toBe("3");
-        expect(parseFunction(mockData, "=MIN(5,3)")).toBe("3");
-        expect(parseFunction(mockData, "=MIN(4,7, 1, 0)")).toBe("0");
-        expect(parseFunction(mockData, "=MIN(4,3.9,3,9.999)")).toBe("3");
-        expect(parseFunction(mockData, "=MIN(5,5,5,5)")).toBe("5");
-
-        // Cell references
-        expect(parseFunction(mockData, "=MIN($B3,$B2,$B1)")).toBe("2");
-        expect(parseFunction(mockData, "=MIN($A1,$B2,$C3)")).toBe("1");
-        expect(parseFunction(mockData, "=MIN($B2,$A1)")).toBe("1");
-
-        // Mixed values
-        expect(parseFunction(mockData, "=MIN($C1,5,$B2, 3)")).toBe("3");
+    // Test for unknown functions
+    test("should throw an error for unknown functions", () => {
+        expect(() => new Parser(mockData, "=UNKNOWN(1, 2, 3)").parse()).toThrow("Unknown function: UNKNOWN");
     });
 
-    test("should correctly evaluate CONCAT function", () => {
-        // Direct values
-        expect(parseFunction(mockData, "=CONCAT(1,2,3)")).toBe("123");
-        expect(parseFunction(mockData, "=CONCAT(44,2)")).toBe("442");
-        expect(parseFunction(mockData, "=CONCAT(1)")).toBe("1");
-
-        // Cell references
-        expect(parseFunction(mockData, "=CONCAT($A1,$B1,$C1)")).toBe("123");
-        expect(parseFunction(mockData, "=CONCAT($A1,$C1,$C1)")).toBe("133");
-        expect(parseFunction(mockData, "=CONCAT($B3,$A2)")).toBe("84");
-
-        // Mixed values
-        expect(parseFunction(mockData, "=CONCAT($B2,5,$A2, 3)")).toBe("5543");
+    // Test for IF function with incorrect number of arguments
+    test("should throw an error for IF function with incorrect number of arguments", () => {
+        expect(() => new Parser(mockData, "=IF(1, 2)").parse()).toThrow("IF function requires exactly 3 arguments");
     });
 
-    test("should correctly evaluate IF function", () => {
-        // 1 is true, so return 2
-        expect(parseFunction(mockData, "=IF(1,2,3)")).toBe("2");
-
-        // wrong number of arguments
-        expect(parseFunction(mockData, "=IF(1,2)")).toBeNull();
-
-        // 0 is false, so return 3
-        expect(parseFunction(mockData, "=IF(0,2,3)")).toBe("3");
-
-        // Cell references where $A1 is true, so return the value of $B1
-        expect(parseFunction(mockData, "=IF($A1,$B1,$C1)")).toBe("2");
-
-        // Mixed values
-        expect(parseFunction(mockData, "=IF($A1,22,$C1)")).toBe("22");
-        expect(parseFunction(mockData, "=IF(34,$B1,$A3)")).toBe("2");
-
+    // Test for SUM function with non-number arguments
+    test("should throw an error for SUM function with non-number arguments", () => {
+        expect(() => new Parser(mockData, '=SUM(1, "two", 3)').parse()).toThrow("SUM function requires all arguments to be numbers");
     });
 
-    test("should correctly evaluate DEBUG function", () => {
-        // Direct value
-        expect(parseFunction(mockData, "=DEBUG(4)")).toBe("4");
-
-        // NaN
-        expect(parseFunction(mockData, "=DEBUG(a)")).toBeNull();
-
-        // Wrong number of arguments
-        expect(parseFunction(mockData, "=DEBUG(4, 2)")).toBeNull();
-
-        // Cell reference
-        expect(parseFunction(mockData, "=DEBUG($A1)")).toBe("1");
+    // Test for CONCAT function
+    test("should correctly parse and evaluate CONCAT function", () => {
+        const parser = new Parser(mockData, '=CONCAT("Hello", " ", "World")');
+        expect(parser.parse()).toBe("Hello World");
     });
 
-    test("should return null for invalid range functions", () => {
-        // $C2 > $A1
-        expect(parseFunction(mockData, "=SUM($C2:$A1)")).toBeNull();
-
-        // $B1 > $A1
-        expect(parseFunction(mockData, "=SUM($B1:$A1, $A2)")).toBeNull();
+    // Test for MIN function
+    test("should correctly parse and evaluate MIN function", () => {
+        const parser = new Parser(mockData, "=MIN(1, 2, 3)");
+        expect(parser.parse()).toBe(1);
     });
-});  
+
+    // Test for MAX function
+    test("should correctly parse and evaluate MAX function", () => {
+        const parser = new Parser(mockData, "=MAX(1, 2, 3)");
+        expect(parser.parse()).toBe(3);
+    });
+
+    // Test for AVG function
+    test("should correctly parse and evaluate AVG function", () => {
+        const parser = new Parser(mockData, "=AVG(1, 2, 3)");
+        expect(parser.parse()).toBe(2);
+    });
+
+    // Test for DEBUG function
+    test("should correctly parse and evaluate DEBUG function", () => {
+        const parser = new Parser(mockData, "=DEBUG(1)");
+        expect(parser.parse()).toBe(1);
+    });
+
+    // Test for SUM function with different numbers
+    test("should correctly parse and evaluate SUM function with different numbers", () => {
+        const parser = new Parser(mockData, "=SUM(10, 20, 30)");
+        expect(parser.parse()).toBe(60);
+    });
+
+    // Test for nested functions with different numbers
+    test("should correctly parse and evaluate nested functions with different numbers", () => {
+        const parser = new Parser(mockData, '=IF(SUM(10, 20), "yes", "no")');
+        expect(parser.parse()).toBe("yes");
+    });
+
+    // Test for CONCAT function with different strings
+    test("should correctly parse and evaluate CONCAT function with different strings", () => {
+        const parser = new Parser(mockData, '=CONCAT("Foo", "Bar", "Baz")');
+        expect(parser.parse()).toBe("FooBarBaz");
+    });
+
+    // Test for complex nested functions
+    test("should correctly parse and evaluate complex nested functions", () => {
+        const parser = new Parser(mockData, '=IF(SUM(1, IF(0, 2, 3)), "yes", "no")');
+        expect(parser.parse()).toBe("yes");
+    });
+
+    // Test for functions with negative numbers
+    test("should correctly parse and evaluate functions with negative numbers", () => {
+        const parser = new Parser(mockData, "=SUM(-1, -2, -3)");
+        expect(parser.parse()).toBe(-6);
+    });
+
+    // Test for functions with decimal numbers
+    test("should correctly parse and evaluate functions with decimal numbers", () => {
+        const parser = new Parser(mockData, "=SUM(1.5, 2.5, 3.5)");
+        expect(parser.parse()).toBe(7.5);
+    });
+
+    // Test for SUM with larger numbers
+    test("should correctly parse and evaluate SUM with larger numbers", () => {
+        const parser = new Parser(mockData, "=SUM(100, 200, 300)");
+        expect(parser.parse()).toBe(600);
+    });
+
+    // Test for MIN with negative numbers
+    test("should correctly parse and evaluate MIN with negative numbers", () => {
+        const parser = new Parser(mockData, "=MIN(-1, -2, -3, 0, 1, 2, 3)");
+        expect(parser.parse()).toBe(-3);
+    });
+
+    // Test for MAX with a mix of positive and negative numbers
+    test("should correctly parse and evaluate MAX with a mix of positive and negative numbers", () => {
+        const parser = new Parser(mockData, "=MAX(-10, -20, 0, 10, 20)");
+        expect(parser.parse()).toBe(20);
+    });
+
+    // Test for AVG with a mix of positive and negative numbers
+    test("should correctly parse and evaluate AVG with a mix of positive and negative numbers", () => {
+        const parser = new Parser(mockData, "=AVG(-1, -2, -3, 1, 2, 3)");
+        expect(parser.parse()).toBe(0);
+    });
+
+    // Test for nested SUM and AVG functions
+    test("should correctly parse and evaluate nested SUM and AVG functions", () => {
+        const parser = new Parser(mockData, '=SUM(AVG(1, 2, 3), AVG(4, 5, 6))');
+        expect(parser.parse()).toBe(7);
+    });
+
+    // Test for nested MIN and MAX functions
+    test("should correctly parse and evaluate nested MIN and MAX functions", () => {
+        const parser = new Parser(mockData, '=MIN(MAX(1, 2), MAX(3, 4))');
+        expect(parser.parse()).toBe(2);
+    });
+
+    // Test for IF function with nested conditions
+    test("should correctly parse and evaluate IF function with nested conditions", () => {
+        const parser = new Parser(mockData, '=IF(1, IF(0, "no", "yes"), "no")');
+        expect(parser.parse()).toBe("yes");
+    });
+
+    // Test for CONCAT with numbers
+    test("should correctly parse and evaluate CONCAT with numbers", () => {
+        const parser = new Parser(mockData, '=CONCAT("Result: ", SUM(1, 2, 3))');
+        expect(parser.parse()).toBe("Result: 6");
+    });
+
+    // Test for SUM function with cell references
+    test("should correctly parse and evaluate SUM function with cell references", () => {
+        const parser = new Parser(mockData, "=SUM($A1, $B1, $C1)");
+        expect(parser.parse()).toBe(6);
+    });
+
+    // Test for IF function with cell references
+    test("should correctly parse and evaluate IF function with cell references", () => {
+        const parser = new Parser(mockData, '=IF($A1, "true", "false")');
+        expect(parser.parse()).toBe("true");
+    });
+
+    // Test for nested functions with cell references
+    test("should correctly parse and evaluate nested functions with cell references", () => {
+        const parser = new Parser(mockData, '=IF(SUM($A1, $B1), "yes", "no")');
+        expect(parser.parse()).toBe("yes");
+    });
+
+    // Test for CONCAT function with cell references
+    test("should correctly parse and evaluate CONCAT function with cell references", () => {
+        const parser = new Parser(mockData, '=CONCAT($A1, $B1, $C1)');
+        expect(parser.parse()).toBe("123");
+    });
+
+    // Test for MIN function with cell references
+    test("should correctly parse and evaluate MIN function with cell references", () => {
+        const parser = new Parser(mockData, "=MIN($A1, $B1, $C1)");
+        expect(parser.parse()).toBe(1);
+    });
+
+    // Test for MAX function with cell references
+    test("should correctly parse and evaluate MAX function with cell references", () => {
+        const parser = new Parser(mockData, "=MAX($A1, $B1, $C1)");
+        expect(parser.parse()).toBe(3);
+    });
+
+    // Test for AVG function with cell references
+    test("should correctly parse and evaluate AVG function with cell references", () => {
+        const parser = new Parser(mockData, "=AVG($A1, $B1, $C1)");
+        expect(parser.parse()).toBe(2);
+    });
+
+    // Test for SUM function with mixed cell references and numbers
+    test("should correctly parse and evaluate SUM function with mixed cell references and numbers", () => {
+        const parser = new Parser(mockData, "=SUM($A1, 2, $B1, 3)");
+        expect(parser.parse()).toBe(8);
+    });
+
+    // Test for nested SUM and AVG functions with cell references
+    test("should correctly parse and evaluate nested SUM and AVG functions with cell references", () => {
+        const parser = new Parser(mockData, '=SUM(AVG($A1, $B1, $C1), AVG($A2, $B2, $C2))');
+        expect(parser.parse()).toBe(7);
+    });
+
+    // Test for nested MIN and MAX functions with cell references
+    test("should correctly parse and evaluate nested MIN and MAX functions with cell references", () => {
+        const parser = new Parser(mockData, '=MIN(MAX($A1, $B1), MAX($A2, $B2))');
+        expect(parser.parse()).toBe(2);
+    });
+
+    // Test for IF function with nested conditions and cell references
+    test("should correctly parse and evaluate IF function with nested conditions and cell references", () => {
+        const parser = new Parser(mockData, '=IF($A1, IF($B1, "yes", "no"), "no")');
+        expect(parser.parse()).toBe("yes");
+    });
+
+    // Test for CONCAT with cell references and strings
+    test("should correctly parse and evaluate CONCAT with cell references and strings", () => {
+        const parser = new Parser(mockData, '=CONCAT("Value: ", $A1)');
+        expect(parser.parse()).toBe("Value: 1");
+    });
+
+});
