@@ -270,10 +270,11 @@ const Spreadsheet: React.FC = () => {
   }
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
-    { func: handleDownloadCSV, color: "green", label: "Download CSV" },
+    { func: handleResetSheet, color: "red", label: "Reset Sheet" },
     { func: handleDeleteRow, color: "red", label: "Delete Row" },
     { func: handleDeleteColumn, color: "red", label: "Delete Column" },
-    { func: handleResetSheet, color: "red", label: "Reset Sheet" },
+    { func: handleDownloadCSV, color: "green", label: "Download CSV" },
+    {func: handleUpdate, color: "green", label: "Save"},
   ];
 
   // render the spreadsheet component
@@ -338,11 +339,6 @@ const Spreadsheet: React.FC = () => {
                 ))}
               </select>
             ) : null}
-          </div>
-          <div className="flex flex-row justify-center">
-            <ToolBarButton onClick={handleUpdate} color="red">
-              Update
-            </ToolBarButton>
           </div>
         </div>
       </div>
