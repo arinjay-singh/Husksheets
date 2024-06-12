@@ -1,12 +1,11 @@
+# Husksheets
+
+<img src="husksheets_logo.jpeg" alt="HuskSheets Logo" width="400"/>
+
+### THE solution to YOUR everyday Spreadsheeting Needs! 
 
 
-# HuskSheets
-
-## THE solution to YOUR everyday Spreadsheeting Needs! 
-
-![HuskSheets Logo](path/to/logo.png)  
-
-### a creation of: team #redlight
+#### a creation of: team #redlight
 - **Arinjay Singh**
 - **Troy Caron**
 - **Kaan Tural**
@@ -48,7 +47,7 @@ To get started with HuskSheets, follow these steps:
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/yourusername/husksheets.git
+git clone
 cd husksheets
 
 
