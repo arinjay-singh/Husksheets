@@ -8,13 +8,17 @@
 
 import React, { useState, useEffect } from "react";
 import { parseEquation } from "../functions/sheet-equations";
-import { useCreateSheet, useDeleteSheet, useGetSheets } from "@/app/api/api/sheets";
+import {
+  useCreateSheet,
+  useDeleteSheet,
+  useGetSheets,
+} from "@/app/api/api/sheets";
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
-import { useRouter } from "next/navigation";
-import { set } from "lodash";
 import { saveArrayAsCSV } from "@/functions/save-csv";
+import { ToolBarButton } from "@/components/toolbar-button";
+import { set } from "lodash";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -35,8 +39,6 @@ const Spreadsheet: React.FC = () => {
   // state variable to prevent reloading from resetting the data
   const [isClient, setIsClient] = useState(false);
 
-  const { getPublishers } = useGetPublishers();
-
   // load the data from local storage when the component mounts
   useEffect(() => {
     // set isClient to true when the component mounts
@@ -50,13 +52,8 @@ const Spreadsheet: React.FC = () => {
     // if the raw data exists, set the raw data state to the raw data
     if (rawData) setRawData(JSON.parse(rawData));
 
-    let publishers = getPublishers();
-    publishers.then((publisherData: string[]) => {
-      localStorage.setItem("publishers",JSON.stringify(publisherData));
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   // save the data to local storage when the data state changes
   // dependencies: rawData and isClient
@@ -67,7 +64,6 @@ const Spreadsheet: React.FC = () => {
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
   }, [data, rawData, isClient]);
-
 
   // handle input change in the spreadsheet
   const handleInputChange = (
@@ -92,7 +88,6 @@ const Spreadsheet: React.FC = () => {
     // update the raw data state
     setRawData(equationData);
   };
-
 
   // handle 'enter' key press for a cell
   const executeCell = (
@@ -122,7 +117,9 @@ const Spreadsheet: React.FC = () => {
     // otherwise, set the display data to the parsed value
     displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? equationResult || functionResult || value : cell
+        rIdx === rowIndex && cIdx === colIndex
+          ? equationResult || functionResult || value
+          : cell
       )
     );
 
@@ -158,7 +155,6 @@ const Spreadsheet: React.FC = () => {
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
   };
 
-
   // add a row to the spreadsheet
   const addRow = () => {
     setData([...data, Array(data[0].length).fill("")]);
@@ -168,42 +164,43 @@ const Spreadsheet: React.FC = () => {
     setData(data.map((row) => [...row, ""]));
   };
 
-    
+  // GET SHEETS
   const { getSheets } = useGetSheets();
-  const [publisher, setPublisher] = useState('');
+  const [sheets, setSheets] = useState<string[]>([]);
+  const [hasSheets, setHasSheets] = useState<boolean>(false);
   const handleGetSheets = async () => {
+    console.log(publisher);
     try {
-      // Call getSheets with the publisher state
-      const publishers = localStorage.getItem("publishers");
-      //console.log(publishers[0]);
-      if (publishers) {
-        const publisherList = JSON.parse(publishers);
-         for (let i = 0; i < publisherList.length; i++) {
-          const sheets = await getSheets(publisherList[i]);
+      for (let i = 0; i < publishers.length; i++) {
+        if (publishers[i] === publisher) {
+          const sheets = await getSheets(publishers[i]);
+          setSheets(sheets);
+          setHasSheets(true);
           console.log(sheets);
-         }
-        
+        }
       }
-      
     } catch (error) {
-      console.error('Error retrieving sheets:', error);
-      alert('Error retrieving sheets. See console for details.');
+      console.error("Error retrieving sheets:", error);
+      alert("Error retrieving sheets. See console for details.");
     }
   };
+  const [selectedSheet, setSelectedSheet] = useState<string>("");
+
   const { createSheet } = useCreateSheet();
-  const {auth} = useAuth()
+  const { auth } = useAuth();
   const username = auth?.username;
-  const [sheet, setSheet] = useState('');
+  const [sheet, setSheet] = useState("");
   const handleCreateSheet = async () => {
     try {
       // Call getSheets with the publisher state
       if (sheet && username) {
         await createSheet(username, sheet);
+        setSheet(sheet);
         console.log(sheet);
       }
     } catch (error) {
-      console.error('Error creating sheet:', error);
-      alert('Error creating sheet. See console for details.');
+      console.error("Error creating sheet:", error);
+      alert("Error creating sheet. See console for details.");
     }
   };
   const { deleteSheet } = useDeleteSheet();
@@ -212,154 +209,210 @@ const Spreadsheet: React.FC = () => {
       // Call deleteSheets with the publisher state
       await deleteSheet(sheet);
     } catch (error) {
-      console.error('Error deleting sheets:', error);
-      alert('Error deleting sheets. See console for details.');
+      console.error("Error deleting sheets:", error);
+      alert("Error deleting sheets. See console for details.");
     }
   };
 
+  // GET PUBLISHERS
+  const [publishers, setPublishers] = useState<string[]>([]);
+  const [hasPublishers, setHasPublishers] = useState<boolean>(false);
+  const { getPublishers } = useGetPublishers();
+  const handleGetPublishers = async () => {
+    let publishers = getPublishers();
+    publishers.then((publisherData: string[]) => {
+      setPublishers(publisherData);
+      console.log(publisherData);
+      setHasPublishers(true);
+      localStorage.setItem("publishers", JSON.stringify(publisherData));
+      alert("Publishers retrieved successfully");
+    });
+  };
+  const [publisher, setPublisher] = useState<string>("");
+
+  useEffect(() => {
+    console.log(publisher);
+  }, [publisher]);
 
   // render the spreadsheet component
   return (
-      <div className="p-4 flex-col">
-        <div className="flex flex-col my-2">
-          <button
-              onClick={handleGetSheets}
-              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-            Get Sheets
-          </button>
-        </div>
-
-        <div>
+    <div className="p-4 flex-col">
+      {/* buttons in toolbar */}
+      <div className="flex flex-row jutify-center">
+        <div className="flex flex-col items-center my-3 space-y-3 w-1/2">
           <input
-              type="text"
-              value={sheet}
-              onChange={(e) => setSheet(e.target.value)}
-              className="border-2 border-black text-black mr-2 rounded-xl p-2"
+            type="text"
+            value={sheet}
+            onChange={(e) => setSheet(e.target.value)}
+            className="border-2 border-black text-black mr-2 rounded-xl p-2"
           />
-
-          <div className="flex flex-col my-2">
-            <button
-                onClick={handleCreateSheet}
-                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-              Create Sheet
-            </button>
-            <button
-                onClick={handleDeleteSheet}
-                className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md">
-              Delete Sheet
-            </button>
-          </div>
-
-        </div>
-        <div className="relative flex-grow flex-col">
           <div className="flex flex-row">
-            <table className="table-auto border-collapse border border-gray-400 w-full">
-              <thead>
+            <ToolBarButton onClick={handleCreateSheet} color="red">
+              Create Sheet
+            </ToolBarButton>
+            <ToolBarButton onClick={handleDeleteSheet} color="red">
+              Delete Sheet
+            </ToolBarButton>
+          </div>
+        </div>
+        <div className="flex flex-col my-3 space-y-3 w-1/2">
+          <div className="flex flex-row justify-center">
+            <ToolBarButton onClick={handleGetPublishers} color="red">
+              Get Publishers
+            </ToolBarButton>
+            {hasPublishers ? (
+              <select
+                id="pub-dropdown"
+                value={publisher}
+                onChange={(e) => {
+                  console.log('set publisher called ${e.target.value}');
+                  setPublisher(e.target.value);
+                }}
+                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
+              >
+                <option>None</option>
+                {publishers.map((pub) => (
+                  <option key={pub} value={pub} className="text-black">
+                    {pub}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+          </div>
+          <div className="flex flex-row justify-center">
+            <ToolBarButton onClick={handleGetSheets} color="red">
+              Get Sheets
+            </ToolBarButton>
+            {hasSheets ? (
+              <select
+                id="sheet-dropdown"
+                value={selectedSheet}
+                onChange={(e) => setSelectedSheet(e.target.value)}
+                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
+              >
+                {sheets.map((ss) => (
+                  <option key={ss} value={ss} className="text-black">
+                    {ss}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+          </div>
+        </div>
+      </div>
+      {/* render the spreadsheet */}
+      <div className="relative flex-grow flex-col">
+        <div className="flex flex-row">
+          <table className="table-auto border-collapse border border-gray-400 w-full">
+            <thead>
               <tr>
                 <th className="border border-gray-400 bg-slate-100"></th>
                 {data[0].map((_, colIndex) => (
-                    <th
-                        key={colIndex}
-                        className="border border-gray-400 text-black font-semibold bg-slate-100"
-                    >
-                      {String.fromCharCode(65 + colIndex)}
-                    </th>
+                  <th
+                    key={colIndex}
+                    className="border border-gray-400 text-black font-semibold bg-slate-100"
+                  >
+                    {String.fromCharCode(65 + colIndex)}
+                  </th>
                 ))}
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               {data.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
-                      {rowIndex + 1}
+                <tr key={rowIndex}>
+                  <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
+                    {rowIndex + 1}
+                  </td>
+                  {row.map((cell, colIndex) => (
+                    <td key={colIndex} className="border border-gray-400">
+                      <input
+                        type="text"
+                        value={cell}
+                        onChange={(e) =>
+                          handleInputChange(rowIndex, colIndex, e.target.value)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            executeCell(
+                              rowIndex,
+                              colIndex,
+                              (e.target as HTMLInputElement).value
+                            );
+                          }
+                        }}
+                        className="w-full text-black p-2"
+                      />
                     </td>
-                    {row.map((cell, colIndex) => (
-                        <td key={colIndex} className="border border-gray-400">
-                          <input
-                              type="text"
-                              value={cell}
-                              onChange={(e) =>
-                                  handleInputChange(rowIndex, colIndex, e.target.value)
-                              }
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  executeCell(
-                                      rowIndex,
-                                      colIndex,
-                                      (e.target as HTMLInputElement).value
-                                  );
-                                }
-                              }}
-                              className="w-full text-black p-2"
-                          />
-                        </td>
-                    ))}
-                  </tr>
+                  ))}
+                </tr>
               ))}
-              </tbody>
-            </table>
-            <button
-                onClick={addColumn}
-                className="bg-gray-300 text-black rounded-full p-3 flex items-center justify-center self-stretch ml-2 hover:shadow-md"
-            >
-              +
-            </button>
-          </div>
-          <div className=" w-full mt-2 flex flex-row">
-            <button
-                onClick={addRow}
-                className="w-full bg-gray-300 text-black rounded-full p-2 hover:shadow-md"
-            >
-              +
-            </button>
-            <div className="p-5"/>
-          </div>
-        </div>
-        <div className=" flex items-center pt-3">
+            </tbody>
+          </table>
           <button
-              onClick={() => {
-                setData([
-                  ["", "", ""],
-                  ["", "", ""],
-                  ["", "", ""],
-                ]);
-                setRawData([
-                  ["", "", ""],
-                  ["", "", ""],
-                  ["", "", ""],
-                ]);
-              }}
-              className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
+            onClick={addColumn}
+            className="bg-gray-300 text-black rounded-full p-3 flex items-center justify-center self-stretch ml-2 hover:shadow-md"
           >
-            Reset
-          </button>
-          <button
-              onClick={() => {
-                if (data.length > 1) {
-                  setData(data.slice(0, -1));
-                  setRawData(rawData.slice(0, -1));
-                }
-              }}
-              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-          >
-            Delete Row
-          </button>
-          <button
-              onClick={() => {
-                if (data[0].length > 1)
-                  setData(data.map((row) => row.slice(0, -1)));
-                setRawData(rawData.map((row) => row.slice(0, -1)));
-              }}
-              className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-          >
-            Delete Column
+            +
           </button>
         </div>
-        <button className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-                onClick={() => saveArrayAsCSV(data)}>Download as CSV
+        <div className=" w-full mt-2 flex flex-row">
+          <button
+            onClick={addRow}
+            className="w-full bg-gray-300 text-black rounded-full p-2 hover:shadow-md"
+          >
+            +
+          </button>
+          <div className="p-5" />
+        </div>
+      </div>
+      <div className=" flex items-center pt-3">
+        <button
+          onClick={() => {
+            setData([
+              ["", "", ""],
+              ["", "", ""],
+              ["", "", ""],
+            ]);
+            setRawData([
+              ["", "", ""],
+              ["", "", ""],
+              ["", "", ""],
+            ]);
+          }}
+          className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => {
+            if (data.length > 1) {
+              setData(data.slice(0, -1));
+              setRawData(rawData.slice(0, -1));
+            }
+          }}
+          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+        >
+          Delete Row
+        </button>
+        <button
+          onClick={() => {
+            if (data[0].length > 1)
+              setData(data.map((row) => row.slice(0, -1)));
+            setRawData(rawData.map((row) => row.slice(0, -1)));
+          }}
+          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+        >
+          Delete Column
         </button>
       </div>
+      <button
+        className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
+        onClick={() => saveArrayAsCSV(data)}
+      >
+        Download as CSV
+      </button>
+    </div>
   );
 };
 
