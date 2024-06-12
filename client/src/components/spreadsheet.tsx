@@ -229,9 +229,36 @@ const Spreadsheet: React.FC = () => {
   };
   const [publisher, setPublisher] = useState<string>("");
 
-  useEffect(() => {
-    console.log(publisher);
-  }, [publisher]);
+  // BOTTOM TOOLBAR FUNCTIONS
+  const handleDeleteRow = () => {
+    if (data.length > 1) {
+      setData(data.slice(0, -1));
+      setRawData(rawData.slice(0, -1));
+    }
+  };
+  const handleDeleteColumn = () => {
+    if (data[0].length > 1) setData(data.map((row) => row.slice(0, -1)));
+    setRawData(rawData.map((row) => row.slice(0, -1)));
+  };
+  const handleResetSheet = () => {
+    setData([
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ]);
+    setRawData([
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ]);
+  };
+  const handleDownloadCSV = () => saveArrayAsCSV(data);
+  const bottomToolbarButtons = [
+    {func: handleDownloadCSV, color: "green", label: "Download CSV"},
+    {func: handleDeleteRow, color: "red", label: "Delete Row"},
+    {func: handleDeleteColumn, color: "red", label: "Delete Column"},
+    {func: handleResetSheet, color: "red", label: "Reset Sheet"},
+  ];
 
   // render the spreadsheet component
   return (
@@ -367,52 +394,13 @@ const Spreadsheet: React.FC = () => {
         </div>
       </div>
       {/* buttons for bottom toolbar */}
-      <div className=" flex items-center pt-3">
-        <button
-          onClick={() => {
-            setData([
-              ["", "", ""],
-              ["", "", ""],
-              ["", "", ""],
-            ]);
-            setRawData([
-              ["", "", ""],
-              ["", "", ""],
-              ["", "", ""],
-            ]);
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 hover:shadow-md"
-        >
-          Reset
-        </button>
-        <button
-          onClick={() => {
-            if (data.length > 1) {
-              setData(data.slice(0, -1));
-              setRawData(rawData.slice(0, -1));
-            }
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-        >
-          Delete Row
-        </button>
-        <button
-          onClick={() => {
-            if (data[0].length > 1)
-              setData(data.map((row) => row.slice(0, -1)));
-            setRawData(rawData.map((row) => row.slice(0, -1)));
-          }}
-          className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-        >
-          Delete Column
-        </button>
+      <div className=" flex flex-row justify-evenly pt-3 items-stretch">
+        {bottomToolbarButtons.map(({ func, color, label }) => (
+          <ToolBarButton onClick={func} color={color} key={label}>
+            {label}
+          </ToolBarButton>
+        ))}
       </div>
-      <button
-        className="bg-red-500 text-white rounded-xl p-2 ml-2 hover:shadow-md"
-        onClick={() => saveArrayAsCSV(data)}
-      >
-        Download as CSV
-      </button>
     </div>
   );
 };
