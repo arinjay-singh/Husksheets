@@ -18,7 +18,6 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
-import { set } from "lodash";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -265,7 +264,7 @@ const Spreadsheet: React.FC = () => {
                 id="pub-dropdown"
                 value={publisher}
                 onChange={(e) => {
-                  console.log('set publisher called ${e.target.value}');
+                  console.log("set publisher called ${e.target.value}");
                   setPublisher(e.target.value);
                 }}
                 className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
@@ -349,6 +348,7 @@ const Spreadsheet: React.FC = () => {
               ))}
             </tbody>
           </table>
+          {/* buttons to add rows and columns */}
           <button
             onClick={addColumn}
             className="bg-gray-300 text-black rounded-full p-3 flex items-center justify-center self-stretch ml-2 hover:shadow-md"
@@ -366,6 +366,7 @@ const Spreadsheet: React.FC = () => {
           <div className="p-5" />
         </div>
       </div>
+      {/* buttons for bottom toolbar */}
       <div className=" flex items-center pt-3">
         <button
           onClick={() => {
