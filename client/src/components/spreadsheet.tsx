@@ -18,7 +18,7 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
-import { set } from "lodash";
+import { useUpdate } from "@/app/api/api/update";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -118,9 +118,7 @@ const Spreadsheet: React.FC = () => {
     displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) {
-          if (functionResult !== null) {
-            return functionResult;
-          }
+          if (functionResult !== null) return functionResult;
           if (equationResult ) return equationResult;
           return value;
         }
@@ -256,6 +254,20 @@ const Spreadsheet: React.FC = () => {
       ["", "", ""],
     ]);
   };
+
+  const payload = localStorage.getItem("spreadsheetData");
+  const { updatePublished } = useUpdate();
+  const handleUpdate = async () => {
+    try {
+      const isOwner = (username == publisher);
+      if (sheet && username && payload) {
+        await updatePublished(username, sheet, payload, isOwner);
+        console.log("Data updated successfully:");
+      }
+    } catch (error) {
+      console.error("Failed to update  data:")
+    }
+  }
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
     { func: handleDownloadCSV, color: "green", label: "Download CSV" },
@@ -326,6 +338,11 @@ const Spreadsheet: React.FC = () => {
                 ))}
               </select>
             ) : null}
+          </div>
+          <div className="flex flex-row justify-center">
+            <ToolBarButton onClick={handleUpdate} color="red">
+              Update
+            </ToolBarButton>
           </div>
         </div>
       </div>
