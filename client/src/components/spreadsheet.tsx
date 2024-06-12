@@ -118,9 +118,7 @@ const Spreadsheet: React.FC = () => {
     displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) {
-          if (functionResult !== null) {
-            return functionResult;
-          }
+          if (functionResult !== null) return functionResult;
           if (equationResult ) return equationResult;
           return value;
         }
