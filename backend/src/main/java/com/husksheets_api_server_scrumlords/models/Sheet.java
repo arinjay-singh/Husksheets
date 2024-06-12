@@ -92,7 +92,7 @@ public class Sheet implements Serializable {
     private String getUpdates(int id, List<String> updates) {
         StringBuilder concatenatedUpdates = new StringBuilder();
         if (id < updates.size()) {
-            for (int i = updates.size() - 1; i >= id ; i--) {
+            for (int i = id; i <= updates.size() - 1 ; i++) {
                  concatenatedUpdates.append(updates.get(i)).append("\n");
             }
         }
