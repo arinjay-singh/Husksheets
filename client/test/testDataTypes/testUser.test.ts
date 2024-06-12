@@ -19,16 +19,16 @@ describe('User class tests', () => {
 
     it('should add a role to a sheet for a user', () => {
         const user = new User('1', 'Alice');
-        user.addSheetRole('sheet1', Role.Admin);
-        expect(user.sheets['sheet1']).toBe(Role.Admin);
+        user.addSheetRole('sheet1', Role.Publisher);
+        expect(user.sheets['sheet1']).toBe(Role.Publisher);
     });
 
     it('should return the correct role for a sheet', () => {
         const user = new User('1', 'Alice');
-        user.addSheetRole('sheet1', Role.Admin);
-        user.addSheetRole('sheet2', Role.Collaborator);
-        expect(user.getRoleForSheet('sheet1')).toBe(Role.Admin);
-        expect(user.getRoleForSheet('sheet2')).toBe(Role.Collaborator);
+        user.addSheetRole('sheet1', Role.Publisher);
+        user.addSheetRole('sheet2', Role.Subscriber);
+        expect(user.getRoleForSheet('sheet1')).toBe(Role.Publisher);
+        expect(user.getRoleForSheet('sheet2')).toBe(Role.Subscriber);
     });
 
     it('should return undefined for a sheet with no role assigned', () => {
