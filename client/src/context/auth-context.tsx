@@ -68,7 +68,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = () => {
       setLoading(false);
       router.push("/");
-      console.log("logged in");
   };
 
   // logout function to deauthenticate user and redirect to the login page
@@ -77,7 +76,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAuth(undefined);
     localStorage.removeItem(localStorageKey);
     router.push("/login");
-    console.log("auth context going to login");
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

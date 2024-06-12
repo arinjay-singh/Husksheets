@@ -18,6 +18,7 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
+import { set } from "lodash";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -115,11 +116,16 @@ const Spreadsheet: React.FC = () => {
     // if the equation result exists, set the display data to the equation result
     // otherwise, set the display data to the parsed value
     displayData = data.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex
-          ? equationResult || functionResult || value
-          : cell
-      )
+      row.map((cell, cIdx) => {
+        if (rIdx === rowIndex && cIdx === colIndex) {
+          if (functionResult !== null) {
+            return functionResult;
+          }
+          if (equationResult ) return equationResult;
+          return value;
+        }
+        return cell;
+      })
     );
 
     // cascading updates for the results of equation data dependent on the current cell
@@ -157,10 +163,12 @@ const Spreadsheet: React.FC = () => {
   // add a row to the spreadsheet
   const addRow = () => {
     setData([...data, Array(data[0].length).fill("")]);
+    setRawData([...rawData, Array(data[0].length).fill("")]);
   };
   // add a column to the spreadsheet
   const addColumn = () => {
     setData(data.map((row) => [...row, ""]));
+    setRawData(rawData.map((row) => [...row, ""]));
   };
 
   // GET SHEETS
@@ -168,14 +176,12 @@ const Spreadsheet: React.FC = () => {
   const [sheets, setSheets] = useState<string[]>([]);
   const [hasSheets, setHasSheets] = useState<boolean>(false);
   const handleGetSheets = async () => {
-    console.log(publisher);
     try {
       for (let i = 0; i < publishers.length; i++) {
         if (publishers[i] === publisher) {
           const sheets = await getSheets(publishers[i]);
           setSheets(sheets);
           setHasSheets(true);
-          console.log(sheets);
         }
       }
     } catch (error) {
@@ -195,7 +201,6 @@ const Spreadsheet: React.FC = () => {
       if (sheet && username) {
         await createSheet(username, sheet);
         setSheet(sheet);
-        console.log(sheet);
       }
     } catch (error) {
       console.error("Error creating sheet:", error);
@@ -221,7 +226,6 @@ const Spreadsheet: React.FC = () => {
     let publishers = getPublishers();
     publishers.then((publisherData: string[]) => {
       setPublishers(publisherData);
-      console.log(publisherData);
       setHasPublishers(true);
       localStorage.setItem("publishers", JSON.stringify(publisherData));
       alert("Publishers retrieved successfully");
@@ -254,10 +258,10 @@ const Spreadsheet: React.FC = () => {
   };
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
-    {func: handleDownloadCSV, color: "green", label: "Download CSV"},
-    {func: handleDeleteRow, color: "red", label: "Delete Row"},
-    {func: handleDeleteColumn, color: "red", label: "Delete Column"},
-    {func: handleResetSheet, color: "red", label: "Reset Sheet"},
+    { func: handleDownloadCSV, color: "green", label: "Download CSV" },
+    { func: handleDeleteRow, color: "red", label: "Delete Row" },
+    { func: handleDeleteColumn, color: "red", label: "Delete Column" },
+    { func: handleResetSheet, color: "red", label: "Reset Sheet" },
   ];
 
   // render the spreadsheet component
@@ -291,7 +295,6 @@ const Spreadsheet: React.FC = () => {
                 id="pub-dropdown"
                 value={publisher}
                 onChange={(e) => {
-                  console.log("set publisher called ${e.target.value}");
                   setPublisher(e.target.value);
                 }}
                 className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"

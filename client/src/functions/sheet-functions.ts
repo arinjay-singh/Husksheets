@@ -74,7 +74,7 @@ class Tokenizer {
         return this._function();
       }
 
-      if (/[0-9]/.test(this.currentChar) || this.currentChar === ".") {
+      if (/[0-9]/.test(this.currentChar) || this.currentChar === "." || this.currentChar === "-") {
         return this._number();
       }
 
@@ -121,7 +121,7 @@ class Tokenizer {
   // Function to parse a number and return a token
   _number(): Token {
     let result = "";
-    while (this.currentChar !== null && /[0-9.]/.test(this.currentChar)) {
+    while (this.currentChar !== null && /[0-9.-]/.test(this.currentChar)) {
       result += this.currentChar;
       this.advance();
     }
@@ -300,6 +300,7 @@ export class Parser {
     if (args.length !== 1) {
       throw new Error("DEBUG function requires exactly 1 argument");
     }
+    console.log(args[0]);
     return args[0];
   }
 }

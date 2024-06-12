@@ -25,7 +25,6 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     if (!isAuthenticated() && pathname !== "/login" && !loading) {
       router.push("/login");
-      console.log("protected route going to login");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, pathname, router, loading]);
