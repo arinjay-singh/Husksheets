@@ -1,10 +1,14 @@
 import { useUpdate, useGetUpdatesForSubscription, useGetUpdatesForPublished } from '../../src/app/api/api/update';
 import { useApi } from '../../src/app/api/api/apiService';
 import { describe } from 'node:test';
-
 import {  it, expect, beforeEach } from '@jest/globals';
-import {useAuth} from "@/context/auth-context";
 jest.mock('../../src/app/api/api/apiService');
+
+/**
+ * @file testUpdates.test.ts
+ * @brief test get updates/ update apis.
+ * @author Nicholas O'Sullivan
+ */
 
 describe('useUpdate', () => {
   it('should call updatePublished API when isOwner is true', async () => {
@@ -60,7 +64,7 @@ describe('useGetUpdatesForSubscription', () => {
       data: {
         success: true,
         message: null,
-        value: [{ payload: 'Update1' }, { payload: 'Update2' }],
+        value: [{ payload: 'a1' }, { payload: 'b1' }],
         time: 1718314551134,
       },
     };
@@ -75,7 +79,7 @@ describe('useGetUpdatesForSubscription', () => {
       sheet: 'TestSheet',
       id: 1,
     });
-    expect(result).toEqual(['Update1', 'Update2']);
+    expect(result).toEqual(['a1', 'b1']);
   });
 });
 
@@ -85,7 +89,7 @@ describe('useGetUpdatesForPublished', () => {
       data: {
         success: true,
         message: null,
-        value: [{ payload: 'Update1' }, { payload: 'Update2' }],
+        value: [{ payload: 'a1' }, { payload: 'b1' }],
         time: 1718314551134,
       },
     };
@@ -100,6 +104,6 @@ describe('useGetUpdatesForPublished', () => {
       sheet: 'TestSheet',
       id: 1,
     });
-    expect(result).toEqual(['Update1', 'Update2']);
+    expect(result).toEqual(['a1', 'b1']);
   });
 });

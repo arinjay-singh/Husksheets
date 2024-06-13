@@ -4,6 +4,11 @@ import { describe } from 'node:test';
 
 jest.mock('../../src/app/api/api/apiService');
 
+/**
+ * @file testRegisterGetPublishers.test.ts
+ * @brief Tests for the Register/GetPublishers api's
+ * @author Nicholas O'Sullivan
+ */
 
 describe('useRegister', () => {
     it('should call the register API', async () => {
