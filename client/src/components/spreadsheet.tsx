@@ -19,6 +19,7 @@ import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
 import { useUpdate } from "@/app/api/api/update";
+import ConditionalDropdown from "./conditional-dropdown";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -44,7 +45,7 @@ const Spreadsheet: React.FC = () => {
     // set isClient to true when the component mounts
     setIsClient(true);
     // retrieve the display data from local storage
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const displayData = localStorage.getItem("displaySpreadsheetData");
       // retrieve the raw data from local storage
       const rawData = localStorage.getItem("spreadsheetData");
@@ -60,7 +61,7 @@ const Spreadsheet: React.FC = () => {
   // dependencies: rawData and isClient
   useEffect(() => {
     // if client is false, return
-    if (!isClient || typeof window === 'undefined') return;
+    if (!isClient || typeof window === "undefined") return;
     // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
@@ -120,7 +121,7 @@ const Spreadsheet: React.FC = () => {
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) {
           if (functionResult !== null) return functionResult;
-          if (equationResult ) return equationResult;
+          if (equationResult) return equationResult;
           return value;
         }
         return cell;
@@ -155,9 +156,12 @@ const Spreadsheet: React.FC = () => {
     );
     // set the display data state
     setData(displayData);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // update the local storage of the display data
-      localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
+      localStorage.setItem(
+        "displaySpreadsheetData",
+        JSON.stringify(displayData)
+      );
     }
   };
 
@@ -228,7 +232,7 @@ const Spreadsheet: React.FC = () => {
     publishers.then((publisherData: string[]) => {
       setPublishers(publisherData);
       setHasPublishers(true);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         localStorage.setItem("publishers", JSON.stringify(publisherData));
       }
       alert("Publishers retrieved successfully");
@@ -260,26 +264,29 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload = typeof window !== 'undefined' ? localStorage.getItem("spreadsheetData") : null;
+  const payload =
+    typeof window !== "undefined"
+      ? localStorage.getItem("spreadsheetData")
+      : null;
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
-      const isOwner = (username == publisher);
+      const isOwner = username == publisher;
       if (sheet && username && payload) {
         await updatePublished(username, sheet, payload, isOwner);
         console.log("Data updated successfully:");
       }
     } catch (error) {
-      console.error("Failed to update  data:")
+      console.error("Failed to update  data:");
     }
-  }
+  };
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
     { func: handleResetSheet, color: "red", label: "Reset Sheet" },
     { func: handleDeleteRow, color: "red", label: "Delete Row" },
     { func: handleDeleteColumn, color: "red", label: "Delete Column" },
     { func: handleDownloadCSV, color: "green", label: "Download CSV" },
-    {func: handleUpdate, color: "green", label: "Save"},
+    { func: handleUpdate, color: "green", label: "Save" },
   ];
 
   // render the spreadsheet component
@@ -308,42 +315,23 @@ const Spreadsheet: React.FC = () => {
             <ToolBarButton onClick={handleGetPublishers} color="red">
               Get Publishers
             </ToolBarButton>
-            {hasPublishers ? (
-              <select
-                id="pub-dropdown"
-                value={publisher}
-                onChange={(e) => {
-                  setPublisher(e.target.value);
-                }}
-                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
-              >
-                <option>None</option>
-                {publishers.map((pub) => (
-                  <option key={pub} value={pub} className="text-black">
-                    {pub}
-                  </option>
-                ))}
-              </select>
-            ) : null}
+            <ConditionalDropdown
+              condition={hasPublishers}
+              value={publisher}
+              setValue={setPublisher}
+              values={publishers}
+            />
           </div>
           <div className="flex flex-row justify-center">
             <ToolBarButton onClick={handleGetSheets} color="red">
               Get Sheets
             </ToolBarButton>
-            {hasSheets ? (
-              <select
-                id="sheet-dropdown"
-                value={selectedSheet}
-                onChange={(e) => setSelectedSheet(e.target.value)}
-                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
-              >
-                {sheets.map((ss) => (
-                  <option key={ss} value={ss} className="text-black">
-                    {ss}
-                  </option>
-                ))}
-              </select>
-            ) : null}
+            <ConditionalDropdown
+              condition={hasSheets}
+              value={selectedSheet}
+              setValue={setSelectedSheet}
+              values={sheets}
+            />
           </div>
         </div>
       </div>

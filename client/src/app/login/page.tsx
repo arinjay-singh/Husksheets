@@ -10,7 +10,8 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "../../context/auth-context";
-import { useGetPublishers } from "../api/api/register";
+import { useRegister } from "../api/api/register";
+import { Loading } from "@/components/loading";
 
 // login page component
 const LoginPage = () => {
@@ -18,81 +19,90 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [invalidAuth, setInvalidAuth] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // get the login function from the auth context
   const { login, setAuthData } = useAuth();
-  const { getPublishers } = useGetPublishers();
+  const { register } = useRegister();
 
   // handle the login form submission
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     // Perform authentication logic here
+    console.log('username:', username);
+    console.log('password:', password );
     setAuthData({ username: username, password: password });
-    let response = getPublishers();
-    response.then(() => {
-      setInvalidAuth(false);
+    try {
+      let response = register();
+      const authenticated = await response;
       login();
-    }).catch(() => {
+    } catch (error) {
       setInvalidAuth(true);
-    });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // render the login form
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">
-          Login
-        </h2>
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Sign In
-            </button>
-            {invalidAuth ? (
-              <p className="text-red-600 font-medium text-sm ">
-                Invalid credentials. Please try again.
-              </p>
-            ) : null}
-          </div>
-        </form>
-      </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-center text-black">
+            Login
+          </h2>
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <div className="flex flex-row items-center justify-between">
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Sign In
+              </button>
+              {invalidAuth ? (
+                <p className="text-red-600 font-medium text-sm ">
+                  Invalid credentials. Please try again.
+                </p>
+              ) : null}
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
