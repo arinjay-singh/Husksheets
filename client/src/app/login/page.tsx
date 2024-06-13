@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth-context";
 import { useRegister } from "../api/api/register";
 import { Loading } from "@/components/loading";
-import { set } from "lodash";
 
 // login page component
 const LoginPage = () => {
