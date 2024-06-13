@@ -1,31 +1,31 @@
 #sample scenarios to be tested:
 #@author Kaan Tural, Nicholas O'Sullivan
 ### unauthorized register, return error
-GET localhost:8080/api/v1/register
+GET https://redlightserver.fly.dev/api/v1/register
 
 ### Register team5
-GET localhost:8080/api/v1/register
+GET https://redlightserver.fly.dev/api/v1/register
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 
 
 
 ### GetPublishers w/ team5 registered
-GET localhost:8080/api/v1/getPublishers
+GET https://redlightserver.fly.dev/api/v1/getPublishers
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 ###
 
 ### Register Mike
-GET localhost:8080/api/v1/register
+GET https://redlightserver.fly.dev/api/v1/register
 Authorization: Basic TWlrZToxMjM0NXBhc3N3b3Jk
 ###
 
 ### GetPublishers w/ team5 & mike register
-GET localhost:8080/api/v1/getPublishers
+GET https://redlightserver.fly.dev/api/v1/getPublishers
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 ###
 
 
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -36,7 +36,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 createSheet w/ non-existent publisher
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -47,7 +47,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 createSheet w/ wrong publisher
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 Duplicate createSheet w/ Correct Publisher team5
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -69,7 +69,7 @@ Content-Type: application/json
 ###
 
 ### team5 second createSheet w/ Correct Publisher team5
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -80,7 +80,7 @@ Content-Type: application/json
 ###
 
 ### Mike creates a sheet w/ correct parameters
-POST localhost:8080/api/v1/createSheet
+POST https://redlightserver.fly.dev/api/v1/createSheet
 Authorization: Basic TWlrZToxMjM0NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -93,7 +93,7 @@ Content-Type: application/json
 #### GET SHEETS ####
 
 ### team5 getSheets from Team5, should return sheet1 & sheet2
-POST localhost:8080/api/v1/getSheets
+POST https://redlightserver.fly.dev/api/v1/getSheets
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -103,7 +103,7 @@ Content-Type: application/json
 ###
 
 ### team5 getSheets from Mike, should return no sheets but proper response
-POST localhost:8080/api/v1/getSheets
+POST https://redlightserver.fly.dev/api/v1/getSheets
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -113,7 +113,7 @@ Content-Type: application/json
 ###
 
 ### ERROR team5 getSheets from non-existent user
-POST localhost:8080/api/v1/getSheets
+POST https://redlightserver.fly.dev/api/v1/getSheets
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -124,7 +124,7 @@ Content-Type: application/json
 
 #### updatePublished, getupdates... ####
 
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -136,7 +136,7 @@ Content-Type: application/json
 ###
 
 ###
-POST localhost:8080/api/v1/getUpdatesForSubscription
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -147,7 +147,7 @@ Content-Type: application/json
 
 }
 ###
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -159,7 +159,7 @@ Content-Type: application/json
 ###
 
 ###
-POST localhost:8080/api/v1/getUpdatesForSubscription
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -170,7 +170,7 @@ Content-Type: application/json
 
 }
 ###
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -180,7 +180,7 @@ Content-Type: application/json
     "payload": "aaa"
 }
 ###
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -190,7 +190,7 @@ Content-Type: application/json
     "payload": "bbb"
 }
 ###
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -202,7 +202,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to use getUpdatesForPublished on Mike's sheet
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -214,7 +214,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to check a sheet that doesn't exist
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -226,7 +226,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to check updates for an id that doesn't exist
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -238,7 +238,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to check updates for an id that doesn't exist
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -250,7 +250,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to pass empty payload and empty sheet to updatePublished
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -260,7 +260,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to pass empty payload and empty sheet to updateSubscription
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -270,7 +270,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to pass empty payload to updatePublished
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -281,7 +281,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 tries to pass empty payload to updateSubscription
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -292,7 +292,7 @@ Content-Type: application/json
 ###
 
 ### Mike successfully uses updateSubcribed to Team5's Sheet
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic TWlrZToxMjM0NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -304,7 +304,7 @@ Content-Type: application/json
 ###
 
 ### Mike successfully uses updateSubcribed to Team5's Sheet
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -316,7 +316,7 @@ Content-Type: application/json
 ###
 
 ### Team5 successfully uses updateSubcribed to Team5's Sheet
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -328,7 +328,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempting updateSubscription with null values.
-POST localhost:8080/api/v1/updateSubscription
+POST https://redlightserver.fly.dev/api/v1/updateSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -340,7 +340,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempting updatePublished with null values.
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -352,7 +352,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempting getUpdatesForSubscription with null values.
-POST localhost:8080/api/v1/getUpdatesForSubscription
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForSubscription
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -364,7 +364,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempting getUpdatesForPublished with null values.
-POST localhost:8080/api/v1/getUpdatesForPublished
+POST https://redlightserver.fly.dev/api/v1/getUpdatesForPublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -376,7 +376,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempts to updatePublished with id instead of payload
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -388,7 +388,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: Team5 attempts to updateSubscription with id instead of payload
-POST localhost:8080/api/v1/updatePublished
+POST https://redlightserver.fly.dev/api/v1/updatePublished
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -402,7 +402,7 @@ Content-Type: application/json
 #### DELETE SHEETS ####
 
 ### team5 deleteSheet w/ Correct Publisher Team5
-POST localhost:8080/api/v1/deleteSheet
+POST https://redlightserver.fly.dev/api/v1/deleteSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -413,7 +413,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 deleteSheet w/ Correct Publisher Team5 but non-existent sheet
-POST localhost:8080/api/v1/deleteSheet
+POST https://redlightserver.fly.dev/api/v1/deleteSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -424,7 +424,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 deleteSheet w/ incorrect publisher
-POST localhost:8080/api/v1/deleteSheet
+POST https://redlightserver.fly.dev/api/v1/deleteSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 
@@ -435,7 +435,7 @@ Content-Type: application/json
 ###
 
 ### ERROR: team5 deleteSheet w/ non-existent Publisher
-POST localhost:8080/api/v1/deleteSheet
+POST https://redlightserver.fly.dev/api/v1/deleteSheet
 Authorization: Basic VGVhbTU6NXBhc3N3b3Jk
 Content-Type: application/json
 

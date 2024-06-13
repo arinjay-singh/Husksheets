@@ -20,9 +20,8 @@ export const base64Convert = async (username: string | undefined, password: stri
 
 // Create an Axios instance with a base URL
 export const api = axios.create({
-    baseURL: 'http://localhost:8080/api/v1' // Replace with backend URL
+    baseURL: 'https://redlightserver.fly.dev/api/v1' // Replace with backend URL
 });
-
 
 /**
  * @author Nicholas O'Sullivan
