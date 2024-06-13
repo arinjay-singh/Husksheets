@@ -26,15 +26,11 @@ export const useGetSheets = () => {
 //requires publishername (we get from auth context), sheetname (user decides sheetname in UI)
 export const useCreateSheet = () => {
     const { post } = useApi();
-    const { auth } = useAuth();
-    const publisher = auth?.username
-
     const createSheet = async (publisher:string, sheet: string) => {
         return await post('/createSheet', { publisher, sheet });
     };
     return { createSheet };
 };
-
 
 //requires publishername (we get from auth context), sheetname (user decides sheetname in UI)
 export const useDeleteSheet = () => {

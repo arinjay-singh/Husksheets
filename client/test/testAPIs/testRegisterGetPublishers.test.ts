@@ -4,6 +4,7 @@ import { describe } from 'node:test';
 
 jest.mock('../../src/app/api/api/apiService');
 
+
 describe('useRegister', () => {
     it('should call the register API', async () => {
         const mockGet = jest.fn().mockResolvedValue({});
@@ -15,6 +16,7 @@ describe('useRegister', () => {
         expect(mockGet).toHaveBeenCalledWith('/register');
     });
 });
+
 
 describe('useGetPublishers', () => {
   it('should call the getPublishers API and return publishers', async () => {
