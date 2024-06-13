@@ -1,14 +1,11 @@
 package com.husksheets_api_server_scrumlords.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -40,15 +37,15 @@ public class SpringSecurityConfig {
     @Value("${user.mike.password}")
     private String mikePassword;
     /**
-     * PasswordEncoder bean to encode passwords for security.
+     * PasswordEncoder bean to encode passwords.
      */
     @Bean
     public PasswordEncoder encoder() { return new BCryptPasswordEncoder();}
 
     /**
-     * InMemoryUserDetailsManager bean to store user details in memory.
+     * InMemoryUserDetailsManager bean to store user logins in memory (on startup).
      * @author Nicholas O'Sullivan
-     * @return InMemoryUserDetailsManager created with our created users
+     * @return InMemoryUserDetailsManager created with our desired users
      */
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
@@ -65,6 +62,7 @@ public class SpringSecurityConfig {
 
     /**
      * AuthenticationProvider bean to authenticate users with case-sensitive usernames.
+     * @return a CaseSensitiveAuthenticationProvider for use in our filter chain.
      * @author Kaan tural
      */
     @Bean
@@ -83,7 +81,7 @@ public class SpringSecurityConfig {
 
     /**
      * SecurityFilterChain bean to configure the security filter chain.
-     *
+     * allow CORS, require HTTPS basic auth, handle exceptions, authenticate w/ CaseSensitiveAuth...
      * @param httpSecurity the HttpSecurity object to configure
      * @return SecurityFilterChain configured with our security settings
      * @throws Exception if an exception occurs
@@ -119,13 +117,14 @@ public class SpringSecurityConfig {
         return source;
     }
 
+    /**
+     * Util used for generating BCrypt for storing passwords
+     */
     public static class PasswordEncoderUtil {
     public static void main(String[] args) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedTeam5Password = encoder.encode("5password");
-        String encodedMikePassword = encoder.encode("12345password");
-        System.out.println("Encoded Team5 Password: " + encodedTeam5Password);
-        System.out.println("Encoded Mike Password: " + encodedMikePassword);
+        String encodedPassword = encoder.encode("");
+        System.out.println("Password: " + encodedPassword);
     }
 }
 
