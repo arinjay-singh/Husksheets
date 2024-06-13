@@ -6,7 +6,7 @@
  * @author Troy Caron
  */
 
-import { parseEquation } from "../../src/functions/sheet-equations";
+import { parseEquation } from '../../src/functions/sheet-equations';
 
 describe("parseEquation", () => {
 
@@ -62,6 +62,8 @@ describe("parseEquation", () => {
 
 
 import { Parser } from "../../src/functions/sheet-functions";
+import test, {describe} from "node:test";
+import {expect} from "sucrase/dist/types/parser/traverser/util";
 
 describe("Parser", () => {
     const mockData = [

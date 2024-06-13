@@ -44,14 +44,15 @@ const Spreadsheet: React.FC = () => {
     // set isClient to true when the component mounts
     setIsClient(true);
     // retrieve the display data from local storage
-    const displayData = localStorage.getItem("displaySpreadsheetData");
-    // retrieve the raw data from local storage
-    const rawData = localStorage.getItem("spreadsheetData");
-    // if the display data exists, set the data state to the display data
-    if (displayData) setData(JSON.parse(displayData));
-    // if the raw data exists, set the raw data state to the raw data
-    if (rawData) setRawData(JSON.parse(rawData));
-
+    if (typeof window !== 'undefined') {
+      const displayData = localStorage.getItem("displaySpreadsheetData");
+      // retrieve the raw data from local storage
+      const rawData = localStorage.getItem("spreadsheetData");
+      // if the display data exists, set the data state to the display data
+      if (displayData) setData(JSON.parse(displayData));
+      // if the raw data exists, set the raw data state to the raw data
+      if (rawData) setRawData(JSON.parse(rawData));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -59,7 +60,7 @@ const Spreadsheet: React.FC = () => {
   // dependencies: rawData and isClient
   useEffect(() => {
     // if client is false, return
-    if (!isClient) return;
+    if (!isClient || typeof window === 'undefined') return;
     // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
@@ -154,8 +155,10 @@ const Spreadsheet: React.FC = () => {
     );
     // set the display data state
     setData(displayData);
-    // update the local storage of the display data
-    localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
+    if (typeof window !== 'undefined') {
+      // update the local storage of the display data
+      localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
+    }
   };
 
   // add a row to the spreadsheet
@@ -225,7 +228,9 @@ const Spreadsheet: React.FC = () => {
     publishers.then((publisherData: string[]) => {
       setPublishers(publisherData);
       setHasPublishers(true);
-      localStorage.setItem("publishers", JSON.stringify(publisherData));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("publishers", JSON.stringify(publisherData));
+      }
       alert("Publishers retrieved successfully");
     });
   };
@@ -255,7 +260,7 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload = localStorage.getItem("spreadsheetData");
+  const payload = typeof window !== 'undefined' ? localStorage.getItem("spreadsheetData") : null;
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
