@@ -17,6 +17,7 @@ export const useUpdate = () => {
 
     const updatePublished = async (publisher: string, sheet: string, payload: string, isOwner: boolean) => {
         if (isOwner) {
+            console.log(payload);
             return await post('/updatePublished', {publisher, sheet, payload});
         } else {
             return await post('/updateSubscription', {publisher, sheet, payload});
@@ -32,7 +33,7 @@ export const useGetUpdatesForSubscription = () => {
     const { post } = useApi();
     const getUpdatesForSubscription = async (publisher: string, sheet: string, id: number) => {
         const response = await  post('/getUpdatesForSubscription', {publisher, sheet, id});
-        return response.data.value.map((item: any) => item.payload);
+        return response.data.value.map(response.data.value[0].payload);
     };
     return { getUpdatesForSubscription };
 };

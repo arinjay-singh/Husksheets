@@ -18,10 +18,17 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
-import { useGetUpdatesForPublished, useGetUpdatesForSubscription, useUpdate } from "@/app/api/api/update";
-import { convertToPayload, parseServerPayload } from "@/functions/parse-payload";
+import {
+  useGetUpdatesForPublished,
+  useGetUpdatesForSubscription,
+  useUpdate,
+} from "@/app/api/api/update";
+import {
+  convertToPayload,
+  parseServerPayload,
+} from "@/functions/parse-payload";
 import ConditionalDropdown from "./conditional-dropdown";
-
+import { parse } from "path";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -183,6 +190,10 @@ const Spreadsheet: React.FC = () => {
   const [sheets, setSheets] = useState<string[]>([]);
   const [hasSheets, setHasSheets] = useState<boolean>(false);
   const handleGetSheets = async () => {
+    if (publisher === "") {
+      alert("Please select a publisher to get sheets");
+      return;
+    }
     try {
       for (let i = 0; i < publishers.length; i++) {
         if (publishers[i] === publisher) {
@@ -201,13 +212,13 @@ const Spreadsheet: React.FC = () => {
   const { createSheet } = useCreateSheet();
   const { auth } = useAuth();
   const username = auth?.username;
-  const [sheet, setSheet] = useState("");
+  const [typedSheet, setTypedSheet] = useState("");
   const handleCreateSheet = async () => {
     try {
       // Call getSheets with the publisher state
-      if (sheet && username) {
-        await createSheet(username, sheet);
-        setSheet(sheet);
+      if (typedSheet && username) {
+        await createSheet(username, typedSheet);
+        setTypedSheet(typedSheet);
       }
     } catch (error) {
       console.error("Error creating sheet:", error);
@@ -218,7 +229,7 @@ const Spreadsheet: React.FC = () => {
   const handleDeleteSheet = async () => {
     try {
       // Call deleteSheets with the publisher state
-      await deleteSheet(sheet);
+      await deleteSheet(typedSheet);
     } catch (error) {
       console.error("Error deleting sheets:", error);
       alert("Error deleting sheets. See console for details.");
@@ -266,42 +277,57 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload =
-    typeof window !== "undefined"
-      ? localStorage.getItem("spreadsheetData")
-      : null;
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
+    const payload =
+      typeof window !== "undefined"
+        ? localStorage.getItem("spreadsheetData")
+        : null;
+    if (selectedSheet == "") {
+      alert("Please select a sheet to save data under");
+      return;
+    }
     try {
       const isOwner = username == publisher;
-      if (sheet && username && payload) {
+      if (selectedSheet && username && payload) {
         const parsedPayload = convertToPayload(JSON.parse(payload));
-        await updatePublished(username, sheet, parsedPayload, isOwner);
+        await updatePublished(username, selectedSheet, parsedPayload, isOwner);
         console.log("Data updated successfully:");
       }
     } catch (error) {
-      console.error("Failed to update data:")
+      console.error("Failed to update data:");
     }
-  }
+  };
 
   const id = 0;
   const { getUpdatesForSubscription } = useGetUpdatesForSubscription();
   const { getUpdatesForPublished } = useGetUpdatesForPublished();
-  const handleLoadData = async () => {
+  const handleGetUpdates = async () => {
+    if (username === undefined) return;
     try {
-      if (username && publisher && sheet && id) {
+      console.log(username, publisher, selectedSheet, id)
+      if (publisher !== '' && selectedSheet !== '') {
         if (username == publisher) {
-          const updatedPayload = await getUpdatesForSubscription(username, sheet, id);
+          const updatedPayload = await getUpdatesForSubscription(
+            username,
+            typedSheet,
+            id
+          );
+          console.log(updatedPayload);
           setRawData(parseServerPayload(updatedPayload));
         } else {
-          const updatedPayload = await getUpdatesForPublished(username, sheet, id);
+          const updatedPayload = await getUpdatesForPublished(
+            username,
+            typedSheet,
+            id
+          );
           setRawData(parseServerPayload(updatedPayload));
         }
       }
     } catch (error) {
-      console.error("Failed to load updates")
+      console.error("Failed to load updates");
     }
-  }
+  };
 
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
@@ -314,14 +340,14 @@ const Spreadsheet: React.FC = () => {
 
   // render the spreadsheet component
   return (
-    <div className="p-4 flex-col">
+    <div className="flex flex-col">
       {/* buttons in toolbar */}
-      <div className="flex flex-row jutify-center">
+      <div className="flex flex-row jutify-center items-center mb-3">
         <div className="flex flex-col items-center my-3 space-y-3 w-1/2">
           <input
             type="text"
-            value={sheet}
-            onChange={(e) => setSheet(e.target.value)}
+            value={typedSheet}
+            onChange={(e) => setTypedSheet(e.target.value)}
             className="border-2 border-black text-black mr-2 rounded-xl p-2"
           />
           <div className="flex flex-row">
@@ -330,9 +356,6 @@ const Spreadsheet: React.FC = () => {
             </ToolBarButton>
             <ToolBarButton onClick={handleDeleteSheet} color="red">
               Delete Sheet
-            </ToolBarButton>
-            <ToolBarButton onClick={handleLoadData} color="red">
-              Load Sheet
             </ToolBarButton>
           </div>
         </div>
@@ -358,6 +381,11 @@ const Spreadsheet: React.FC = () => {
               setValue={setSelectedSheet}
               values={sheets}
             />
+          </div>
+          <div className="flex justify-center">
+            <ToolBarButton onClick={handleGetUpdates} color="red">
+              Open Sheet
+            </ToolBarButton>
           </div>
         </div>
       </div>

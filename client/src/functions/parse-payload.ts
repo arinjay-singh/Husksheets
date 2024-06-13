@@ -11,6 +11,7 @@ import { cellMap } from "../../src/functions/cell-referencing";
 
 // Function to parse the server payload and convert it to a 2D array
 export const parseServerPayload = (payload: string): (string)[][] => {
+    // console.log('string being parsed: , ', payload);
     const lines = payload.split('\n');
     let maxRow = 0;
     let maxCol = 0;
