@@ -6,7 +6,7 @@
  * @author Arinjay Singh
  */
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { parseEquation } from "../functions/sheet-equations";
 import {
   useCreateSheet,

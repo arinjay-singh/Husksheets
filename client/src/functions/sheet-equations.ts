@@ -67,9 +67,9 @@ export const parseEquation = (data: string[][], equation: string) => {
   const funcResult = eval(expression);
 
   // in case of a boolean result, return 1 or 0
-  if (funcResult === "true") {
+  if (funcResult === true) {
     return "1";
-  } else if (funcResult === "false") {
+  } else if (funcResult === false) {
     return "0";
   }
 
