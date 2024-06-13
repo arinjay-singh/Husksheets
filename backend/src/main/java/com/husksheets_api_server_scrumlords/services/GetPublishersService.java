@@ -32,7 +32,7 @@ public class GetPublishersService {
                     .collect(Collectors.toList());
 
             Response response = new Response(true, null);
-            response.setValues(values);
+            response.setValue(values);
             return response;
         }
 }

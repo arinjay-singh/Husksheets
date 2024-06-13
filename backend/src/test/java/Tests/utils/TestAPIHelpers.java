@@ -71,16 +71,16 @@ public class TestAPIHelpers {
         /**
          * @author Kaan Tural
          */
-        if (expectedOutput.getValues() != null) {
-            for (int i = 0; i < expectedOutput.getValues().size(); i++) {
-                Value expectedValue = expectedOutput.getValues().get(i);
-                resultActions.andExpect(jsonPath("$.values[" + i + "].publisher").value(expectedValue.getPublisher()))
-                        .andExpect(jsonPath("$.values[" + i + "].sheet").value(expectedValue.getSheet()))
-                        .andExpect(jsonPath("$.values[" + i + "].id").value(expectedValue.getId()))
-                        .andExpect(jsonPath("$.values[" + i + "].payload").value(expectedValue.getPayload()));
+        if (expectedOutput.getValue() != null) {
+            for (int i = 0; i < expectedOutput.getValue().size(); i++) {
+                Value expectedValue = expectedOutput.getValue().get(i);
+                resultActions.andExpect(jsonPath("$.value[" + i + "].publisher").value(expectedValue.getPublisher()))
+                        .andExpect(jsonPath("$.value[" + i + "].sheet").value(expectedValue.getSheet()))
+                        .andExpect(jsonPath("$.value[" + i + "].id").value(expectedValue.getId()))
+                        .andExpect(jsonPath("$.value[" + i + "].payload").value(expectedValue.getPayload()));
             }
         } else {
-            resultActions.andExpect(jsonPath("$.values").isEmpty());
+            resultActions.andExpect(jsonPath("$.value").isEmpty());
         }
     }
 

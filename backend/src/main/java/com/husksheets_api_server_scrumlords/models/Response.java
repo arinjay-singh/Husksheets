@@ -18,7 +18,7 @@ public class Response {
     String message;
     @Getter
     @Setter
-    List<Value> values;
+    List<Value> value;
     @Getter
     Long time;
 
@@ -31,7 +31,7 @@ public class Response {
     public Response(Boolean success, String message) {
         this.success = success;
         this.message = message;
-        this.values = new ArrayList<>();
+        this.value = new ArrayList<>();
         this.time = System.currentTimeMillis();
     }
 
@@ -49,7 +49,7 @@ public class Response {
                     "value":"%s""
                     "time":"%s"
                 }""",
-                success, message, values, time);
+                success, message, value, time);
     }
 
     /**
@@ -66,7 +66,7 @@ public class Response {
         Response otherResponse = (Response) obj;
         return success == otherResponse.success &&
                 (Objects.equals(message, otherResponse.message)) &&
-                (Objects.equals(values, otherResponse.values)) &&
+                (Objects.equals(value, otherResponse.value)) &&
                 otherResponse.time != null;
     }
 }

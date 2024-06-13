@@ -29,10 +29,10 @@ export const useGetPublishers = () => {
     const { get } = useApi();
     const getPublishers = async () => {
         const publisherData =  await get('/getPublishers');
-        const values =  publisherData.data.values;
+        const value =  publisherData.data.value;
         let publishers: string[] = [];
-        Object.keys(values).forEach(key => {
-            publishers.push(values[key].publisher)
+        Object.keys(value).forEach(key => {
+            publishers.push(value[key].publisher)
         })
         return publishers;
     };

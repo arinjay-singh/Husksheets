@@ -30,7 +30,7 @@ public class GetSheetsService {
             System.out.println(sheet.getSheetName());
         }
         Response response = new Response(true, null);
-        response.setValues(values);
+        response.setValue(values);
         return response;
     }
 }
