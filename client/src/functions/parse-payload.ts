@@ -43,7 +43,7 @@ export const parseServerPayload = (payload: string): (string)[][] => {
 };
 
 // Function to convert a 2D array back into a server payload
-export const convertToPayload = (data: (string | number | null)[][]): string => {
+export const convertToPayload = (data: string[][]): string => {
     const payloadLines: string[] = [];
 
     for (let row = 0; row < data.length; row++) {

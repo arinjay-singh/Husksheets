@@ -19,7 +19,7 @@ import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
 import { useGetUpdatesForPublished, useGetUpdatesForSubscription, useUpdate } from "@/app/api/api/update";
-import { parseServerPayload } from "@/functions/parse-payload";
+import { convertToPayload, parseServerPayload } from "@/functions/parse-payload";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -256,13 +256,14 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload = localStorage.getItem("spreadsheetData");
+  const payload = localStorage.get("spreadsheetData");
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
       const isOwner = (username == publisher);
       if (sheet && username && payload) {
-        await updatePublished(username, sheet, payload, isOwner);
+        const parsedPayload = convertToPayload(payload);
+        await updatePublished(username, sheet, parsedPayload, isOwner);
         console.log("Data updated successfully:");
       }
     } catch (error) {
@@ -278,7 +279,7 @@ const Spreadsheet: React.FC = () => {
       if (username && publisher && sheet && id) {
         if (username == publisher) {
           const updatedPayload = await getUpdatesForSubscription(username, sheet, id);
-          return parseServerPayload(updatedPayload);
+          setRawData(parseServerPayload(updatedPayload));
         } else {
           const updatedPayload = await getUpdatesForPublished(username, sheet, id);
           setRawData(parseServerPayload(updatedPayload));
