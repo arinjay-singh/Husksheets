@@ -8,10 +8,11 @@
  */
 
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth-context";
 import { useRegister } from "../api/api/register";
 import { Loading } from "@/components/loading";
+import { set } from "lodash";
 
 // login page component
 const LoginPage = () => {
@@ -20,28 +21,36 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [invalidAuth, setInvalidAuth] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAuthUpdated, setIsAuthUpdated] = useState(false);
 
   // get the login function from the auth context
   const { login, setAuthData } = useAuth();
   const { register } = useRegister();
 
+  useEffect(() => {
+    const handleAuthUpdate = async () => {
+      if (isAuthUpdated) {
+        try {
+          let response = await register();
+          login();
+        } catch (error) {
+          setInvalidAuth(true);
+        } finally {
+          setLoading(false);
+          setIsAuthUpdated(false);
+        }
+      }
+    };
+
+    handleAuthUpdate();
+  }, [isAuthUpdated, login, register]);
+
   // handle the login form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Perform authentication logic here
-    console.log('username:', username);
-    console.log('password:', password );
-    setAuthData({ username: username, password: password });
-    try {
-      let response = register();
-      const authenticated = await response;
-      login();
-    } catch (error) {
-      setInvalidAuth(true);
-    } finally {
-      setLoading(false);
-    }
+    setAuthData({ username, password });
+    setIsAuthUpdated(true);
   };
 
   // render the login form
