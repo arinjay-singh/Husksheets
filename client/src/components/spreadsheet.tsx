@@ -18,8 +18,10 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
-import { useUpdate } from "@/app/api/api/update";
+import { useGetUpdatesForPublished, useGetUpdatesForSubscription, useUpdate } from "@/app/api/api/update";
+import { convertToPayload, parseServerPayload } from "@/functions/parse-payload";
 import ConditionalDropdown from "./conditional-dropdown";
+
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -273,13 +275,34 @@ const Spreadsheet: React.FC = () => {
     try {
       const isOwner = username == publisher;
       if (sheet && username && payload) {
-        await updatePublished(username, sheet, payload, isOwner);
+        const parsedPayload = convertToPayload(JSON.parse(payload));
+        await updatePublished(username, sheet, parsedPayload, isOwner);
         console.log("Data updated successfully:");
       }
     } catch (error) {
-      console.error("Failed to update  data:");
+      console.error("Failed to update data:")
     }
-  };
+  }
+
+  const id = 0;
+  const { getUpdatesForSubscription } = useGetUpdatesForSubscription();
+  const { getUpdatesForPublished } = useGetUpdatesForPublished();
+  const handleLoadData = async () => {
+    try {
+      if (username && publisher && sheet && id) {
+        if (username == publisher) {
+          const updatedPayload = await getUpdatesForSubscription(username, sheet, id);
+          setRawData(parseServerPayload(updatedPayload));
+        } else {
+          const updatedPayload = await getUpdatesForPublished(username, sheet, id);
+          setRawData(parseServerPayload(updatedPayload));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load updates")
+    }
+  }
+
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
     { func: handleResetSheet, color: "red", label: "Reset Sheet" },
@@ -307,6 +330,9 @@ const Spreadsheet: React.FC = () => {
             </ToolBarButton>
             <ToolBarButton onClick={handleDeleteSheet} color="red">
               Delete Sheet
+            </ToolBarButton>
+            <ToolBarButton onClick={handleLoadData} color="red">
+              Load Sheet
             </ToolBarButton>
           </div>
         </div>

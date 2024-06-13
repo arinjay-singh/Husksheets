@@ -10,12 +10,11 @@
 import { cellMap } from "../../src/functions/cell-referencing";
 
 // Function to parse the server payload and convert it to a 2D array
-export const parseServerPayload = (payload: string): (string | null)[][] => {
+export const parseServerPayload = (payload: string): (string)[][] => {
     const lines = payload.split('\n');
     let maxRow = 0;
     let maxCol = 0;
     const parsedPayload: { row: number, col: number, value: string }[] = [];
-
     for (const line of lines) {
         if (line.trim()) { // Check if the line is not empty
             const [ref, ...termParts] = line.split(' ');
@@ -30,18 +29,21 @@ export const parseServerPayload = (payload: string): (string | null)[][] => {
     }
 
     // Create a 2D array filled with nulls
-    const result: (string | null)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(""));
+    const result: (string)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(""));
 
     // Fill the 2D array with parsed values
     for (const { row, col, value } of parsedPayload) {
         result[row][col] = value;
     }
-
-    return result;
+    if (result == null) {
+        return [];
+    } else {
+        return result;
+    }
 };
 
 // Function to convert a 2D array back into a server payload
-export const convertToPayload = (data: (string | number | null)[][]): string => {
+export const convertToPayload = (data: string[][]): string => {
     const payloadLines: string[] = [];
 
     for (let row = 0; row < data.length; row++) {
