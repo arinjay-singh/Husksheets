@@ -74,7 +74,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const logout = () => {
     setAuth(undefined);
-    localStorage.removeItem(localStorageKey);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(localStorageKey);
+    }
     router.push("/login");
   };
 
@@ -84,7 +86,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // set auth data
   const setAuthData = (data: AuthData) => {
     setAuth(data);
-    localStorage.setItem(localStorageKey, JSON.stringify(data));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(localStorageKey, JSON.stringify(data));
+    }
   }
 
   // context value to provide the authentication state and functions

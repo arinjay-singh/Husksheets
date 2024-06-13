@@ -51,7 +51,7 @@ public class TestSheetServices {
         Assertions.assertEquals(Constants.createSheetResponseSuccess, actualResponse);
 
         expectedSheetsTeam5.add(new Value(Constants.team5username, "Sheet1", null, null));
-        getSheetResponseSuccess.setValues(expectedSheetsTeam5);
+        getSheetResponseSuccess.setValue(expectedSheetsTeam5);
         //get sheets from team5 returns sheet1
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
@@ -69,7 +69,7 @@ public class TestSheetServices {
         Assertions.assertEquals(new Response(true, null), actualResponse);
 
         expectedSheetsTeam5.add(new Value(Constants.team5username, "Sheet2", null, null));
-        getSheetResponseSuccess.setValues(expectedSheetsTeam5);
+        getSheetResponseSuccess.setValue(expectedSheetsTeam5);
         //get sheets from team5 returns sheet1, sheet2
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
@@ -79,7 +79,7 @@ public class TestSheetServices {
         Assertions.assertEquals(new Response(true, null), actualResponse);
 
         expectedSheetsMike.add(new Value(Constants.mikeUsername, "Sheet1", null, null));
-        getSheetResponseSuccess.setValues(expectedSheetsMike);
+        getSheetResponseSuccess.setValue(expectedSheetsMike);
         //get sheets from mike returns Sheet1
         actualResponse = getSheetsService.getSheets(mikePublisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
@@ -89,7 +89,7 @@ public class TestSheetServices {
         Assertions.assertEquals(new Response(true, null), actualResponse);
 
         expectedSheetsTeam5.remove(new Value(Constants.team5username, "Sheet2", null, null));
-        getSheetResponseSuccess.setValues(expectedSheetsTeam5);
+        getSheetResponseSuccess.setValue(expectedSheetsTeam5);
         //get sheets from team5 returns sheet1
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);
@@ -106,7 +106,7 @@ public class TestSheetServices {
         Assertions.assertEquals(new Response(true, null), actualResponse);
 
         expectedSheetsTeam5.remove(new Value(Constants.team5username, "Sheet1", null, null));
-        getSheetResponseSuccess.setValues(expectedSheetsTeam5);
+        getSheetResponseSuccess.setValue(expectedSheetsTeam5);
         //getSheets team5, no more sheets
         actualResponse = getSheetsService.getSheets(team5Publisher);
         Assertions.assertEquals(getSheetResponseSuccess, actualResponse);

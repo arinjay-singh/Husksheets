@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.husksheets_api_server_scrumlords.services.ValidationUtils;
-
 /**
  * Get updates service class
  * @author main implementation: Nicholas O'Sullivan
@@ -47,7 +45,7 @@ public class GetUpdatesService {
         List<Value> returnValues = new ArrayList<>();
         returnValues.add(returnValue);
         Response returnResponse = new Response(true, null);
-        returnResponse.setValues(returnValues);
+        returnResponse.setValue(returnValues);
         return returnResponse;
     }
 

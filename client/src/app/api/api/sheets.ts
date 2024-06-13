@@ -13,10 +13,10 @@ export const useGetSheets = () => {
     const { post } = useApi();
     const getSheets = async (publisher: string) => {
         const sheetData = await post('/getSheets', { publisher });
-        const values = sheetData.data.values;
+        const value = sheetData.data.value;
         let sheets: string[] = [];
-        Object.keys(values).forEach(key => {
-            sheets.push(values[key].sheet)
+        Object.keys(value).forEach(key => {
+            sheets.push(value[key].sheet)
         })
         return sheets;
     };

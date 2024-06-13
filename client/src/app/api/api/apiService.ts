@@ -14,6 +14,7 @@ import { useAuth } from '@/context/auth-context';
  */
 export const base64Convert = async (username: string | undefined, password: string | undefined): Promise<string> => {
     const credentials = `${username}:${password}`;
+    console.log(username, password);
     const encodedCredentials = btoa(credentials);
     return `${encodedCredentials}`;
 };
@@ -22,7 +23,6 @@ export const base64Convert = async (username: string | undefined, password: stri
 export const api = axios.create({
     baseURL: 'http://localhost:8080/api/v1' // Replace with backend URL
 });
-
 
 /**
  * @author Nicholas O'Sullivan
@@ -50,6 +50,7 @@ export const useApi = (): ApiMethods => {
      */
     const get = async (url: string) => {
         const headers = await getAuthHeaders();
+        console.log(headers);
         return api.get(url, { headers });
     };
     /**

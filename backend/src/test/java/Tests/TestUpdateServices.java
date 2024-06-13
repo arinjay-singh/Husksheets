@@ -130,9 +130,9 @@ public class TestUpdateServices {
         Response response = getUpdatesService.getUpdates(requestPublisher, requestSheet, id, updateType);
 
         assertTrue(response.isSuccess());
-        assertNotNull(response.getValues());
-        assertEquals(1, response.getValues().size());
-        assertEquals("subscriptionUpdate\n", response.getValues().get(0).getPayload());
+        assertNotNull(response.getValue());
+        assertEquals(1, response.getValue().size());
+        assertEquals("subscriptionUpdate\n", response.getValue().get(0).getPayload());
     }
 
     @Test
@@ -152,9 +152,9 @@ public class TestUpdateServices {
         Response response = getUpdatesService.getUpdates(requestPublisher, requestSheet, id, updateType);
 
         assertTrue(response.isSuccess());
-        assertNotNull(response.getValues());
-        assertEquals(1, response.getValues().size());
-        assertEquals("subscriptionUpdate\n", response.getValues().get(0).getPayload());
+        assertNotNull(response.getValue());
+        assertEquals(1, response.getValue().size());
+        assertEquals("subscriptionUpdate\n", response.getValue().get(0).getPayload());
     }
 
     @Test

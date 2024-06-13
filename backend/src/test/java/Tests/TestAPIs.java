@@ -22,16 +22,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -254,7 +251,7 @@ public class TestAPIs {
         }
 
         publishers.addFirst(noDocsValue);
-        getPublishersResponse.setValues(publishers);
+        getPublishersResponse.setValue(publishers);
         System.out.printf("Publishers after registering %s: %s%n", username, publishers);
     }
 
@@ -512,7 +509,7 @@ public class TestAPIs {
                     returnValues.add(returnValue);
 
                     Response returnResponse = new Response(true, null);
-                    returnResponse.setValues(returnValues);
+                    returnResponse.setValue(returnValues);
                     return returnResponse;
                 });
 
@@ -553,7 +550,7 @@ public class TestAPIs {
                     returnValues.add(returnValue);
 
                     Response returnResponse = new Response(true, null);
-                    returnResponse.setValues(returnValues);
+                    returnResponse.setValue(returnValues);
                     return returnResponse;
                 });
     }

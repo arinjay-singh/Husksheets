@@ -7,11 +7,8 @@
  */
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "../context/auth-context";
-
-const inter = Inter({ subsets: ["latin"] });
+import { AuthProvider } from "@/context/auth-context";
 
 // title and description metadata for the application
 export const metadata: Metadata = {
@@ -28,7 +25,7 @@ export default function RootLayout({
   // render the layout
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

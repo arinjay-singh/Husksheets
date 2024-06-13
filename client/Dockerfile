@@ -20,11 +20,5 @@ RUN npm run build
 # Expose the port the application runs on (if applicable)
 EXPOSE 3000
 
-# Set the working directory to where the tests are located
-WORKDIR /app/client/test
-
-# Install test dependencies
-RUN npm install
-
 # Command to run the application
 CMD ["npm", "run", "dev"]

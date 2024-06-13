@@ -2,8 +2,6 @@ package Tests;
 
 
 import Tests.utils.Constants;
-import Tests.utils.TestAPIHelpers;
-import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Response;
 import com.husksheets_api_server_scrumlords.models.Value;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Test register & get publishers service
@@ -49,7 +46,7 @@ public class TestRegisterGetPublishersService {
 
                 //get Publishers: should return Team5
                 expectedPublishers.addFirst(Constants.Team5PublisherNoDocsValue);
-                getPublishersResponseSuccess.setValues(expectedPublishers);
+                getPublishersResponseSuccess.setValue(expectedPublishers);
                 actualResponse = getPublishersService.getPublishers();
                 Assertions.assertEquals(getPublishersResponseSuccess, actualResponse);
 
@@ -76,7 +73,7 @@ public class TestRegisterGetPublishersService {
 
                 //get Publishers: should return Team5 & Mike
                 expectedPublishers.addFirst(Constants.MikePublisherNoDocsValue);
-                getPublishersResponseSuccess.setValues(expectedPublishers);
+                getPublishersResponseSuccess.setValue(expectedPublishers);
                 actualResponse = getPublishersService.getPublishers();
                 Assertions.assertEquals(getPublishersResponseSuccess, actualResponse);
         }

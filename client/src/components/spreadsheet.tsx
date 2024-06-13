@@ -6,7 +6,7 @@
  * @author Arinjay Singh
  */
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { parseEquation } from "../functions/sheet-equations";
 import {
   useCreateSheet,
@@ -20,6 +20,8 @@ import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
 import { useGetUpdatesForPublished, useGetUpdatesForSubscription, useUpdate } from "@/app/api/api/update";
 import { convertToPayload, parseServerPayload } from "@/functions/parse-payload";
+import ConditionalDropdown from "./conditional-dropdown";
+
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -45,14 +47,15 @@ const Spreadsheet: React.FC = () => {
     // set isClient to true when the component mounts
     setIsClient(true);
     // retrieve the display data from local storage
-    const displayData = localStorage.getItem("displaySpreadsheetData");
-    // retrieve the raw data from local storage
-    const rawData = localStorage.getItem("spreadsheetData");
-    // if the display data exists, set the data state to the display data
-    if (displayData) setData(JSON.parse(displayData));
-    // if the raw data exists, set the raw data state to the raw data
-    if (rawData) setRawData(JSON.parse(rawData));
-
+    if (typeof window !== "undefined") {
+      const displayData = localStorage.getItem("displaySpreadsheetData");
+      // retrieve the raw data from local storage
+      const rawData = localStorage.getItem("spreadsheetData");
+      // if the display data exists, set the data state to the display data
+      if (displayData) setData(JSON.parse(displayData));
+      // if the raw data exists, set the raw data state to the raw data
+      if (rawData) setRawData(JSON.parse(rawData));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,7 +63,7 @@ const Spreadsheet: React.FC = () => {
   // dependencies: rawData and isClient
   useEffect(() => {
     // if client is false, return
-    if (!isClient) return;
+    if (!isClient || typeof window === "undefined") return;
     // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
@@ -120,7 +123,7 @@ const Spreadsheet: React.FC = () => {
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) {
           if (functionResult !== null) return functionResult;
-          if (equationResult ) return equationResult;
+          if (equationResult) return equationResult;
           return value;
         }
         return cell;
@@ -155,8 +158,13 @@ const Spreadsheet: React.FC = () => {
     );
     // set the display data state
     setData(displayData);
-    // update the local storage of the display data
-    localStorage.setItem("displaySpreadsheetData", JSON.stringify(displayData));
+    if (typeof window !== "undefined") {
+      // update the local storage of the display data
+      localStorage.setItem(
+        "displaySpreadsheetData",
+        JSON.stringify(displayData)
+      );
+    }
   };
 
   // add a row to the spreadsheet
@@ -226,7 +234,9 @@ const Spreadsheet: React.FC = () => {
     publishers.then((publisherData: string[]) => {
       setPublishers(publisherData);
       setHasPublishers(true);
-      localStorage.setItem("publishers", JSON.stringify(publisherData));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("publishers", JSON.stringify(publisherData));
+      }
       alert("Publishers retrieved successfully");
     });
   };
@@ -256,11 +266,14 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload = localStorage.getItem("spreadsheetData");
+  const payload =
+    typeof window !== "undefined"
+      ? localStorage.getItem("spreadsheetData")
+      : null;
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
-      const isOwner = (username == publisher);
+      const isOwner = username == publisher;
       if (sheet && username && payload) {
         const parsedPayload = convertToPayload(JSON.parse(payload));
         await updatePublished(username, sheet, parsedPayload, isOwner);
@@ -296,7 +309,7 @@ const Spreadsheet: React.FC = () => {
     { func: handleDeleteRow, color: "red", label: "Delete Row" },
     { func: handleDeleteColumn, color: "red", label: "Delete Column" },
     { func: handleDownloadCSV, color: "green", label: "Download CSV" },
-    {func: handleUpdate, color: "green", label: "Save"},
+    { func: handleUpdate, color: "green", label: "Save" },
   ];
 
   // render the spreadsheet component
@@ -328,42 +341,23 @@ const Spreadsheet: React.FC = () => {
             <ToolBarButton onClick={handleGetPublishers} color="red">
               Get Publishers
             </ToolBarButton>
-            {hasPublishers ? (
-              <select
-                id="pub-dropdown"
-                value={publisher}
-                onChange={(e) => {
-                  setPublisher(e.target.value);
-                }}
-                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
-              >
-                <option>None</option>
-                {publishers.map((pub) => (
-                  <option key={pub} value={pub} className="text-black">
-                    {pub}
-                  </option>
-                ))}
-              </select>
-            ) : null}
+            <ConditionalDropdown
+              condition={hasPublishers}
+              value={publisher}
+              setValue={setPublisher}
+              values={publishers}
+            />
           </div>
           <div className="flex flex-row justify-center">
             <ToolBarButton onClick={handleGetSheets} color="red">
               Get Sheets
             </ToolBarButton>
-            {hasSheets ? (
-              <select
-                id="sheet-dropdown"
-                value={selectedSheet}
-                onChange={(e) => setSelectedSheet(e.target.value)}
-                className="border-2 border-black text-black mx-3 rounded-xl p-2 w-1/4"
-              >
-                {sheets.map((ss) => (
-                  <option key={ss} value={ss} className="text-black">
-                    {ss}
-                  </option>
-                ))}
-              </select>
-            ) : null}
+            <ConditionalDropdown
+              condition={hasSheets}
+              value={selectedSheet}
+              setValue={setSelectedSheet}
+              values={sheets}
+            />
           </div>
         </div>
       </div>
