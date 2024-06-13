@@ -1,14 +1,16 @@
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig');
+
 module.exports = {
     preset: 'ts-jest',
-    testEnvironment: 'node',
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
+    testEnvironment: 'jest-environment-jsdom',
+    setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/'}),
     collectCoverage: true,
     coverageDirectory: 'coverage',
     collectCoverageFrom: [
-        'src/**/*.{ts,tsx}', // Includes all TypeScript files in the src directory
-        '!src/**/*.d.ts', // Excludes type definition files
+        'src/**/*.{ts,tsx}',
+        '!src/**/*.d.ts',
     ],
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     coverageThreshold: {
@@ -23,6 +25,6 @@ module.exports = {
         '^.+\\.[t|j]sx?$': 'babel-jest',
     },
     transformIgnorePatterns: [
-    '/node_modules/',
-  ],
+        '/node_modules/',
+    ],
 };
