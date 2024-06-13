@@ -35,4 +35,19 @@ describe('User class tests', () => {
         const user = new User('1', 'Alice');
         expect(user.getRoleForSheet('sheet1')).toBeUndefined();
     });
+
+    it('should return undefined for a sheet with no role assigned', () => {
+        const user = new User('1', 'Alice');
+        const user2 = new User('2', 'Bob');
+        user.addSheetRole('sheet1', Role.Publisher);
+        user2.addSheetRole('sheet2', Role.Subscriber);
+        user.removeSheetRole('sheet1');
+        user2.removeSheetRole('sheet2');
+        user.addSheetRole('sheet2', Role.Publisher);
+
+        expect(user.getRoleForSheet('sheet2')).toBe(Role.Publisher);
+        expect(user.getId()).toBe('1');
+        expect(user.getName()).toBe('Alice');
+        expect(user.getSheets()).toEqual(['sheet2']);
+    });
 });

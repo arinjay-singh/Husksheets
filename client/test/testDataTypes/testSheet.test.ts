@@ -77,6 +77,7 @@ describe("Spreadsheet", () => {
         const sheet = new Spreadsheet(rows, cols);
         expect(sheet.cells.get('$A1')).toBeInstanceOf(Cell);
         expect(sheet.cells.get('$B1')).toBeInstanceOf(Cell);
+        expect(sheet.getCell('$A6')).toBeNull();
     });
 
 });

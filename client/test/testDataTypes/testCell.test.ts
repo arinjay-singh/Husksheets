@@ -47,5 +47,12 @@ describe("Cell", () => {
         expect(cell.font).toBe("Arial");
     });
 
+    test('getters and setters', () => {
+        const cell = new Cell();
+        cell.formula = "=($A1 + 12.0)";
+        cell.displayCellInfo();
+        expect(cell.formula).toBe("=($A1 + 12.0)");
+    });
+
 
 });
