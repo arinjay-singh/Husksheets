@@ -1,6 +1,9 @@
+const { pathsToModuleNameMapper } = require('ts-jest');
+const { compilerOptions } = require('./tsconfig');
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
     collectCoverage: true,
     coverageDirectory: 'coverage',
     collectCoverageFrom: [
@@ -19,4 +22,7 @@ module.exports = {
     transform: {
         '^.+\\.[t|j]sx?$': 'babel-jest',
     },
+    transformIgnorePatterns: [
+    '/node_modules/',
+  ],
 };
