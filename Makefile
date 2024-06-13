@@ -37,7 +37,7 @@ frontend-run: frontend-build
 	cd $(FRONTEND_DIR) && npm run dev
 
 frontend-test:
-	cd $(FRONTEND_DIR)/test && npm install && npm test
+	cd $(FRONTEND_DIR) && npm install && npm run test-coverage
 
 # Docker targets
 docker-backend:
@@ -56,7 +56,7 @@ docker-test-backend:
 	docker run --rm $(BACKEND_IMAGE_NAME) ./mvnw test
 
 docker-test-frontend:
-	docker run --rm $(FRONTEND_IMAGE_NAME) /bin/sh -c "cd /app/test && npm install && npm test"
+	docker run --rm $(FRONTEND_IMAGE_NAME) /bin/sh -c "cd /app && npm install && npm run test-coverage"
 
 docker-contain: docker-backend docker-frontend
 
