@@ -256,18 +256,18 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload = localStorage.get("spreadsheetData");
+  const payload = localStorage.getItem("spreadsheetData");
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
       const isOwner = (username == publisher);
       if (sheet && username && payload) {
-        const parsedPayload = convertToPayload(payload);
+        const parsedPayload = convertToPayload(JSON.parse(payload));
         await updatePublished(username, sheet, parsedPayload, isOwner);
         console.log("Data updated successfully:");
       }
     } catch (error) {
-      console.error("Failed to update  data:")
+      console.error("Failed to update data:")
     }
   }
 
