@@ -9,7 +9,7 @@
 
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/auth-context";
+import { useAuth } from "@/context/auth-context";
 import { useRegister } from "../api/api/register";
 import { Loading } from "@/components/loading";
 
@@ -65,7 +65,7 @@ const LoginPage = () => {
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="email"
+                htmlFor="username"
               >
                 Username
               </label>
@@ -115,6 +115,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-function aysnc() {
-  throw new Error("Function not implemented.");
-}
