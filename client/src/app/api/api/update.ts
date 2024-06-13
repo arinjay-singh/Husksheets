@@ -17,7 +17,7 @@ export const useUpdate = () => {
 
     const updatePublished = async (publisher: string, sheet: string, payload: string, isOwner: boolean) => {
         if (isOwner) {
-            console.log(payload);
+            console.log('Payload:', payload);
             return await post('/updatePublished', {publisher, sheet, payload});
         } else {
             return await post('/updateSubscription', {publisher, sheet, payload});
