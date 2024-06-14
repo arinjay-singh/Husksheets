@@ -138,6 +138,11 @@ describe("parseEquation", () => {
         expect(parseEquation(mockData, input)).toBe(null);
       });
 
+      it("should return the expression when eval throws an error", () => {
+        const input = "= 1 + (2"; // This input will cause eval to throw an error due to unmatched parentheses
+        expect(parseEquation(mockData, input)).toBe("1+(2");
+      });
+
 });
 
 
