@@ -74,6 +74,7 @@ const Spreadsheet: React.FC = () => {
     // store the data in local storage
     localStorage.setItem("spreadsheetData", JSON.stringify(rawData));
     localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
+    console.log(JSON.stringify(rawData));
   }, [data, rawData, isClient]);
 
   // handle input change in the spreadsheet
@@ -291,16 +292,18 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
-  const payload =
-    typeof window !== "undefined"
-      ? localStorage.getItem("spreadsheetData")
-      : null;
+  // const payload =
+    // typeof window !== "undefined"
+    //   ? localStorage.getItem("spreadsheetData")
+    //   : null;
+  const payload = rawData;
   const { updatePublished } = useUpdate();
   const handleUpdate = async () => {
     try {
       const isOwner = username == publisher;
       if (sheet && username && payload) {
-        const parsedPayload = convertToPayload(JSON.parse(payload));
+        console.log(payload);
+        const parsedPayload = convertToPayload(payload);
         await updatePublished(username, sheet, parsedPayload, isOwner);
         console.log("Data updated successfully:");
       }
