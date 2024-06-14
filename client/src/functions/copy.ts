@@ -1,3 +1,10 @@
+/**
+ * @file copy.ts
+ * @brief This file defines the parseCopy function, which is used to parse the COPY function in the spreadsheet.
+ * @date 06-13-2024
+ * @author Arinjay Singh
+ */
+
 import { cellMap } from "./cell-referencing";
 
 export const parseCopy = (
