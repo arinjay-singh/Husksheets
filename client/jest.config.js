@@ -5,7 +5,10 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jest-environment-jsdom',
     setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/'}),
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/'}),
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+    },
     collectCoverage: true,
     coverageDirectory: 'coverage',
     collectCoverageFrom: [

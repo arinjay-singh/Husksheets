@@ -1,3 +1,7 @@
+/**
+ * The tests for the app page.
+ * @author Kaan Tural
+ */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from '../../src/app/login/page'; // Adjusted the import path
 import { useAuth } from '@/context/auth-context'; // Adjusted the import path
