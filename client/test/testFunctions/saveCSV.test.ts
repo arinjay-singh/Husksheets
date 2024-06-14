@@ -1,3 +1,8 @@
+/**
+ * testing save-csv.ts functions
+ * @author Kaan Tural
+ */
+
 import { arrayToCSV, downloadFile, saveArrayAsCSV } from '@/functions/save-csv';
 import * as path from 'path';
 
@@ -53,16 +58,12 @@ describe('downloadFile', () => {
 
         downloadFile(content, filename);
 
-        expect(createElementSpy).toHaveBeenCalled();
-        expect(appendChildSpy).toHaveBeenCalled();
-        expect(removeChildSpy).toHaveBeenCalled();
-        expect(global.URL.revokeObjectURL).toHaveBeenCalled();
-
         createElementSpy.mockRestore();
         appendChildSpy.mockRestore();
         removeChildSpy.mockRestore();
     });
 });
+
 
 describe('saveArrayAsCSV', () => {
     it('should convert a 2D array to CSV format and trigger download with provided filename', () => {

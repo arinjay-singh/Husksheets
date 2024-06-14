@@ -18,6 +18,7 @@ public class SerializationUtil {
      * @author Kaan Tural
      */
     public static void serialize(Object object, String fileName) throws IOException {
+        System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
         Path path = Paths.get(fileName).toAbsolutePath();
         Path parentDir = path.getParent();
         if (parentDir != null && !Files.exists(parentDir)) {
@@ -37,13 +38,17 @@ public class SerializationUtil {
      * @author Kaan Tural
      */
     public static Object deserialize(String filename) {
+        System.out.println("StartupHook: Working Directory = " + System.getProperty("user.dir"));
         Path path = Paths.get(filename).toAbsolutePath();
+        System.out.println("Attempting to deserialize from: " + path.toString());
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toString()))) {
             return ois.readObject();
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filename);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("IO Exception: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class not found: " + e.getMessage());
         }
         return null;
     }

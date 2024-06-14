@@ -6,7 +6,7 @@
  * @author Troy Caron
  */
 
-import { parseLatestUpdates, convertToPayload } from "../../src/functions/parse-payload";
+import { parseLatestUpdates, convertToPayload } from "@/functions/parse-payload";
 
 describe("parse-payload", () => {
     test('should correctly parse payload given into a JSON array of objects', () => {
@@ -52,6 +52,4 @@ describe("convertToPayload", () => {
         const partiallyEmptyPayload = "$A1 12.0\n$B1 Hello\n$A2 \"Monkey\"\n$B2 \n";
         expect(convertToPayload([["12.0", "Hello"], ["\"Monkey\"", ""]])).toEqual(partiallyEmptyPayload);
     });
-
-
 });
