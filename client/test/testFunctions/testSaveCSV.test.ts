@@ -7,7 +7,7 @@
  */
 
 
-import { arrayToCSV, downloadFile, saveArrayAsCSV } from '../../src/functions/save-csv';
+import { arrayToCSV, downloadFile, saveArrayAsCSV } from '@/functions/save-csv';
 import * as fs from 'fs';
 import * as path from 'path';
  
