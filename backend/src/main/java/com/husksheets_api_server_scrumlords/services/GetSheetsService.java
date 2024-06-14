@@ -24,14 +24,15 @@ public class GetSheetsService {
      * @return A response with all sheets for the publisher.
      */
     public Response getSheets(Publisher publisher) {
-        ArrayList<Value> values = (ArrayList<Value>) publisher.getSheets().stream()
+        List<Value> values = publisher.getSheets().stream()
                 .map(sheet -> new Value(sheet.getPublisherName(), sheet.getSheetName(), null, null))
                 .toList();
         for (Sheet sheet : publisher.getSheets()) {
             System.out.println(sheet.getSheetName());
         }
+        ArrayList<Value> returnValues = values.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         Response response = new Response(true, null);
-        response.setValue(values);
+        response.setValue(returnValues);
         return response;
     }
 }
