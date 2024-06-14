@@ -1,28 +1,91 @@
 /**
- * @file testParseServerPayload.test.ts
- * @brief Tests for the parseServerPayload function
+ * @file testCellReferencing.test.ts
+ * @brief Tests for the cell-referencing functionality
  * @version 1.0
- * @date 06-04-2024
- * @author Troy Caron
+ * @author Nicholas O'Sullivan
  */
 
-import { cellMap } from "../../src/functions/cell-referencing";
+
+import { retrieveCellValue } from "../../src/functions/cell-referencing";
+
+describe("retrieveCellValue", () => {
+  it("should retrieve cell value correctly from data", () => {
+    const data = [
+      ["A1", "B1", "C1"],
+      ["A2", "B2", "C2"],
+      ["A3", "B3", "C3"]
+    ];
+
+    // Test retrieval for known coordinates
+    expect(retrieveCellValue(data, [0, 0])).toEqual("A1");
+    expect(retrieveCellValue(data, [1, 1])).toEqual("B2");
+    expect(retrieveCellValue(data, [2, 2])).toEqual("C3");
+  });
+
+});
+
+import { parseCellReferences } from "../../src/functions/cell-referencing";
+
+describe("parseCellReferences", () => {
+  const data = [
+    ["A1", "B1"],
+    ["A2", "B2"]
+  ];
+
+  it("should replace cell references with values from data", () => {
+    const expression = "= $A1 + $B2";
+    const parsed = parseCellReferences(data, expression);
+    expect(parsed).toEqual("= A1 + B2");
+  });
+
+  it("should handle invalid cell references", () => {
+    const expression = "= $A1 + $C3"; // C3 is out of bounds in the mock data
+    const parsed = parseCellReferences(data, expression);
+    expect(parsed).toEqual("= A1 + $C3"); // Invalid reference remains unchanged
+  });
+});
 
 
-describe("cellMap", () => {
-     test('should correctly map cells from a 2d array to their corresponding reference', () => {
-        expect(cellMap("$A1")).toEqual([0, 0]);
-        expect(cellMap("$B2")).toEqual([1, 1]);
-        expect(cellMap("$C3")).toEqual([2, 2]);
-        expect(cellMap("$Z1")).toEqual([0, 25]);
-        expect(cellMap("$AA1")).toEqual([0, 26]);
-        expect(cellMap("$AB2")).toEqual([1, 27]);
-    });
+import { retrieveCellRangeValues } from "../../src/functions/cell-referencing";
 
-    test('should handle lower-case letters correctly', () => {
-        expect(cellMap("$a1")).toEqual([0, 0]);
-        expect(cellMap("$b2")).toEqual([1, 1]);
-        expect(cellMap("$aa1")).toEqual([0, 26]);
-        expect(cellMap("$ab2")).toEqual([1, 27]);
-    });
+describe("retrieveCellRangeValues", () => {
+  const data = [
+    ["A1", "B1", "C1"],
+    ["A2", "B2", "C2"],
+    ["A3", "B3", "C3"]
+  ];
+
+  it("should retrieve values from cell range", () => {
+    const rangeValues = retrieveCellRangeValues("$A1", "$B2", data);
+    expect(rangeValues).toEqual("A1,B1,A2,B2");
+  });
+
+  it("should handle invalid cell ranges gracefully", () => {
+    // Mock data does not cover all possible scenarios, but test edge cases
+    const rangeValues = retrieveCellRangeValues("$A1", "$D4", data);
+    expect(rangeValues).toEqual(""); // Invalid range should return empty string
+  });
+});
+
+
+import { replaceCellRangesWithValues } from "../../src/functions/cell-referencing";
+
+describe("replaceCellRangesWithValues", () => {
+  const data = [
+    ["A1", "B1", "C1"],
+    ["A2", "B2", "C2"],
+    ["A3", "B3", "C3"]
+  ];
+
+  it("should replace cell range with values from data", () => {
+    const input = "= SUM($A1:$B2)";
+    const result = replaceCellRangesWithValues(data, input);
+    expect(result).toEqual("= SUM(A1,B1,A2,B2)");
+  });
+
+  it("should handle invalid cell ranges gracefully", () => {
+    const input = "= SUM($A1:$D4)";
+    const result = replaceCellRangesWithValues(data, input);
+    expect(result).toEqual("= SUM()");
+  });
 });

@@ -1,5 +1,5 @@
-import { useRegister, useGetPublishers } from '../../src/app/api/api/register';
-import { useApi } from '../../src/app/api/api/apiService';
+import { useRegister, useGetPublishers } from '@/app/api/api/register';
+import { useApi } from '@/app/api/api/apiService';
 import { describe } from 'node:test';
 
 jest.mock('../../src/app/api/api/apiService');
