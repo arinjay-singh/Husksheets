@@ -1,3 +1,4 @@
+
 /**
  * @file apiService.ts
  * @brief Abstracted api service calls
@@ -5,12 +6,12 @@
  */
 
 import axios from 'axios';
-import { useAuth } from '@/context/auth-context';
+import {useAuth} from '@/context/auth-context';
 
 
 /**
-@author Parnika Jain
- Function to convert credentials to Base64
+ @author Parnika Jain
+  Function to convert credentials to Base64
  */
 export const base64Convert = async (username: string | undefined, password: string | undefined): Promise<string> => {
     const credentials = `${username}:${password}`;
@@ -21,7 +22,8 @@ export const base64Convert = async (username: string | undefined, password: stri
 
 // Create an Axios instance with a base URL
 export const api = axios.create({
-    baseURL: 'http://localhost:8080/api/v1' // Replace with backend URL
+    baseURL: 'https://husksheets.fly.dev/api/v1'
+    // baseURL: 'http://localhost:8080/api/v1' // Replace with backend URL
     // baseURL: 'https://redlightserver.fly.dev/api/v1'
 });
 
@@ -36,14 +38,14 @@ interface ApiMethods {
 }
 
 export const useApi = (): ApiMethods => {
-    const { auth } = useAuth();
+    const {auth} = useAuth();
 
     /**
      * @author Parnika Jain
      */
     const getAuthHeaders = async () => {
         const token = await base64Convert(auth?.username, auth?.password);
-        return token ? { Authorization: `Basic ${token}` } : {};
+        return token ? {Authorization: `Basic ${token}`} : {};
     };
 
     /**
@@ -52,16 +54,17 @@ export const useApi = (): ApiMethods => {
     const get = async (url: string) => {
         const headers = await getAuthHeaders();
         console.log(headers);
-        return api.get(url, { headers });
+        return api.get(url, {headers});
     };
     /**
      * @author Nicholas O'Sullivan
      */
     const post = async (url: string, data: any) => {
         const headers = await getAuthHeaders();
-        return api.post(url, data, { headers });
+        return api.post(url, data, {headers});
     };
 
-    return { get, post };
+    return {get, post};
 
 };
+
