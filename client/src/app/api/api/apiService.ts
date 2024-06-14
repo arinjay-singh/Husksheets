@@ -8,6 +8,14 @@
 import axios from 'axios';
 import {useAuth} from '@/context/auth-context';
 
+const apiUrl = process.env.NEXT_PUBLIC_URL;
+const userName = process.env.NEXT_PUBLIC_NAME;
+const userPassword = process.env.NEXT_PUBLIC_PASSWORD;
+const publisherName = process.env.NEXT_PUBLIC_PUBLISHER;
+const sheetName = process.env.NEXT_PUBLIC_SHEET;
+console.log(apiUrl);
+console.log(userName);
+console.log(userPassword);
 
 /**
  @author Parnika Jain

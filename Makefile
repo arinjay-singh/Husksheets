@@ -75,6 +75,11 @@ run: backend-run frontend-run
 # Build all
 build: backend-build frontend-build
 
+#create .env.local file for setting client local environment. (Used for cli startup)
+create-env-file:
+	@echo "Creating .env.local file..."
+	touch $(FRONTEND_DIR)/.env.local
+
 # Clean targets
 clean:
 	cd $(BACKEND_DIR) && ./mvnw clean
