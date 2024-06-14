@@ -36,7 +36,7 @@ const Home: NextPage = () => {
               Register
             </ToolBarButton>
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-black text-center">
+          <h1 className="text-4xl font-bold mb-2 text-black text-center">
             HuskSheets
           </h1>
           <Spreadsheet />
