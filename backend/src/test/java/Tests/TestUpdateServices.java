@@ -132,7 +132,7 @@ public class TestUpdateServices {
         assertTrue(response.isSuccess());
         assertNotNull(response.getValue());
         assertEquals(1, response.getValue().size());
-        assertEquals("subscriptionUpdate\n", response.getValue().get(0).getPayload());
+        assertEquals("subscriptionUpdate", response.getValue().get(0).getPayload());
     }
 
     @Test
@@ -154,7 +154,7 @@ public class TestUpdateServices {
         assertTrue(response.isSuccess());
         assertNotNull(response.getValue());
         assertEquals(1, response.getValue().size());
-        assertEquals("subscriptionUpdate\n", response.getValue().get(0).getPayload());
+        assertEquals("subscriptionUpdate", response.getValue().get(0).getPayload());
     }
 
     @Test
