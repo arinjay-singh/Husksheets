@@ -67,8 +67,10 @@ const Spreadsheet: React.FC = () => {
         const [hasSheets, setHasSheets] = useState<boolean>(false);
         const [isLoadingInData, setIsLoadingInData] = useState(false);
         const [isSpreadsheetLoaded, setIsSpreadsheetLoaded] = useState<boolean>(false);
-        const [publishedUpdatesId, setPublishedUpdatesId] = useState<number>(0);
-        const [subscriptionUpdatesID, setSubscriptionUpdatesId] = useState<number>(0);
+        const [publishedUpdatesId, setPublishedUpdatesId] = useState(0);
+        const [subscriptionUpdatesId, setSubscriptionUpdatesId] = useState<number>(0);
+
+
         /* INITIAL DATA LOAD FROM LOCAL STORAGE */
         useEffect(() => {
             setIsClient(true);
@@ -115,19 +117,37 @@ const Spreadsheet: React.FC = () => {
         }, [rawData]);
 
 
-        /** updates and getUpdates cycle when user makes changes to the loaded spreadsheet.
+        /** updates sent to server when user makes changes to the loaded spreadsheet.
          * @author: Nicholas O'Sullivan
          */
         useEffect(() => {
                 console.log(isSpreadsheetLoaded);
                 if (isSpreadsheetLoaded) {
-                    handleUpdate(); // Call handleUpdate first
-                    handleGetUpdates(); // Call handleGetUpdates second
+                    handleUpdate(); // Call handleUpdate
                 }
             }, [changes]
         )
         ;
+        /**
+         * retrieve updates from the server every 1-2 seconds.
+         */
+        useEffect(() => {
+            console.log("fetching updates:");
 
+            if (isSpreadsheetLoaded) {
+                // Define a function to fetch updates
+                const fetchUpdates = async () => {
+                    try {
+                        await handleGetUpdates(); // Call your function to fetch updates
+                    } catch (error) {
+                        console.error("Failed to fetch updates:", error);
+                    }
+                };
+                // interval to call fetchUpdates every 1 second
+                const interval = setInterval(fetchUpdates, 2000);
+                return () => clearInterval(interval);
+            }
+        }, [isSpreadsheetLoaded]);
 
         /* CELL INPUT CHANGE HANDLER */
         const handleInputChange = (
@@ -320,6 +340,9 @@ const Spreadsheet: React.FC = () => {
             }
         }
 
+        // Assuming publishedUpdatesId needs to be updated based on some condition
+
+
         /** handle getting updates for the loaded sheet:
          * getUpdatesForPublished (if user=publisher): allows the Publisher to see the Subscribers new changes
          * or getUpdatesForSubscription(if user!=publisher): which allows the Subscriber to see the publisher's new changes)
@@ -339,27 +362,35 @@ const Spreadsheet: React.FC = () => {
                             publishedUpdatesId
                         );
                         const updatedPayload = payloadAndId[0].join('');
-                        const id = payloadAndId[1];
-                        setIsLoadingInData(true);
-                        const parsedChanges = parseLatestUpdates(convertToPayload(rawData) + updatedPayload);
-                        setRawData(parsedChanges);
-                        if (id != null) {
+                        const id = parseInt(payloadAndId[1][0], 10);
+
+                        console.log('payload', payloadAndId);
+                        console.log('retrieved id', id);
+                        console.log('client stored id', publishedUpdatesId);
+                        if (id != null && id > publishedUpdatesId) {
+                            console.log("Setting newPublishedUpdatesId to:", id);
                             setPublishedUpdatesId(id);
+                            setIsLoadingInData(true);
+                            console.log('update payload', updatedPayload);
+                            console.log('raw data', rawData)
+                            const parsedChanges = parseLatestUpdates(convertToPayload(rawData) + updatedPayload);
+                            setRawData(parsedChanges);
+                            console.log('final parsed changes', parsedChanges);
                         }
 
                     } else {
                         const payloadAndId = await getUpdatesForSubscription(
                             username,
                             typedSheet,
-                            subscriptionUpdatesID
+                            subscriptionUpdatesId
                         );
                         const updatedPayload = payloadAndId[0].join('');
-                        const id = payloadAndId[1];
-                        setIsLoadingInData(true);
-                        const parsedChanges = parseLatestUpdates(convertToPayload(rawData) + updatedPayload);
-                        setRawData(parsedChanges);
-                        if (id != null) {
+                        const id = parseInt(payloadAndId[1][0], 10);
+                        if (id != null && id > subscriptionUpdatesId) {
+                            setIsLoadingInData(true);
                             setSubscriptionUpdatesId(id);
+                            const parsedChanges = parseLatestUpdates(convertToPayload(rawData) + updatedPayload);
+                            setRawData(parsedChanges);
                         }
                     }
                 }
