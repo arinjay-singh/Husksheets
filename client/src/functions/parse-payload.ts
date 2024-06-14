@@ -40,11 +40,7 @@ export const parseLatestUpdates = (payload: string): (string)[][] => {
         result[row][col] = value;
     }
     console.log("result", result);
-    if (result == null) {
-        return [];
-    } else {
-        return result;
-    }
+    return result;
 };
 
 // Function to convert a 2D array back into a server payload
