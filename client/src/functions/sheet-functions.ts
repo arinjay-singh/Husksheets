@@ -35,7 +35,7 @@ class Token {
 }
 
 // Tokenizer class
-class Tokenizer {
+class FunctionTokenizer {
   input: string;
   position: number = 0;
   currentChar: string | null;
@@ -143,8 +143,8 @@ class Tokenizer {
 }
 
 // Parser class
-export class Parser {
-  tokenizer: Tokenizer;
+export class FunctionParser {
+  tokenizer: FunctionTokenizer;
   currentToken: Token;
 
   // Constructor that initializes the tokenizer and currentToken
@@ -152,7 +152,7 @@ export class Parser {
   constructor(data: string[][], input: string) {
     const parsedRanges = replaceCellRangesWithValues(data, input);
     const parsedReferences = parseCellReferences(data, parsedRanges);
-    this.tokenizer = new Tokenizer(parsedReferences);
+    this.tokenizer = new FunctionTokenizer(parsedReferences);
     this.currentToken = this.tokenizer.getNextToken();
   }
 
