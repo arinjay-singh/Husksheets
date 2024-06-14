@@ -40,7 +40,7 @@ public class SerializationUtil {
     public static Object deserialize(String filename) {
         System.out.println("StartupHook: Working Directory = " + System.getProperty("user.dir"));
         Path path = Paths.get(filename).toAbsolutePath();
-        System.out.println("Attempting to deserialize from: " + path.toString());
+        System.out.println("Attempting to deserialize from: " + path);
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toString()))) {
             return ois.readObject();
         } catch (FileNotFoundException e) {
