@@ -5,8 +5,8 @@
  * @date 06-12-2024
  */
 
-import { parseEquation } from '../../src/functions/sheet-equations';
-import { Parser } from '../../src/functions/sheet-functions';
+import { parseEquation } from '../../src/functionality/sheet-equations';
+import { Parser } from '../../src/functionality/sheet-functions';
 
 describe("parseEquation", () => {
     const mockData = [

@@ -7,7 +7,7 @@
  */
 
 
-import { cellMap } from "../../src/functions/cell-referencing";
+import { cellMap } from "./cell-referencing";
 
 // Function to parse the server payload and convert it to a 2D array
 export const parseServerPayload = (payload: string): (string)[][] => {

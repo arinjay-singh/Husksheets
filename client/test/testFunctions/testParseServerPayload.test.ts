@@ -6,7 +6,7 @@
  * @author Troy Caron
  */
 
-import { parseServerPayload, convertToPayload } from "../../src/functions/parse-payload";
+import { parseServerPayload, convertToPayload } from "../../src/functionality/parse-payload";
 
 describe("parse-payload", () => {
     test('should correctly parse payload given into a JSON array of objects', () => {

@@ -6,7 +6,7 @@
  * @author Troy Caron
  */
 
-import { cellMap } from "../../src/functions/cell-referencing";
+import { cellMap } from "../../src/functionality/cell-referencing";
 
 
 describe("cellMap", () => {

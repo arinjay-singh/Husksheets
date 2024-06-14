@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { parseEquation } from "../functions/sheet-equations";
+import { parseEquation } from "../functionality/sheet-equations";
 import {
   useCreateSheet,
   useDeleteSheet,
@@ -15,8 +15,8 @@ import {
 } from "@/app/api/api/sheets";
 import { useGetPublishers } from "@/app/api/api/register";
 import { useAuth } from "@/context/auth-context";
-import { Parser } from "@/functions/sheet-functions";
-import { saveArrayAsCSV } from "@/functions/save-csv";
+import { Parser } from "@/functionality/sheet-functions";
+import { saveArrayAsCSV } from "@/functionality/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
 import {
   useGetUpdatesForPublished,
@@ -26,9 +26,10 @@ import {
 import {
   convertToPayload,
   parseServerPayload,
-} from "@/functions/parse-payload";
+} from "@/functionality/parse-payload";
 import ConditionalDropdown from "./conditional-dropdown";
 import { parse } from "path";
+import parseCopy from "@/functionality/copy";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -106,6 +107,7 @@ const Spreadsheet: React.FC = () => {
     colIndex: number,
     value: string | null
   ) => {
+    console.log("executeCell");
     // if the value is null, alert the user and return
     if (value === null) {
       alert("Cannot execute empty cell");
@@ -122,13 +124,31 @@ const Spreadsheet: React.FC = () => {
       equationResult = parseEquation(data, value);
     }
 
+    // parse copy function
+    let copyResult = parseCopy(data, value, [rowIndex, colIndex]);
+    if (copyResult) {
+      console.log("copying");
+      let copiedRawData = rawData.map((row) => [...row]);
+      copyResult[2].forEach((coord) => {
+        copiedRawData[coord[0]][coord[1]] = copyResult[0];
+      });
+      setRawData(copiedRawData);
+    }
+
     // create a display data variable
     let displayData: string[][];
     // if the equation result exists, set the display data to the equation result
     // otherwise, set the display data to the parsed value
     displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) => {
+        if (
+          copyResult &&
+          copyResult[2].some((coord) => coord[0] === rIdx && coord[1] === cIdx)
+        ) {
+          return copyResult[1];
+        }
         if (rIdx === rowIndex && cIdx === colIndex) {
+          if (copyResult) return copyResult[1];
           if (functionResult !== null) return functionResult;
           if (equationResult) return equationResult;
           return value;
@@ -305,8 +325,8 @@ const Spreadsheet: React.FC = () => {
   const handleGetUpdates = async () => {
     if (username === undefined) return;
     try {
-      console.log(username, publisher, selectedSheet, id)
-      if (publisher !== '' && selectedSheet !== '') {
+      console.log(username, publisher, selectedSheet, id);
+      if (publisher !== "" && selectedSheet !== "") {
         if (username == publisher) {
           const updatedPayload = await getUpdatesForSubscription(
             username,
@@ -421,7 +441,9 @@ const Spreadsheet: React.FC = () => {
                           handleInputChange(rowIndex, colIndex, e.target.value)
                         }
                         onKeyDown={(e) => {
+                          console.log("keydown");
                           if (e.key === "Enter") {
+                            console.log("enter");
                             e.preventDefault();
                             executeCell(
                               rowIndex,

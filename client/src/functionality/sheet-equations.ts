@@ -13,7 +13,7 @@ export const parseEquation = (data: string[][], equation: string) => {
   // remove all spaces from the equation
   equation = equation.replace(/\s/g, "");
   // ensure the operation is in the correct format
-  if (!equation.startsWith("=") || equation.length < 4) {
+  if (!equation.startsWith("=") || equation.length < 4 || equation.includes("COPY")) {
     return null;
   }
 
