@@ -35,10 +35,8 @@ public class RegisterController {
      */
     @GetMapping("api/v1/register")
     public Response register() {
-        //get auth token to access client username
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username =  authentication.getName();
-        //get and send response from reg service
         return registerUserService.register(username);
     }
 

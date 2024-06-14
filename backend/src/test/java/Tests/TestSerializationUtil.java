@@ -28,6 +28,9 @@ public class TestSerializationUtil {
     @TempDir
     Path tempDir;
     private static final String TEST_FILE_PATH = "src/test/java/Tests/test_publishers.ser";
+    private static final String TEST_FILE_PATH2 =
+            "backend/src/main/java/com/husksheets_api_server_scrumlords/serialize/test_publishers.ser";
+
 
     @BeforeEach
     public void setUp() {
@@ -99,5 +102,21 @@ public class TestSerializationUtil {
         String nonExistentFilePath = "src/test/java/Tests/non_existent_file.ser";
         Object result = SerializationUtil.deserialize(nonExistentFilePath);
         assertNull(result, "Expected null to be returned on deserialization failure");
+    }
+
+    @Test
+    public void testSerializationDeserialization() throws IOException {
+        Publishers publishers = Publishers.getInstance();
+        publishers.addNewPublisher("testUser");
+
+        SerializationUtil.serialize(publishers, TEST_FILE_PATH2);
+
+        File file = new File(TEST_FILE_PATH2);
+        assertTrue(file.exists(), "Serialized file should be created");
+
+        Publishers deserializedPublishers = (Publishers) SerializationUtil.deserialize(TEST_FILE_PATH2);
+        assertNotNull(deserializedPublishers, "Deserialized object should not be null");
+        assertTrue(deserializedPublishers.getPublisherMap().containsKey("testUser"),
+                "Deserialized publisher should contain testUser");
     }
 }

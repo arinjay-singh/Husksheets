@@ -23,6 +23,8 @@ public class StartupHook {
      */
     @PostConstruct
     public void onStartup() {
+        System.out.println("Current Directory: " + System.getProperty("user.dir"));
+        System.out.println("Absolute File Path: " + new File(FILE_PATH).getAbsolutePath());
         File file = new File(FILE_PATH);
         if (file.exists()) {
             Publishers deserializedPublishers = (Publishers) SerializationUtil.deserialize(FILE_PATH);

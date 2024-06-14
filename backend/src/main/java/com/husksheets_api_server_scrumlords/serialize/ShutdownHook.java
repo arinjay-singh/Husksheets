@@ -33,6 +33,7 @@ public class ShutdownHook {
     @PreDestroy
     public void onShutdown() throws IOException {
         System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
+        System.out.println("Path: " + Paths.get(filePath).toAbsolutePath());
         Path path = Paths.get(filePath).toAbsolutePath();
         System.out.println("Resolved path: " + path);
 

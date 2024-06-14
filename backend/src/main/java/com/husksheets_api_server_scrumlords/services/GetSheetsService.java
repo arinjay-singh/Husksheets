@@ -6,6 +6,7 @@ import com.husksheets_api_server_scrumlords.models.Sheet;
 import com.husksheets_api_server_scrumlords.models.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class GetSheetsService {
      * @return A response with all sheets for the publisher.
      */
     public Response getSheets(Publisher publisher) {
-        List<Value> values = publisher.getSheets().stream()
+        ArrayList<Value> values = (ArrayList<Value>) publisher.getSheets().stream()
                 .map(sheet -> new Value(sheet.getPublisherName(), sheet.getSheetName(), null, null))
                 .toList();
         for (Sheet sheet : publisher.getSheets()) {

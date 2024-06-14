@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,19 @@ public class SpringSecurityConfig {
 
     @Value("${user.mike.password}")
     private String mikePassword;
+
+    @Value("${user.bob.username}")
+    private String bobUsername;
+
+    @Value("${user.bob.password}")
+    private String bobPassword;
+
+    @Value("${user.alice.username}")
+    private String aliceUsername;
+
+    @Value("${user.alice.password}")
+    private String alicePassword;
+
     /**
      * PasswordEncoder bean to encode passwords.
      */
@@ -57,7 +71,15 @@ public class SpringSecurityConfig {
                 mikeUsername, mikePassword,
                 Collections.emptyList()
         );
-        return new InMemoryUserDetailsManager(Team5User, MikeUser);
+        UserDetails BobUser = new CustomUserDetails(
+                bobUsername, bobPassword,
+                Collections.emptyList()
+        );
+        UserDetails AliceUser = new CustomUserDetails(
+                aliceUsername, alicePassword,
+                Collections.emptyList()
+        );
+        return new InMemoryUserDetailsManager(Team5User, MikeUser, BobUser, AliceUser);
     }
 
     /**
@@ -103,7 +125,7 @@ public class SpringSecurityConfig {
 
     /**
      * CorsConfigurationSource bean to configure CORS settings.
-     * @author Parnika Jaan
+     * @author Parnika Jain
      * @return CorsConfigurationSource configured with our CORS settings
      */
     public CorsConfigurationSource corsConfigurationSource() {
@@ -118,15 +140,15 @@ public class SpringSecurityConfig {
     }
 
     /**
-     * Util used for generating BCrypt for storing passwords
+     * Util used for generating BCrypt for creating encrypted passwords for users to store
+     * @author Nicholas O'Sullivan
      */
     public static class PasswordEncoderUtil {
     public static void main(String[] args) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode("");
+        String encodedPassword = encoder.encode("2password");
         System.out.println("Password: " + encodedPassword);
     }
-}
-
+    }
 }
 
