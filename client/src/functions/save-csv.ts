@@ -3,7 +3,6 @@
 * @author Nicholas O'Sullivan
 */
 
-import * as fs from 'fs';
 /**
 * Convert a 2D array to CSV format.
 * @param data - The 2D array to convert.
