@@ -89,3 +89,50 @@ describe("replaceCellRangesWithValues", () => {
     expect(result).toEqual("= SUM()");
   });
 });
+
+
+import { cellMap } from "../../src/functions/cell-referencing";
+
+
+describe("cellMap", () => {
+  it("should convert cell reference to row and column indices", () => {
+    expect(cellMap("A1")).toEqual([0, 0]);
+    expect(cellMap("B2")).toEqual([1, 1]);
+    expect(cellMap("Z1")).toEqual([0, 25]);
+    expect(cellMap("AA1")).toEqual([0, 26]);
+    expect(cellMap("AB10")).toEqual([9, 27]);
+  });
+
+  it("should handle cell references with no letter part", () => {
+
+    // Expect column to be -1 as there's no letter part
+    expect(cellMap("1")).toEqual([0, -1]); 
+
+    // Expect column to be -1 as there's no letter part
+    expect(cellMap("10")).toEqual([9, -1]); 
+
+  });
+
+  it("should handle cell references with no number part", () => {
+
+    // Expect row to be -1 as there's no number part
+    expect(cellMap("A")).toEqual([-1, 0]); 
+
+    // Expect row to be -1 as there's no number part
+    expect(cellMap("Z")).toEqual([-1, 25]); 
+
+  });
+
+  it("should handle invalid cell references", () => {
+
+    // Both row and column should be -1 for empty input
+    expect(cellMap("")).toEqual([-1, -1]); 
+
+    // Both row and column should be -1 for whitespace input
+    expect(cellMap(" ")).toEqual([-1, -1]); 
+
+    // Both row and column should be -1 for special character input
+    expect(cellMap("!@#")).toEqual([-1, -1]); 
+    
+  });
+});
