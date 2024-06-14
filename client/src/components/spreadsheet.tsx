@@ -7,7 +7,6 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { parseEquation } from "../functions/sheet-equations";
 import {
   useCreateSheet,
   useDeleteSheet,
