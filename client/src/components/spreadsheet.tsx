@@ -6,7 +6,7 @@
  * @author Arinjay Singh
  */
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {parseEquation} from "../functions/sheet-equations";
 import {
     useCreateSheet,
@@ -82,7 +82,9 @@ const Spreadsheet: React.FC = () => {
         const [isLoadingInData, setIsLoadingInData] = useState(false);
         const [isSpreadsheetLoaded, setIsSpreadsheetLoaded] = useState<boolean>(false);
         const [publishedUpdatesId, setPublishedUpdatesId] = useState(0);
+        const publishUpdatesIdRef = useRef(publishedUpdatesId);
         const [subscriptionUpdatesId, setSubscriptionUpdatesId] = useState<number>(0);
+        const subscriptionUpdatesIdRef = useRef(subscriptionUpdatesId);
 
 
         /* INITIAL DATA LOAD FROM LOCAL STORAGE */
@@ -124,7 +126,6 @@ const Spreadsheet: React.FC = () => {
                 };
                 updateDisplayData();
                 setIsLoadingInData(false);
-                setIsSpreadsheetLoaded(true);
                 console.log(isSpreadsheetLoaded);
 
             }
@@ -151,6 +152,7 @@ const Spreadsheet: React.FC = () => {
             if (isSpreadsheetLoaded) {
                 // Define a function to fetch updates
                 const fetchUpdates = async () => {
+
                     try {
                         await handleGetUpdates(); // Call your function to fetch updates
                     } catch (error) {
@@ -158,10 +160,12 @@ const Spreadsheet: React.FC = () => {
                     }
                 };
                 // interval to call fetchUpdates every 1 second
-                const interval = setInterval(fetchUpdates, 2000);
+                const interval = setInterval(fetchUpdates, 3000);
                 return () => clearInterval(interval);
+
             }
         }, [isSpreadsheetLoaded]);
+
 
         /* CELL INPUT CHANGE HANDLER */
         const handleInputChange = (
@@ -323,7 +327,8 @@ const Spreadsheet: React.FC = () => {
          */
         const handleUpdate = async () => {
             try {
-                const isOwner = username == publisher;
+                const isOwner = username === publisher;
+                console.log(isOwner);
                 if (typedSheet && username && changes.length > 0) {
                     const payload = formatChanges(changes);
                     console.log(payload);
@@ -348,7 +353,8 @@ const Spreadsheet: React.FC = () => {
                 const id = payloadAndId[1];
                 setIsLoadingInData(true);
                 setRawData(parseLatestUpdates(payload.join('')));
-                setSubscriptionUpdatesId(id);
+                subscriptionUpdatesIdRef.current = id;
+                setIsSpreadsheetLoaded(true);
             } catch (error) {
                 console.error("Failed to load sheet");
             }
@@ -380,10 +386,12 @@ const Spreadsheet: React.FC = () => {
 
                         console.log('payload', payloadAndId);
                         console.log('retrieved id', id);
-                        console.log('client stored id', publishedUpdatesId);
-                        if (id != null && id > publishedUpdatesId) {
+                        console.log('client stored id', publishUpdatesIdRef.current);
+                        if (id !== null && id > publishUpdatesIdRef.current) {
                             console.log("Setting newPublishedUpdatesId to:", id);
                             setPublishedUpdatesId(id);
+                            publishUpdatesIdRef.current = id;
+                            console.log("lets see what it sets", publishUpdatesIdRef.current);
                             setIsLoadingInData(true);
                             console.log('update payload', updatedPayload);
                             console.log('raw data', rawData)
@@ -400,9 +408,10 @@ const Spreadsheet: React.FC = () => {
                         );
                         const updatedPayload = payloadAndId[0].join('');
                         const id = parseInt(payloadAndId[1][0], 10);
-                        if (id != null && id > subscriptionUpdatesId) {
+                        if (id != null && id > subscriptionUpdatesIdRef.current) {
                             setIsLoadingInData(true);
                             setSubscriptionUpdatesId(id);
+                            subscriptionUpdatesIdRef.current = id;
                             const parsedChanges = parseLatestUpdates(convertToPayload(rawData) + updatedPayload);
                             setRawData(parsedChanges);
                         }
@@ -468,10 +477,10 @@ const Spreadsheet: React.FC = () => {
     { func: handleDeleteColumn, color: "red", label: "Delete Column" },
   ];
   const topToolbarButtons = [
-    { func: handleUpdate, color: "green", label: "Save" },
+ //   { func: handleUpdate, color: "green", label: "Save" },
     { func: handleCreateSheet, color: "green", label: "Create" },
     { func: handleDeleteSheet, color: "red", label: "Delete" },
-    { func: handleGetUpdates, color: "blue", label: "Load" },
+    { func: handleLoadingSheet, color: "blue", label: "Load" },
   ];
   const conditonalDropdowns = [
     {
