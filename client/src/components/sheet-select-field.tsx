@@ -12,7 +12,6 @@ import { ToolBarButton } from "./toolbar-button";
 
 type ConditionalSelectFieldProps = {
   onClick: () => void;
-  condition: boolean;
   value: string;
   setValue: (value: string) => void;
   values: string[];
@@ -21,7 +20,6 @@ type ConditionalSelectFieldProps = {
 
 const ConditionalSelectField = ({
   onClick,
-  condition,
   value,
   setValue,
   values,
@@ -33,7 +31,6 @@ const ConditionalSelectField = ({
         {label}
       </ToolBarButton>
       <ConditionalDropdown
-        condition={condition}
         value={value}
         setValue={setValue}
         values={values}

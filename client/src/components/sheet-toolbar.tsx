@@ -11,7 +11,6 @@ import ConditionalSelectField from "./sheet-select-field";
 
 interface ConditionalDropdownProps {
   onClick: () => Promise<void>;
-  condition: boolean;
   value: string;
   setValue: (value: string) => void;
   values: string[];
@@ -42,7 +41,6 @@ const SheetToolbar = ({
   } = textFieldProps;
   const {
     onClick: handleGetPublishers,
-    condition: hasPublishers,
     value: publisher,
     setValue: setPublisher,
     values: publishers,
@@ -50,7 +48,6 @@ const SheetToolbar = ({
   } = dropdownProps[0];
   const {
     onClick: handleGetSheets,
-    condition: hasSheets,
     value: selectedSheet,
     setValue: setSelectedSheet,
     values: sheets,
@@ -66,7 +63,6 @@ const SheetToolbar = ({
       <div className="flex flex-row justify-center space-x-3 pb-1">
         <ConditionalSelectField
           onClick={handleGetPublishers}
-          condition={hasPublishers}
           value={publisher}
           setValue={setPublisher}
           values={publishers}
@@ -74,7 +70,6 @@ const SheetToolbar = ({
         />
         <ConditionalSelectField
           onClick={handleGetSheets}
-          condition={hasSheets}
           value={selectedSheet}
           setValue={setSelectedSheet}
           values={sheets}

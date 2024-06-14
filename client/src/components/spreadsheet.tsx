@@ -74,11 +74,9 @@ const Spreadsheet: React.FC = () => {
         const [isClient, setIsClient] = useState(false);
         const [publisher, setPublisher] = useState<string>("");
         const [publishers, setPublishers] = useState<string[]>([]);
-        const [hasPublishers, setHasPublishers] = useState<boolean>(false);
         const [selectedSheet, setSelectedSheet] = useState<string>("");
         const [typedSheet, setTypedSheet] = useState("");
         const [sheets, setSheets] = useState<string[]>([]);
-        const [hasSheets, setHasSheets] = useState<boolean>(false);
         const [isLoadingInData, setIsLoadingInData] = useState(false);
         const [isSpreadsheetLoaded, setIsSpreadsheetLoaded] = useState<boolean>(false);
         const [publishedUpdatesId, setPublishedUpdatesId] = useState(0);
@@ -485,7 +483,6 @@ const Spreadsheet: React.FC = () => {
   const conditonalDropdowns = [
     {
       onClick: handleGetPublishers,
-      condition: hasPublishers,
       value: publisher,
       setValue: setPublisher,
       values: publishers,
@@ -493,7 +490,6 @@ const Spreadsheet: React.FC = () => {
     },
     {
       onClick: handleGetSheets,
-      condition: hasSheets,
       value: selectedSheet,
       setValue: setSelectedSheet,
       values: sheets,
