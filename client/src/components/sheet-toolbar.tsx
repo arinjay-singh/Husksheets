@@ -57,13 +57,13 @@ const SheetToolbar = ({
     label: sheetLabel,
   } = dropdownProps[1];
   return (
-    <div className="flex flex-row space-x-12">
+    <div className="flex flex-row space-x-32 justify-center items-start">
       <SheetInputField
         textValue={typedSheet}
         setTextValue={setTypedSheet}
         buttons={topToolbarButtons}
       />
-      <div className="flex flex-row space-x-3 w-1/2">
+      <div className="flex flex-row justify-center space-x-3 pb-1">
         <ConditionalSelectField
           onClick={handleGetPublishers}
           condition={hasPublishers}

@@ -38,14 +38,28 @@ const Spreadsheet: React.FC = () => {
 
   /* SHEET DISPLAY AND RAW DATA */
   const [data, setData] = useState<string[][]>([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
   ]);
   const [rawData, setRawData] = useState<string[][]>([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
   ]);
 
   /* API CALLS */
@@ -319,14 +333,28 @@ const Spreadsheet: React.FC = () => {
   };
   const handleResetSheet = () => {
     setData([
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
     ]);
     setRawData([
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
     ]);
   };
   const handleDownloadCSV = () => saveArrayAsCSV(data);
@@ -351,7 +379,7 @@ const Spreadsheet: React.FC = () => {
       value: publisher,
       setValue: setPublisher,
       values: publishers,
-      label: "Get Publishers"
+      label: "Get Publishers",
     },
     {
       onClick: handleGetSheets,
@@ -359,7 +387,7 @@ const Spreadsheet: React.FC = () => {
       value: selectedSheet,
       setValue: setSelectedSheet,
       values: sheets,
-      label: "Get Sheets"
+      label: "Get Sheets",
     },
   ];
   const textFieldProps = {
@@ -370,7 +398,7 @@ const Spreadsheet: React.FC = () => {
 
   /* RENDER SPREADSHEET */
   return (
-    <div className="p-4 flex-col">
+    <div className="p-4 flex flex-col">
       {/* Toolbar (API Calls to Server) */}
       <SheetToolbar
         textFieldProps={textFieldProps}
@@ -385,7 +413,9 @@ const Spreadsheet: React.FC = () => {
         addColumn={addColumn}
       />
       {/* Local Change Control Buttons */}
-      <ButtonRow buttons={bottomToolbarButtons} />
+      <div className=" pt-3">
+        <ButtonRow buttons={bottomToolbarButtons} />
+      </div>
     </div>
   );
 };

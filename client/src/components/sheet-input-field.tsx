@@ -18,7 +18,7 @@ const SheetInputField = ({
   buttons: any[];
 }) => {
   return (
-    <div className="flex flex-col justify-start mb-5 items-center w-1/2">
+    <div className="flex flex-row justify-center mb-5 items-center">
       <input        
         type="text"
         placeholder="Sheet Name"

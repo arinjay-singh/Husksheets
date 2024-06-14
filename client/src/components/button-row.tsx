@@ -14,7 +14,7 @@ interface ButtonRowProps {
 
 const ButtonRow = ({ buttons }: ButtonRowProps) => {
   return (
-    <div className=" flex flex-row justify-evenly pt-3 items-stretch">
+    <div className=" flex flex-row justify-evenly items-stretch">
       {buttons.map(({ func, color, label }) => (
         <ToolBarButton onClick={func} color={color} key={label}>
           {label}

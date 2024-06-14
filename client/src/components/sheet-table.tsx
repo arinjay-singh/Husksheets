@@ -28,7 +28,7 @@ const SheetTable = ({
               {data[0].map((_: any, colIndex: number) => (
                 <th
                   key={colIndex}
-                  className="border border-gray-400 text-black font-semibold bg-slate-100"
+                  className="border border-gray-400 text-black font-semibold bg-slate-100 py-2"
                 >
                   {String.fromCharCode(65 + colIndex)}
                 </th>
@@ -38,7 +38,7 @@ const SheetTable = ({
           <tbody>
             {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
-                <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100">
+                <td className=" text-black font-semibold px-2 border-b border-gray-400 bg-slate-100 text-center">
                   {rowIndex + 1}
                 </td>
                 {row.map((cell: string, colIndex: number) => (

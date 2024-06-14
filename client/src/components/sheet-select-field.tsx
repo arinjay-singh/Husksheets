@@ -28,7 +28,7 @@ const ConditionalSelectField = ({
   label,
 }: ConditionalSelectFieldProps) => {
   return (
-    <div className="flex flex-col justify-start space-y-2 items-center">
+    <div className="flex flex-row justify-start items-center">
       <ToolBarButton onClick={onClick} color="red">
         {label}
       </ToolBarButton>
