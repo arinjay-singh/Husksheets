@@ -1,3 +1,10 @@
+/**
+ * @file sheet-operations.ts
+ * @brief A simple function to parse and evaluate simple mathematical operations.
+ * @date 06-14-2024
+ * @author Arinjay Singh
+ */
+
 import { parseCellReferences } from "./cell-referencing";
 
 // Enums for token types to include logical and comparison operators

@@ -94,6 +94,7 @@ export const replaceCellRangesWithValues = (
   data: string[][],
   input: string
 ): string => {
+  input = input.replace(/\s/g, "");
   // Regular expression to match the pattern "$A1:$B4"
   const cellRangePattern = /\$[A-Za-z]+\d+:\$[A-Za-z]+\d+/g;
 
