@@ -331,8 +331,8 @@ const Spreadsheet: React.FC = () => {
             const isOwner = username === publisher;
             console.log(isOwner);
             if (typedSheetRef.current && username && changes.length > 0) {
-                const payload = formatChanges(changes);
-                console.log(payload);
+                const payload = formatChanges(changes) + "\n";
+                console.log("payload to server:", payload);
                 await updatePublished(username, typedSheetRef.current, payload, isOwner);
                 console.log("Data updated successfully:");
                 setChanges([]); //empty the changes array

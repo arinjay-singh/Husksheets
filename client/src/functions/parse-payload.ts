@@ -39,6 +39,9 @@ export const parseLatestUpdates = (payload: string): (string)[][] => {
     for (const { row, col, value } of parsedPayload) {
         result[row][col] = value;
     }
+    if (result == null) {
+        return [];
+    }
     console.log("result", result);
     return result;
 };
