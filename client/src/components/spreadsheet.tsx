@@ -18,10 +18,17 @@ import { useAuth } from "@/context/auth-context";
 import { Parser } from "@/functions/sheet-functions";
 import { saveArrayAsCSV } from "@/functions/save-csv";
 import { ToolBarButton } from "@/components/toolbar-button";
-import { useGetUpdatesForPublished, useGetUpdatesForSubscription, useUpdate } from "@/app/api/api/update";
-import { convertToPayload, parseServerPayload } from "@/functions/parse-payload";
+import {
+  useGetUpdatesForPublished,
+  useGetUpdatesForSubscription,
+  useUpdate,
+} from "@/app/api/api/update";
+import {
+  convertToPayload,
+  parseServerPayload,
+} from "@/functions/parse-payload";
 import ConditionalDropdown from "./conditional-dropdown";
-
+import parseCopy from "@/functions/copy";
 
 // spreadsheet component
 const Spreadsheet: React.FC = () => {
@@ -115,13 +122,31 @@ const Spreadsheet: React.FC = () => {
       equationResult = parseEquation(data, value);
     }
 
+    // parse copy function
+    let copyResult = parseCopy(data, value, [rowIndex, colIndex]);
+    if (copyResult) {
+      console.log("copying");
+      let copiedRawData = rawData.map((row) => [...row]);
+      copyResult[2].forEach((coord) => {
+        copiedRawData[coord[0]][coord[1]] = copyResult[0];
+      });
+      setRawData(copiedRawData);
+    }
+
     // create a display data variable
     let displayData: string[][];
     // if the equation result exists, set the display data to the equation result
     // otherwise, set the display data to the parsed value
     displayData = data.map((row, rIdx) =>
       row.map((cell, cIdx) => {
+        if (
+          copyResult &&
+          copyResult[2].some((coord) => coord[0] === rIdx && coord[1] === cIdx)
+        ) {
+          return copyResult[1];
+        }
         if (rIdx === rowIndex && cIdx === colIndex) {
+          if (copyResult) return copyResult[1];
           if (functionResult !== null) return functionResult;
           if (equationResult) return equationResult;
           return value;
@@ -280,9 +305,9 @@ const Spreadsheet: React.FC = () => {
         console.log("Data updated successfully:");
       }
     } catch (error) {
-      console.error("Failed to update data:")
+      console.error("Failed to update data:");
     }
-  }
+  };
 
   const id = 0;
   const { getUpdatesForSubscription } = useGetUpdatesForSubscription();
@@ -291,17 +316,25 @@ const Spreadsheet: React.FC = () => {
     try {
       if (username && publisher && sheet && id) {
         if (username == publisher) {
-          const updatedPayload = await getUpdatesForSubscription(username, sheet, id);
+          const updatedPayload = await getUpdatesForSubscription(
+            username,
+            sheet,
+            id
+          );
           setRawData(parseServerPayload(updatedPayload));
         } else {
-          const updatedPayload = await getUpdatesForPublished(username, sheet, id);
+          const updatedPayload = await getUpdatesForPublished(
+            username,
+            sheet,
+            id
+          );
           setRawData(parseServerPayload(updatedPayload));
         }
       }
     } catch (error) {
-      console.error("Failed to load updates")
+      console.error("Failed to load updates");
     }
-  }
+  };
 
   const handleDownloadCSV = () => saveArrayAsCSV(data);
   const bottomToolbarButtons = [
