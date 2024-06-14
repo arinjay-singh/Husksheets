@@ -83,6 +83,7 @@ const Spreadsheet: React.FC = () => {
         const publishUpdatesIdRef = useRef(publishedUpdatesId);
         const [subscriptionUpdatesId, setSubscriptionUpdatesId] = useState<number>(0);
         const subscriptionUpdatesIdRef = useRef(subscriptionUpdatesId);
+        const [stopFetching, setStopFetching] = useState(false);
 
 
         /* INITIAL DATA LOAD FROM LOCAL STORAGE */
@@ -138,9 +139,8 @@ const Spreadsheet: React.FC = () => {
                 if (isSpreadsheetLoaded) {
                     handleUpdate(); // Call handleUpdate
                 }
-            }, [changes]
-        )
-        ;
+            }, [changes, stopFetching, isSpreadsheetLoaded]
+        );
         /**
          * retrieve updates from the server every 1-2 seconds.
          */
@@ -353,6 +353,7 @@ const Spreadsheet: React.FC = () => {
                 setRawData(parseLatestUpdates(payload.join('')));
                 subscriptionUpdatesIdRef.current = id;
                 setIsSpreadsheetLoaded(true);
+                setStopFetching(true);
             } catch (error) {
                 console.error("Failed to load sheet");
             }
