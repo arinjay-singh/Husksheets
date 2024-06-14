@@ -6,30 +6,30 @@
  * @author Troy Caron
  */
 
-import { parseServerPayload, convertToPayload } from "../../src/functions/parse-payload";
+import { parseLatestUpdates, convertToPayload } from "../../src/functions/parse-payload";
 
 describe("parse-payload", () => {
     test('should correctly parse payload given into a JSON array of objects', () => {
 
         // should correctly assign values to the correct cell
         const payload1 = "$A1 12.0\n$A2 \"Monkey\"\n$B1 Hello\n$B2 =($A1 + 12.0)\n";
-        expect(parseServerPayload([payload1])).toEqual([["12.0", "Hello"],
+        expect(parseLatestUpdates(payload1)).toEqual([["12.0", "Hello"],
                                                       ["\"Monkey\"", "=($A1 + 12.0)"]]);
 
         // should correctly assign an empty cell
         const payloadwithEmptyCell = "$A1 12.0\n$A2 \"Monkey\"\n$B1 Hello\n$B2 \n";
-        expect(parseServerPayload([payloadwithEmptyCell])).toEqual([["12.0", "Hello"],
+        expect(parseLatestUpdates(payloadwithEmptyCell)).toEqual([["12.0", "Hello"],
                                                                   ["\"Monkey\"", ""]]);
 
         // should correctly assign an empty payload
         const emptyPayload = "$A1 \n$A2 \n$B1 \n$B2 \n";
-        expect(parseServerPayload([emptyPayload])).toEqual([["", ""],
+        expect(parseLatestUpdates(emptyPayload)).toEqual([["", ""],
                                                           ["", ""]]);
 
         // should correctly overwrite values to the correct cells and, since there was never
         // a value specified for $B2, it should be an empty string
         const payload2 = "$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n$A1 12.0\n$A2 \"Monkey\"\n$B1 =($A1 + 12.0)\n";
-        expect(parseServerPayload([payload2])).toEqual([["12.0", "=($A1 + 12.0)"],
+        expect(parseLatestUpdates(payload2)).toEqual([["12.0", "=($A1 + 12.0)"],
                                                       ["\"Monkey\"", ""]]);
     });
 

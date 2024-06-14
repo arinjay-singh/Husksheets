@@ -79,7 +79,7 @@ describe('useGetUpdatesForSubscription', () => {
       sheet: 'TestSheet',
       id: 1,
     });
-    expect(result).toEqual(['a1', 'b1']);
+    expect(result[0]).toEqual(['a1', 'b1']);
   });
 });
 
@@ -104,6 +104,6 @@ describe('useGetUpdatesForPublished', () => {
       sheet: 'TestSheet',
       id: 1,
     });
-    expect(result).toEqual(['a1', 'b1']);
+    expect(result[0]).toEqual(['a1', 'b1']);
   });
 });

@@ -9,54 +9,9 @@
 
 import { cellMap } from "../../src/functions/cell-referencing";
 
+
 // Function to parse the server payload and convert it to a 2D array
-export const parseServerPayload = (payload: string[]): (string)[][] => {
-    if (payload.length === 0) {
-    return [];
-    }
-    console.log(payload);
-
-    // Join the array into a single string and then split it into lines
-    const payloadStr = payload.join('');
-    const lines = payloadStr.split('\n');
-    let maxRow = 0;
-    let maxCol = 0;
-    const parsedPayload: { row: number, col: number, value: string }[] = [];
-    for (const line of lines) {
-        if (line.trim()) { // Check if the line is not empty
-            const [ref, ...termParts] = line.split(' ');
-            const term = termParts.join(' ') || ""; // Ensure empty cells are represented as empty strings
-            if (ref) { // Ensure ref is defined
-                const [row, col] = cellMap(ref);
-                parsedPayload.push({ row, col, value: term });
-                if (row > maxRow) maxRow = row;
-                if (col > maxCol) maxCol = col;
-            }
-        }
-    }
-
-    // Create a 2D array filled with nulls
-    const result: (string)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(""));
-    // Fill the 2D array with parsed values
-    for (const { row, col, value } of parsedPayload) {
-        result[row][col] = value;
-    }
-    console.log("result", result);
-    if (result == null) {
-        return [];
-    } else {
-        return result;
-    }
-};
-
 export const parseLatestUpdates = (payload: string): (string)[][] => {
-    // if (payload.length === 0) {
-    // return [];
-    // }
-    // console.log(payload);
-    //
-    // // Join the array into a single string and then split it into lines
-    // const payloadStr = payload.join('');
     const lines = payload.split('\n');
     let maxRow = 0;
     let maxCol = 0;
@@ -105,7 +60,11 @@ export const convertToPayload = (data: string[][]): string => {
     return payloadLines.join('\n') + '\n';
 };
 
-// Utility function to convert column index to letter (e.g., 0 -> 'A', 1 -> 'B')
+
+/**
+ * Utility function to convert column index to letter (e.g., 0 -> 'A', 1 -> 'B')
+ * @author Nicholas O'Sullivan
+  */
 const getColumnLetter = (colIndex: number): string => {
   let letter = "";
   while (colIndex >= 0) {
@@ -115,12 +74,19 @@ const getColumnLetter = (colIndex: number): string => {
   return letter;
 };
 
-// Utility function to format cell address
+/**
+ *  Utility function to format cell address
+ * @author Nicholas O'Sullivan
+  */
 const getCellAddress = (rowIndex: number, colIndex: number): string => {
   const columnLetter = getColumnLetter(colIndex);
   return `$${columnLetter}${rowIndex + 1}`;
 };
 
+/**
+ * Format new changes as a payload string.
+ * @author Nicholas O'Sullivan
+  */
 export const formatChanges = (changes: { row: number; col: number; value: string }[]) => {
   return changes.map(change => {
     const cellAddress = getCellAddress(change.row, change.col);

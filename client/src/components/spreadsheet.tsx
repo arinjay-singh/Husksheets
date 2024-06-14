@@ -22,10 +22,7 @@ import {
     useGetUpdatesForSubscription,
     useUpdate,
 } from "@/app/api/api/update";
-import {
-    convertToPayload, formatChanges, parseLatestUpdates,
-    parseServerPayload,
-} from "@/functions/parse-payload";
+import {convertToPayload, formatChanges, parseLatestUpdates} from "@/functions/parse-payload";
 import parseCopy from "@/functions/copy";
 import SheetTable from "./sheet-table";
 import ButtonRow from "./button-row";
@@ -91,7 +88,10 @@ const Spreadsheet: React.FC = () => {
             localStorage.setItem("displaySpreadsheetData", JSON.stringify(data));
         }, [data, rawData, isClient]);
 
-        /* COMPUTE RAW DATA ON LOAD */
+
+        /** COMPUTE RAW DATA ON LOAD, update displayed SS data
+         * @author: Nicholas O'Sullivan
+         */
         useEffect(() => {
             if (isLoadingInData) {
                 const updateDisplayData = () => {
@@ -114,7 +114,10 @@ const Spreadsheet: React.FC = () => {
             }
         }, [rawData]);
 
-// Periodic updates and getUpdates cycle
+
+        /** updates and getUpdates cycle when user makes changes to the loaded spreadsheet.
+         * @author: Nicholas O'Sullivan
+         */
         useEffect(() => {
                 console.log(isSpreadsheetLoaded);
                 if (isSpreadsheetLoaded) {
@@ -280,8 +283,10 @@ const Spreadsheet: React.FC = () => {
         };
 
         /* UPDATE API BUTTON HANDLERS */
-// AFTER the sheet is loaded, we must periodically (every 1-2 secs) call updatePublished (if user=publisher),
-// or updateSubscription(if user!=publisher),
+
+        /** handle Updating the sheet: call updatePublished (if user=publisher),or updateSubscription(if user!=publisher),
+         * @author: Nicholas O'Sullivan
+         */
         const handleUpdate = async () => {
             try {
                 const isOwner = username == publisher;
@@ -291,15 +296,16 @@ const Spreadsheet: React.FC = () => {
                     await updatePublished(username, typedSheet, payload, isOwner);
                     console.log("Data updated successfully:");
                     setChanges([]); //empty the changes array
-
                 }
             } catch (error) {
                 console.error("Failed to update data:");
             }
-
         };
 
-//when loading a new sheet, both Publisher/subscriber pull the OFFICIAL changes from the publisher.
+        /** handle loading a sheet by pulling the OFFICIAL changes from the publisher,
+         *  loads w/(ID=0) then sets latest ID from pull
+         * @author: Nicholas O'Sullivan
+         */
         const handleLoadingSheet = async () => {
             if (username === undefined) return;
             try {
@@ -307,16 +313,21 @@ const Spreadsheet: React.FC = () => {
                 const payload = payloadAndId[0];
                 const id = payloadAndId[1];
                 setIsLoadingInData(true);
-                setRawData(parseServerPayload(payload));
+                setRawData(parseLatestUpdates(payload.join('')));
                 setSubscriptionUpdatesId(id);
             } catch (error) {
                 console.error("Failed to load sheet");
             }
         }
 
-// (every 1-2 secs) call  getUpdatesForPublished (if user=publisher,
-// which allows the Publisher to see the Subscribers new changes), or getUpdatesForSubscription(if user!=publisher,
-// which allows the Subscriber to see the publisher's new changes)
+        /** handle getting updates for the loaded sheet:
+         * getUpdatesForPublished (if user=publisher): allows the Publisher to see the Subscribers new changes
+         * or getUpdatesForSubscription(if user!=publisher): which allows the Subscriber to see the publisher's new changes)
+         *
+         * call using the version ID of the latest pull (publishedUpdatesId or subscriptionUpdatesID),
+         * to only recieve the latest changes from the server.
+         * @author: Nicholas O'Sullivan
+         */
         const handleGetUpdates = async () => {
             if (username === undefined) return;
             try {
@@ -398,7 +409,7 @@ const Spreadsheet: React.FC = () => {
             {func: handleDeleteColumn, color: "red", label: "Delete Column"},
         ];
         const topToolbarButtons = [
-            {func: handleUpdate, color: "green", label: "Save"},
+            //  {func: handleUpdate, color: "green", label: "Save"},
             {func: handleCreateSheet, color: "green", label: "Create"},
             {func: handleDeleteSheet, color: "red", label: "Delete"},
             {func: handleLoadingSheet, color: "blue", label: "Load"},
