@@ -1,6 +1,7 @@
 package Tests;
 
 import com.husksheets_api_server_scrumlords.HusksheetsApiServerScrumlordsApplication;
+import com.husksheets_api_server_scrumlords.config.CustomUserDetails;
 import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
 import com.husksheets_api_server_scrumlords.models.Sheet;
@@ -19,10 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test the application lifecycle hooks for data persistence.
@@ -100,5 +100,16 @@ public class TestApplicationLifecycle {
                 "Deserialized publisher should have 1 sheet");
         assertEquals("Sheet1", deserializedPublisher1.getSheets().get(0).getSheetName(),
                 "Deserialized sheet name should be 'Sheet1'");
+    }
+
+    @Test
+    public void testCustomUserDetails() {
+        CustomUserDetails customUserDetails = new CustomUserDetails("testUser1", "password",
+                Collections.emptyList());
+        CustomUserDetails customUserDetails2 = new CustomUserDetails("testUser2", "password",
+                Collections.emptyList());
+        assertEquals("testUser1", customUserDetails.getUsername());
+        assertEquals("password", customUserDetails.getPassword());
+        assertNotEquals(customUserDetails, customUserDetails2);
     }
 }

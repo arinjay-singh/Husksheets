@@ -29,7 +29,7 @@ public class TestSerializationUtil {
     Path tempDir;
     private static final String TEST_FILE_PATH = "src/test/java/Tests/test_publishers.ser";
     private static final String TEST_FILE_PATH2 =
-            "backend/src/main/java/com/husksheets_api_server_scrumlords/serialize/test_publishers.ser";
+            "src/test/java/Tests/test_publishers.ser";
 
 
     @BeforeEach
@@ -50,6 +50,7 @@ public class TestSerializationUtil {
 
     @Test
     public void testSerializationAndDeserialization() throws IOException {
+        System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
         // Create and populate the Publishers singleton
         Publishers publishers = Publishers.getInstance();
         publishers.addNewPublisher("testUser1");
@@ -80,6 +81,7 @@ public class TestSerializationUtil {
 
     @Test
     public void testSerializationException() {
+        System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
         // Simulate serialization exception by providing a directory path instead of a file path
         String invalidPath = tempDir.toString();
         Publishers publishers = Publishers.getInstance();
@@ -98,6 +100,7 @@ public class TestSerializationUtil {
 
     @Test
     public void testDeserializationException() {
+        System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
         // Simulate deserialization exception by providing a non-existent file
         String nonExistentFilePath = "src/test/java/Tests/non_existent_file.ser";
         Object result = SerializationUtil.deserialize(nonExistentFilePath);
@@ -106,6 +109,7 @@ public class TestSerializationUtil {
 
     @Test
     public void testSerializationDeserialization() throws IOException {
+        System.out.println("ShutdownHook: Working Directory = " + System.getProperty("user.dir"));
         Publishers publishers = Publishers.getInstance();
         publishers.addNewPublisher("testUser");
 
