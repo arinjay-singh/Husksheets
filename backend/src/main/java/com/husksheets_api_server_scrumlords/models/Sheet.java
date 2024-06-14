@@ -50,7 +50,7 @@ public class Sheet implements Serializable {
     /**
      * Update Subscription/Published methods
      * @author Nicholas O'Sullivan
-     * @param update
+     * @param update update payload to be added
      */
     public void addNewUpdateSubscription(String update) {
         updatesForSubscription.add(update);
@@ -71,7 +71,7 @@ public class Sheet implements Serializable {
     /**
      * Get updates "parent" methods
      * @author: Nicholas O'Sullivan
-     * @param id
+     * @param id starting ID to get updates of
      * @return String (Updates)
      */
     public String getUpdatesForSubscriptionAfterGivenID(int id) {

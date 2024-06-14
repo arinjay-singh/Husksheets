@@ -1,6 +1,9 @@
 package Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.husksheets_api_server_scrumlords.models.Publisher;
 import com.husksheets_api_server_scrumlords.models.Publishers;
@@ -9,15 +12,21 @@ import com.husksheets_api_server_scrumlords.serialize.SerializationUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Test SerializationUtil class for serialization and deserialization of data
  * @author Kaan Tural
  */
 public class TestSerializationUtil {
+    @TempDir
+    Path tempDir;
     private static final String TEST_FILE_PATH = "src/test/java/Tests/test_publishers.ser";
 
     @BeforeEach
@@ -60,18 +69,28 @@ public class TestSerializationUtil {
         assertTrue(deserializedPublishers.getPublisherMap().containsKey("testUser1"), "Deserialized publisher should contain testUser1");
         Publisher deserializedPublisher1 = deserializedPublishers.getPublisher("testUser1");
         assertNotNull(deserializedPublisher1, "Deserialized publisher testUser1 should not be null");
-        assertEquals(1, deserializedPublisher1.getSheets().size(), "Deserialized publisher should have 1 sheet");
-        assertEquals("Sheet1", deserializedPublisher1.getSheets().get(0).getSheetName(), "Deserialized sheet name should be 'Sheet1'");
+        assertEquals(1, deserializedPublisher1.getSheets().size(),
+                "Deserialized publisher should have 1 sheet");
+        assertEquals("Sheet1", deserializedPublisher1.getSheets().get(0).getSheetName(),
+                "Deserialized sheet name should be 'Sheet1'");
     }
 
     @Test
     public void testSerializationException() {
         // Simulate serialization exception by providing a directory path instead of a file path
-        String invalidPath = "src/test/java/com/husksheets_api_server_scrumlords";
+        String invalidPath = tempDir.toString();
         Publishers publishers = Publishers.getInstance();
-        assertThrows(IOException.class, () -> {
-            SerializationUtil.serialize(publishers, invalidPath);
-        }, "Expected IOException to be thrown");
+
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.exists(Mockito.any())).thenReturn(false);
+            mockedFiles.when(() -> Files.createDirectories(Mockito.any()))
+                    .thenThrow(new IOException("Mocked IOException"));
+
+            assertThrows(IOException.class, () -> SerializationUtil.serialize(publishers, invalidPath),
+                    "Expected IOException to be thrown");
+
+            mockedFiles.verify(() -> Files.createDirectories(Mockito.any()), times(1));
+        }
     }
 
     @Test

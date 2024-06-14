@@ -17,10 +17,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test the application lifecycle hooks for data persistence.
@@ -30,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(classes = HusksheetsApiServerScrumlordsApplication.class)
 public class TestApplicationLifecycle {
     private static final String TEST_FILE_PATH =
-            "src/main/java/com/husksheets_api_server_scrumlords/serialize/publishers.ser";
+            "backend/src/test/java/com/husksheets_api_server_scrumlords/serialize/publishers_test.ser";
 
     @Autowired
     private StartupHook startupHook;
@@ -42,6 +44,7 @@ public class TestApplicationLifecycle {
     public void setUp() {
         Publishers.getInstance().getPublisherMap().clear();
         SerializationUtil.clearSerializedData(TEST_FILE_PATH);
+        shutdownHook.setFilePath(TEST_FILE_PATH);
     }
 
     @AfterEach
