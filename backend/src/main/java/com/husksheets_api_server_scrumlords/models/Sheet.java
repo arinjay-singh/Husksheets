@@ -44,6 +44,8 @@ public class Sheet implements Serializable {
         this.publisherName = publisherName;
         this.updatesForSubscription = new ArrayList<>();
         this.updatesForPublished = new ArrayList<>();
+        this.updatesForPublished.add("");
+        this.updatesForSubscription.add("");
         System.out.println("Created sheet with name: " + name + " and publisher: " + publisherName);
     }
 
@@ -65,7 +67,16 @@ public class Sheet implements Serializable {
      * @return int (latest ID)
      */
     public int getLatestUpdateID() {
-        return updatesForSubscription.size();
+        return updatesForSubscription.size() - 1;
+    }
+
+    /**
+     * Get latest published ID
+     * @author Kaan Tural
+     * @return int (latest ID)
+     */
+    public int getLatestPublishedID() {
+        return updatesForPublished.size() - 1;
     }
 
     /**
@@ -92,6 +103,9 @@ public class Sheet implements Serializable {
     private String getUpdates(int id, List<String> updates) {
         StringBuilder concatenatedUpdates = new StringBuilder();
         if (id < updates.size()) {
+            if (id == 0) {
+                id = 1;
+            }
             for (int i = id; i <= updates.size() - 1 ; i++) {
                  concatenatedUpdates.append(updates.get(i)).append("\n");
             }

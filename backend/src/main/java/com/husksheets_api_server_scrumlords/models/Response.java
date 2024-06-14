@@ -18,7 +18,7 @@ public class Response {
     String message;
     @Getter
     @Setter
-    List<Value> value;
+    ArrayList<Value> value;
     @Getter
     Long time;
 

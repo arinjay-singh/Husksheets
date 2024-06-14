@@ -36,13 +36,15 @@ public class GetUpdatesService {
         int idInt = Integer.parseInt(id);
         Sheet userSheet = validationResponse.keySet().iterator().next();
         String payload = "";
+        Value returnValue = new Value(requestPublisher, requestSheet, 0, "");
         if (updateType == UpdateType.SUBSCRIPTION) {
             payload = userSheet.getUpdatesForSubscriptionAfterGivenID(idInt);
+            returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
         } else if (updateType == UpdateType.PUBLISHED) {
             payload = userSheet.getUpdatesForPublishedAfterGivenID(idInt);
+            returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestPublishedID(), payload);
         }
-        Value returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
-        List<Value> returnValues = new ArrayList<>();
+        ArrayList<Value> returnValues = new ArrayList<>();
         returnValues.add(returnValue);
         Response returnResponse = new Response(true, null);
         returnResponse.setValue(returnValues);

@@ -32,7 +32,13 @@ export const useGetUpdatesForSubscription = () => {
     const { post } = useApi();
     const getUpdatesForSubscription = async (publisher: string, sheet: string, id: number) => {
         const response = await  post('/getUpdatesForSubscription', {publisher, sheet, id});
-        return response.data.value.map((item: any) => item.payload);
+       const payload = response.data.value.map((item: any) => item.payload);
+        const latest_id = response.data.value.map((item: any) => item.id);
+        console.log("payload map thing", payload);
+        return [
+            payload,
+            latest_id
+        ];
     };
     return { getUpdatesForSubscription };
 };
@@ -44,7 +50,13 @@ export const useGetUpdatesForPublished = () => {
     const { post } = useApi();
     const getUpdatesForPublished = async (publisher: string, sheet: string, id: number) => {
         const response = await post('/getUpdatesForPublished', { publisher, sheet, id });
-        return response.data.value.map((item: any) => item.payload);
+        const payload = response.data.value.map((item: any) => item.payload);
+        const latest_id = response.data.value.map((item: any) => item.id);
+        console.log("payload map thing", payload);
+        return [
+            payload,
+            latest_id
+        ];
     };
     return { getUpdatesForPublished };
 };
