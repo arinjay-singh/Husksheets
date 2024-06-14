@@ -505,7 +505,7 @@ public class TestAPIs {
                     Sheet userSheet = validationResponse.keySet().iterator().next();
                     String payload = userSheet.getUpdatesForSubscriptionAfterGivenID(idInt);
                     Value returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
-                    List<Value> returnValues = new ArrayList<>();
+                    ArrayList<Value> returnValues = new ArrayList<>();
                     returnValues.add(returnValue);
 
                     Response returnResponse = new Response(true, null);
@@ -546,7 +546,7 @@ public class TestAPIs {
                     Sheet userSheet = validationResponse.keySet().iterator().next();
                     String payload = userSheet.getUpdatesForPublishedAfterGivenID(idInt);
                     Value returnValue = new Value(requestPublisher, requestSheet, userSheet.getLatestUpdateID(), payload);
-                    List<Value> returnValues = new ArrayList<>();
+                    ArrayList<Value> returnValues = new ArrayList<>();
                     returnValues.add(returnValue);
 
                     Response returnResponse = new Response(true, null);

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = HusksheetsApiServerScrumlordsApplication.class)
 public class TestApplicationLifecycle {
     private static final String TEST_FILE_PATH =
-            "backend/src/test/java/com/husksheets_api_server_scrumlords/serialize/publishers_test.ser";
+            "backend/src/test/java/Tests/publishers_test.ser";
 
     @Autowired
     private StartupHook startupHook;
