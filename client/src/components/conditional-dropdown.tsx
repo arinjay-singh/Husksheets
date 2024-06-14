@@ -18,7 +18,7 @@ const ConditionalDropdown = ({
 }) => {
   return (
     <div>
-      {condition ? (
+      {true ? (
         <select
           id="pub-dropdown"
           value={value}

@@ -27,8 +27,8 @@ const Home: NextPage = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-6 rounded shadow-lg">
-          <div className="flex flex-row-reverse">
+        <div className="bg-white p-6 rounded shadow-lg min-h-screen w-screen">
+          <div className="flex flex-row-reverse mr-10">
             <ToolBarButton onClick={logout} color="red">
               Logout
             </ToolBarButton>
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
               Register
             </ToolBarButton>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-black text-center">
+          <h1 className="text-4xl font-bold mt-2 mb-5 text-black text-center">
             HuskSheets
           </h1>
           <Spreadsheet />

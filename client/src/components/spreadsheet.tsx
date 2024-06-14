@@ -29,21 +29,35 @@ import ButtonRow from "./button-row";
 import SheetToolbar from "./sheet-toolbar";
 
 const Spreadsheet: React.FC = () => {
-        /* USER AUTHENTICATION CONTEXT */
-        const {auth} = useAuth();
-        const username = auth?.username;
+  /* USER AUTHENTICATION CONTEXT */
+  const { auth } = useAuth();
+  const username = auth?.username;
 
-        /* SHEET DISPLAY AND RAW DATA */
-        const [data, setData] = useState<string[][]>([
-            ["", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-        ]);
-        const [rawData, setRawData] = useState<string[][]>([
-            ["", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-        ]);
+  /* SHEET DISPLAY AND RAW DATA */
+  const [data, setData] = useState<string[][]>([
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+  ]);
+  const [rawData, setRawData] = useState<string[][]>([
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+  ]);
 
         const [changes, setChanges] = useState<{ row: number, col: number, value: string }[]>([]);
 
@@ -410,86 +424,101 @@ const Spreadsheet: React.FC = () => {
                 setRawData(rawData.slice(0, -1));
             }
         };
-        const addColumn = () => {
-            setData(data.map((row) => [...row, ""]));
-            setRawData(rawData.map((row) => [...row, ""]));
-        };
-        const handleDeleteColumn = () => {
-            if (data[0].length > 1) setData(data.map((row) => row.slice(0, -1)));
-            setRawData(rawData.map((row) => row.slice(0, -1)));
-        };
-        const handleResetSheet = () => {
-            setData([
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-            ]);
-            setRawData([
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-            ]);
-        };
-        const handleDownloadCSV = () => saveArrayAsCSV(data);
+  const addColumn = () => {
+    setData(data.map((row) => [...row, ""]));
+    setRawData(rawData.map((row) => [...row, ""]));
+  };
+  const handleDeleteColumn = () => {
+    if (data[0].length > 1) setData(data.map((row) => row.slice(0, -1)));
+    setRawData(rawData.map((row) => row.slice(0, -1)));
+  };
+  const handleResetSheet = () => {
+    setData([
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+    ]);
+    setRawData([
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+    ]);
+  };
+  const handleDownloadCSV = () => saveArrayAsCSV(data);
 
-        /* SPREADSHEET DATA */
-        const bottomToolbarButtons = [
-            {func: handleDownloadCSV, color: "green", label: "Download CSV"},
-            {func: handleResetSheet, color: "red", label: "Reset Sheet"},
-            {func: handleDeleteRow, color: "red", label: "Delete Row"},
-            {func: handleDeleteColumn, color: "red", label: "Delete Column"},
-        ];
-        const topToolbarButtons = [
-            //  {func: handleUpdate, color: "green", label: "Save"},
-            {func: handleCreateSheet, color: "green", label: "Create"},
-            {func: handleDeleteSheet, color: "red", label: "Delete"},
-            {func: handleLoadingSheet, color: "blue", label: "Load"},
-        ];
-        const conditonalDropdowns = [
-            {
-                onClick: handleGetPublishers,
-                condition: hasPublishers,
-                value: publisher,
-                setValue: setPublisher,
-                values: publishers,
-                label: "Get Publishers"
-            },
-            {
-                onClick: handleGetSheets,
-                condition: hasSheets,
-                value: selectedSheet,
-                setValue: setSelectedSheet,
-                values: sheets,
-                label: "Get Sheets"
-            },
-        ];
-        const textFieldProps = {
-            textValue: typedSheet,
-            setTextValue: setTypedSheet,
-            buttons: topToolbarButtons,
-        };
+  /* SPREADSHEET DATA */
+  const bottomToolbarButtons = [
+    { func: handleDownloadCSV, color: "green", label: "Download CSV" },
+    { func: handleResetSheet, color: "red", label: "Reset Sheet" },
+    { func: handleDeleteRow, color: "red", label: "Delete Row" },
+    { func: handleDeleteColumn, color: "red", label: "Delete Column" },
+  ];
+  const topToolbarButtons = [
+    { func: handleUpdate, color: "green", label: "Save" },
+    { func: handleCreateSheet, color: "green", label: "Create" },
+    { func: handleDeleteSheet, color: "red", label: "Delete" },
+    { func: handleGetUpdates, color: "blue", label: "Load" },
+  ];
+  const conditonalDropdowns = [
+    {
+      onClick: handleGetPublishers,
+      condition: hasPublishers,
+      value: publisher,
+      setValue: setPublisher,
+      values: publishers,
+      label: "Get Publishers",
+    },
+    {
+      onClick: handleGetSheets,
+      condition: hasSheets,
+      value: selectedSheet,
+      setValue: setSelectedSheet,
+      values: sheets,
+      label: "Get Sheets",
+    },
+  ];
+  const textFieldProps = {
+    textValue: typedSheet,
+    setTextValue: setTypedSheet,
+    buttons: topToolbarButtons,
+  };
 
-        /* RENDER SPREADSHEET */
-        return (
-            <div className="p-4 flex-col">
-                {/* Toolbar (API Calls to Server) */}
-                <SheetToolbar
-                    textFieldProps={textFieldProps}
-                    dropdownProps={conditonalDropdowns}
-                />
-                {/* Spreadsheet Table */}
-                <SheetTable
-                    data={data}
-                    onChange={handleInputChange}
-                    onExecute={executeCell}
-                    addRow={addRow}
-                    addColumn={addColumn}
-                />
-                {/* Local Change Control Buttons */}
-                <ButtonRow buttons={bottomToolbarButtons}/>
-            </div>
-        );
-    }
-;
+  /* RENDER SPREADSHEET */
+  return (
+    <div className="p-4 flex flex-col">
+      {/* Toolbar (API Calls to Server) */}
+      <SheetToolbar
+        textFieldProps={textFieldProps}
+        dropdownProps={conditonalDropdowns}
+      />
+      {/* Spreadsheet Table */}
+      <SheetTable
+        data={data}
+        onChange={handleInputChange}
+        onExecute={executeCell}
+        addRow={addRow}
+        addColumn={addColumn}
+      />
+      {/* Local Change Control Buttons */}
+      <div className=" pt-3">
+        <ButtonRow buttons={bottomToolbarButtons} />
+      </div>
+    </div>
+  );
+};
 
 export default Spreadsheet;
