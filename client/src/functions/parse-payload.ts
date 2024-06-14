@@ -14,10 +14,50 @@ export const parseServerPayload = (payload: string[]): (string)[][] => {
     if (payload.length === 0) {
     return [];
     }
+    console.log(payload);
 
     // Join the array into a single string and then split it into lines
     const payloadStr = payload.join('');
     const lines = payloadStr.split('\n');
+    let maxRow = 0;
+    let maxCol = 0;
+    const parsedPayload: { row: number, col: number, value: string }[] = [];
+    for (const line of lines) {
+        if (line.trim()) { // Check if the line is not empty
+            const [ref, ...termParts] = line.split(' ');
+            const term = termParts.join(' ') || ""; // Ensure empty cells are represented as empty strings
+            if (ref) { // Ensure ref is defined
+                const [row, col] = cellMap(ref);
+                parsedPayload.push({ row, col, value: term });
+                if (row > maxRow) maxRow = row;
+                if (col > maxCol) maxCol = col;
+            }
+        }
+    }
+
+    // Create a 2D array filled with nulls
+    const result: (string)[][] = Array.from({ length: maxRow + 1 }, () => Array(maxCol + 1).fill(""));
+    // Fill the 2D array with parsed values
+    for (const { row, col, value } of parsedPayload) {
+        result[row][col] = value;
+    }
+    console.log("result", result);
+    if (result == null) {
+        return [];
+    } else {
+        return result;
+    }
+};
+
+export const parseLatestUpdates = (payload: string): (string)[][] => {
+    // if (payload.length === 0) {
+    // return [];
+    // }
+    // console.log(payload);
+    //
+    // // Join the array into a single string and then split it into lines
+    // const payloadStr = payload.join('');
+    const lines = payload.split('\n');
     let maxRow = 0;
     let maxCol = 0;
     const parsedPayload: { row: number, col: number, value: string }[] = [];
@@ -63,6 +103,29 @@ export const convertToPayload = (data: string[][]): string => {
     }
 
     return payloadLines.join('\n') + '\n';
+};
+
+// Utility function to convert column index to letter (e.g., 0 -> 'A', 1 -> 'B')
+const getColumnLetter = (colIndex: number): string => {
+  let letter = "";
+  while (colIndex >= 0) {
+    letter = String.fromCharCode((colIndex % 26) + 65) + letter;
+    colIndex = Math.floor(colIndex / 26) - 1;
+  }
+  return letter;
+};
+
+// Utility function to format cell address
+const getCellAddress = (rowIndex: number, colIndex: number): string => {
+  const columnLetter = getColumnLetter(colIndex);
+  return `$${columnLetter}${rowIndex + 1}`;
+};
+
+export const formatChanges = (changes: { row: number; col: number; value: string }[]) => {
+  return changes.map(change => {
+    const cellAddress = getCellAddress(change.row, change.col);
+    return `${cellAddress} ${`${change.value}`}`;
+  }).join('\n');
 };
 
 
