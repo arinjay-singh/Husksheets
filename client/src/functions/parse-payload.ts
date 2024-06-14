@@ -12,6 +12,9 @@ import { cellMap } from "../../src/functions/cell-referencing";
 
 // Function to parse the server payload and convert it to a 2D array
 export const parseLatestUpdates = (payload: string): (string)[][] => {
+    console.log(payload)
+
+    payload = payload.replace(/\//g, '');
     const lines = payload.split('\n');
     let maxRow = 0;
     let maxCol = 0;
