@@ -106,9 +106,10 @@ public class Sheet implements Serializable {
             if (id == 0) {
                 id = 1;
             }
-            for (int i = id; i <= updates.size() - 1 ; i++) {
+            for (int i = id; i <= updates.size() - 2 ; i++) {
                  concatenatedUpdates.append(updates.get(i)).append("\n");
             }
+            concatenatedUpdates.append(updates.get(updates.size() - 1));
         }
         return concatenatedUpdates.toString();
     }

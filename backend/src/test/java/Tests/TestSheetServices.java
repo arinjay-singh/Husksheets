@@ -37,8 +37,8 @@ public class TestSheetServices {
 
     @Test
     public void testSheetsService() {
-        List<Value> expectedSheetsTeam5 = new ArrayList<>();
-        List<Value> expectedSheetsMike = new ArrayList<>();
+        ArrayList<Value> expectedSheetsTeam5 = new ArrayList<>();
+        ArrayList<Value> expectedSheetsMike = new ArrayList<>();
         Response getSheetResponseSuccess = new Response(true, null);
         registerUserService.register(Constants.team5username);
         registerUserService.register(Constants.mikeUsername);
