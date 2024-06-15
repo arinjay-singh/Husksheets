@@ -80,4 +80,17 @@ describe("Spreadsheet", () => {
         expect(sheet.getCell('$A6')).toBeNull();
     });
 
+    test('invalid construction - rows', () => {
+        expect(() => {
+            new Spreadsheet(0, 1);
+        }).toThrow('Rows must be greater than or equal to 1');
+    });
+    
+    test('invalid construction - columns', () => {
+        expect(() => {
+            new Spreadsheet(1, 0);
+        }).toThrow('Columns must be greater than or equal to 1');
+    });
+    
+
 });

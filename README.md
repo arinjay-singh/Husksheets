@@ -1,6 +1,6 @@
 # Husksheets
 
-<img src="husksheets_logo.jpeg" alt="HuskSheets Logo" width="400"/>
+<img src="husksheets_logo.jpeg" alt="HuskSheets Logo" width="300"/>
 
 ### THE solution to YOUR everyday Spreadsheeting Needs! 
 
@@ -12,29 +12,6 @@
 - **Nicholas O'Sullivan**
 
 ---
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Makefile Commands](#makefile-commands)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-
----
-
-## Introduction
-HuskSheets is a user-friendly spreadsheet application designed for Northeastern students. If you want to collaborate with fellow Huskies on a simple but powerful spreadsheet, give HuskSheets a shot!
-
-## Features
-- **Spreadsheet Management**: Create, edit, and delete spreadsheets.
-- **Authentication**: All files are securely stored, and only other Huskies can read and suggest changes to your files.
-- **Data Manipulation Tools/Formulas**: Built-in functions and formulas for data manipulation.
-- **Collaboration**: Share spreadsheets with team members and collaborate in a 'git' version control style format.
-- **Cross-Platform**: Accessible on various devices and operating systems.
 
 ## Installation
 To get started with HuskSheets, follow these steps:
@@ -74,12 +51,19 @@ cd backend
 java -jar target/husksheets-api-server-scrumlords-0.0.1-SNAPSHOT.jar
 ```
 
-### Running the Frontend
+### Running the Frontend, 2 options:
 ```bash
 cd client
-npm run dev
+./client.js --url --name --password --publisher --sheet #streamlined startup to spreadsheet editor
 ```
 
+#### or 
+```bash
+cd client
+npm run dev 
+```
+##### ex: ./client.js --url="https://husksheets.fly.dev/api/v1" --name="alice" --password="ert*hdu4GGwkw89" --publisher="alice" --sheet="S15"
+The sheet will not open immediately, it requires the user to press the "Load" button.
 ## Makefile Commands
 The Makefile provides a set of commands to streamline various tasks. Here are the available targets:
 

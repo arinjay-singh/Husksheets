@@ -56,6 +56,12 @@ fs.writeFileSync(envFilePath, envData.trim());
 
 const { exec } = require('child_process');
 
+// Function to clear the .env.local file
+const clearEnvFile = () => {
+    fs.writeFileSync(envFilePath, '');
+    console.log('.env.local file cleared');
+};
+
 // Function to start the development server
 const startDevServer = () => {
     const devServer = exec('npm run dev');
@@ -73,6 +79,28 @@ const startDevServer = () => {
 
     devServer.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
+        clearEnvFile();
+    });
+
+    // Handle process exit events to ensure .env.local is cleared
+    process.on('exit', () => {
+        clearEnvFile();
+    });
+
+    process.on('SIGINT', () => {
+        clearEnvFile();
+        process.exit();
+    });
+
+    process.on('SIGTERM', () => {
+        clearEnvFile();
+        process.exit();
+    });
+
+    process.on('uncaughtException', (err) => {
+        console.error('Uncaught exception:', err);
+        clearEnvFile();
+        process.exit(1);
     });
 };
 
