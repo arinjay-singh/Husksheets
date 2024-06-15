@@ -48,12 +48,14 @@ class OperationTokenizer {
     this.currentChar = this.input[this.position];
   }
 
+  // Function to advance the position and currentChar
   advance() {
     this.position++;
     this.currentChar =
       this.position < this.input.length ? this.input[this.position] : null;
   }
 
+  // Function to get the next token
   getNextToken(): Token {
     while (this.currentChar !== null) {
       if (this.currentChar.trim() === "") {
@@ -89,6 +91,7 @@ class OperationTokenizer {
     return new Token(TokenType.EOF, "");
   }
 
+  // Function to read a number
   readNumber() {
     let result = "";
     while (this.currentChar !== null && /[\d\.]/.test(this.currentChar)) {
@@ -98,6 +101,7 @@ class OperationTokenizer {
     return result;
   }
 
+  // Function to read a string
   readString() {
     const quote = this.currentChar;
     this.advance(); // skip opening quote
@@ -110,6 +114,7 @@ class OperationTokenizer {
     return result;
   }
 
+  // Function to read an operator
   readOperator() {
     let result = this.currentChar;
     this.advance(); // Advance past the first character of the operator
@@ -129,6 +134,8 @@ export class OperationParser {
   tokens: Token[];
   position: number = 0;
 
+  // Constructor to parse the input
+  // swap out cell references for their values
   constructor(data: string[][], input: string) {
     const parsedReferences = parseCellReferences(data, input);
     const tokenizer = new OperationTokenizer(parsedReferences);
@@ -141,6 +148,7 @@ export class OperationParser {
     this.tokens = tokens;
   }
 
+  // Function to parse the input
   parse() {
     if (this.tokens.length === 0) return;
     const firstToken = this.tokens[this.position];
@@ -151,16 +159,19 @@ export class OperationParser {
     return this.expression();
   }
 
+  // Function to get the current token
   current() {
     return this.tokens[this.position] || new Token(TokenType.EOF, "");
   }
 
+  // Function to advance the position
   advance() {
     if (this.current().type !== TokenType.EOF) {
       this.position++;
     }
   }
 
+  // Function to expect a token type
   expect(type: TokenType) {
     if (this.current().type !== type) {
       throw new Error(
@@ -172,6 +183,7 @@ export class OperationParser {
     return token;
   }
 
+  // Function to parse an expression
   expression() {
     let leftValue = this.term();
 
@@ -187,6 +199,7 @@ export class OperationParser {
     return leftValue;
   }
 
+  // Function to parse a term
   term() {
     let result = this.factor();
 
@@ -202,6 +215,7 @@ export class OperationParser {
     return result;
   }
 
+  // Function to parse a factor
   factor(): any {
     const token = this.current();
 
@@ -222,6 +236,7 @@ export class OperationParser {
     }
   }
 
+  // Function to apply an operator
   applyOperator(left: any, operator: any, right: any) {
     switch (operator) {
       case "+":
