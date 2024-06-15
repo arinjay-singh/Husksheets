@@ -15,7 +15,7 @@ public class ValidationUtils {
 
     /**
      * Helper method to validate the publisher and sheet, making sure both exist and are not null.
-     * @author: Kaan Tural, Parnika Jaan
+     * @author: Kaan Tural
      * @param requestPublisher The publisher to validate.
      * @param requestSheet The sheet to validate.
      * @return A map with the sheet and response of the validation to allow for easy access to both.
