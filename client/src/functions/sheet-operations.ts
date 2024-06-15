@@ -265,3 +265,18 @@ export class OperationParser {
     }
   }
 }
+
+/**
+ * @author Arinjay Singh
+ */
+export const extractSimpleEquation = (data: string[][], inputString: string) => {
+    const regex = /\b(\d+\s*[+\-*/=><]\s*\d+)\b/;
+    const matches = inputString.match(regex);
+    if (matches) {
+        let match = matches[0];
+        let result = new OperationParser(data, '=' + match).parse();
+        let newString = inputString.replace(match, result.toString());
+        return newString;
+    }
+    return inputString;
+};

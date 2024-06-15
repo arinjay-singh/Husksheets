@@ -34,7 +34,7 @@ frontend-build: frontend-deps
 	cd $(FRONTEND_DIR) && npm run build
 
 frontend-run: frontend-build
-	cd $(FRONTEND_DIR) && npm run dev
+	cd $(FRONTEND_DIR) && ./client.js --url="https://husksheets.fly.dev/api/v1" --name="alice" --password="ert*hdu4GGwkw89" --publisher="alice" --sheet="S6"
 
 frontend-test:
 	cd $(FRONTEND_DIR) && npm install && npm run test-coverage
