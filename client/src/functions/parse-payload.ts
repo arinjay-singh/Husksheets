@@ -10,7 +10,10 @@
 
 import { cellMap } from "../../src/functions/cell-referencing";
 
-
+/**
+ * @author Troy M. Caron
+ * @author Nicholas O'Sullivan
+ */
 // Function to parse the server payload and convert it to a 2D array
 export const parseLatestUpdates = (payload: string): (string)[][] => {
     console.log(payload)
@@ -46,6 +49,9 @@ export const parseLatestUpdates = (payload: string): (string)[][] => {
     return result;
 };
 
+/**
+ * @author Troy M. Caron
+ */
 // Function to convert a 2D array back into a server payload
 export const convertToPayload = (data: string[][]): string => {
     const payloadLines: string[] = [];
@@ -67,6 +73,7 @@ export const convertToPayload = (data: string[][]): string => {
 /**
  * Utility function to convert column index to letter (e.g., 0 -> 'A', 1 -> 'B')
  * @author Nicholas O'Sullivan
+ * 
   */
 const getColumnLetter = (colIndex: number): string => {
   let letter = "";
@@ -98,7 +105,9 @@ export const formatChanges = (changes: { row: number; col: number; value: string
 };
 
 
-
+/**
+ * @author Nicholas O'Sullivan
+ */
 // Function to convert a 0-indexed row and column to a cell reference
 const getCellReference = (row: number, col: number): string => {
     const columnReference = getColumnLetters(col);
@@ -106,6 +115,9 @@ const getCellReference = (row: number, col: number): string => {
     return `$${columnReference}${rowReference}`;
 };
 
+/**
+ * @author Nicholas O'Sullivan
+ */
 // Function to convert column index to column letters
 const getColumnLetters = (col: number): string => {
     let columnReference = '';

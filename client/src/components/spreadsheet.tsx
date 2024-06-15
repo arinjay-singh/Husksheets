@@ -72,6 +72,9 @@ const Spreadsheet: React.FC = () => {
     ["", "", "", "", ""],
   ]);
 
+  /** 
+   * @author: Nicholas O'Sullivan
+   */
   const [changes, setChanges] = useState<
     { row: number; col: number; value: string }[]
   >([]);
@@ -188,8 +191,10 @@ const Spreadsheet: React.FC = () => {
       handleUpdate(); // Call handleUpdate
     }
   }, [changes, stopFetching, isSpreadsheetLoaded]);
+
   /**
    * retrieve updates from the server every 1-2 seconds.
+   * @author Nicholas O'Sullivan
    */
   useEffect(() => {
     console.log("fetching updates:");
