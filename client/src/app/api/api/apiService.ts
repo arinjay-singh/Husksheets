@@ -73,6 +73,5 @@ export const useApi = (): ApiMethods => {
     };
 
     return {get, post};
-
 };
 
