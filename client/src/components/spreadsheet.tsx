@@ -40,7 +40,7 @@ const Spreadsheet: React.FC = () => {
      * @author Arinjay Singh
      */
     /* USER AUTHENTICATION CONTEXT */
-    const {auth} = useAuth();
+    const {auth, setAuthData} = useAuth();
     const username = auth?.username;
 
     /**
@@ -92,6 +92,7 @@ const Spreadsheet: React.FC = () => {
     const {createSheet} = useCreateSheet();
 
     //handle command line arguments on startup
+    //@author: Nicholas O'Sullivan
     const publisherName = process.env.NEXT_PUBLIC_PUBLISHER;
     let basePublisherName = ""
     if (publisherName) {
@@ -106,23 +107,52 @@ const Spreadsheet: React.FC = () => {
         console.log("used diff sheet name:", sheetName)
     }
 
-    if (!(auth?.username && auth?.password)) {
-        const userName = process.env.NEXT_PUBLIC_NAME;
-        let baseUserName = ""
-        if (userName) {
-            baseUserName = userName;
-            console.log("used diff username:", userName)
-            //set auth context username to baseusername
-        }
+    const authUsername = auth?.username;
+    const authPassword = auth?.password;
 
-        const userPassword = process.env.NEXT_PUBLIC_PASSWORD;
-        let baseUserPassword = ""
-        if (userPassword) {
-            baseUserPassword = userPassword;
-            console.log("used diff password :", userPassword)
-            //set auth context password to baseuserpassword
+// Check if auth data is already set and only set it if it's not
+    const userName = process.env.NEXT_PUBLIC_NAME || "";
+    const userPassword = process.env.NEXT_PUBLIC_PASSWORD || "";
+
+    useEffect(() => {
+        // Only update the state if the environment variables are different from the current auth values
+        if (auth?.username !== userName || auth?.password !== userPassword) {
+            // Log values for debugging
+            if (userName) {
+                console.log("used diff username:", userName);
+            }
+            if (userPassword) {
+                console.log("used diff password :", userPassword);
+            }
+
+            // Only set auth context data if both values are provided
+            if (userName && userPassword) {
+                setAuthData({username: userName, password: userPassword});
+            }
         }
-    }
+    }, [auth, userName, userPassword, setAuthData]);
+
+    //   useEffect(() => {
+    //     if (!(auth?.username && auth?.password)) {
+    //         const userName = process.env.NEXT_PUBLIC_NAME;
+    //         let baseUserName = ""
+    //         if (userName) {
+    //             baseUserName = userName;
+    //             console.log("used diff username:", userName)
+    //             // set auth context username to baseusername
+    //         }
+    //         const userPassword = process.env.NEXT_PUBLIC_PASSWORD;
+    //         let baseUserPassword = ""
+    //         if (userPassword) {
+    //             baseUserPassword = userPassword;
+    //             console.log("used diff password :", userPassword)
+    //             // set auth context password to baseuserpassword
+    //         }
+    //         if (baseUserName && baseUserPassword) {
+    //             setAuthData({ username: baseUserName, password: baseUserPassword });
+    //         }
+    //     }
+    // }, [auth, setAuthData]);
 
     /**
      * @author Arinjay Singh

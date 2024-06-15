@@ -4,6 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 const { argv, option} = require('yargs');
+const killPort = require('kill-port');
+
 
 // Configure yargs options
 const options = option('url', {
@@ -53,11 +55,34 @@ const envData = `
 fs.writeFileSync(envFilePath, envData.trim());
 
 const { exec } = require('child_process');
-exec('npm run dev', (err, stdout, stderr) => {
-  if (err) {
-    console.error(`Error executing command: ${err}`);
-    return;
-  }
-  console.log(stdout);
-  console.error(stderr);
-});
+
+// Function to start the development server
+const startDevServer = () => {
+    const devServer = exec('npm run dev');
+
+    devServer.stdout.on('data', (data) => {
+        console.log(data);
+        if (data.includes('ready - started server on')) {
+            console.log('Localhost URL: http://localhost:3000');
+        }
+    });
+
+    devServer.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    devServer.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
+};
+
+// Kill the process running on port 3000 and then start the server
+killPort(3000)
+    .then(() => {
+        console.log('Killed process on port 3000');
+        startDevServer();
+    })
+    .catch((err) => {
+        console.error(`Error killing process on port 3000: ${err}`);
+        startDevServer();
+    });
