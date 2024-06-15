@@ -1,77 +1,77 @@
-
 /**
  * @file apiService.ts
  * @brief Abstracted api service calls
  * @date 06-10-2024
  */
 
-import axios from 'axios';
-import {useAuth} from '@/context/auth-context';
+import axios, { AxiosInstance } from 'axios';
+import { useAuth } from '@/context/auth-context';
 
 const apiUrl = process.env.NEXT_PUBLIC_URL;
-const userName = process.env.NEXT_PUBLIC_NAME;
-const userPassword = process.env.NEXT_PUBLIC_PASSWORD;
-const publisherName = process.env.NEXT_PUBLIC_PUBLISHER;
-const sheetName = process.env.NEXT_PUBLIC_SHEET;
-console.log(apiUrl);
-console.log(userName);
-console.log(userPassword);
+
 
 /**
- @author Parnika Jain
-  Function to convert credentials to Base64
+ * Function to convert credentials to Base64
+ * @param username - User's username
+ * @param password - User's password
+ * @returns Base64 encoded credentials
  */
 export const base64Convert = async (username: string | undefined, password: string | undefined): Promise<string> => {
     const credentials = `${username}:${password}`;
-    console.log(username, password);
     const encodedCredentials = btoa(credentials);
-    return `${encodedCredentials}`;
+    return encodedCredentials;
 };
 
+let baseURL = 'http://localhost:8080/api/v1'; // Default base URL
+
+// Check if apiUrl is defined and use it if available
+if (apiUrl) {
+    baseURL = apiUrl;
+    console.log("used diff baseurl:", baseURL)
+}
+
 // Create an Axios instance with a base URL
-export const api = axios.create({
-    // baseURL: 'https://husksheets.fly.dev/api/v1'
-    baseURL: 'http://localhost:8080/api/v1' // Replace with backend URL
-    // baseURL: 'https://redlightserver.fly.dev/api/v1'
+const api: AxiosInstance = axios.create({
+    baseURL,
 });
 
 /**
- * @author Nicholas O'Sullivan
  * Hook to use API methods
  */
-//set expected in/out
 interface ApiMethods {
     get: (url: string) => Promise<any>;
     post: (url: string, data: any) => Promise<any>;
 }
 
 export const useApi = (): ApiMethods => {
-    const {auth} = useAuth();
+    const { auth } = useAuth();
 
     /**
-     * @author Parnika Jain
+     * Function to get authorization headers
      */
     const getAuthHeaders = async () => {
         const token = await base64Convert(auth?.username, auth?.password);
-        return token ? {Authorization: `Basic ${token}`} : {};
+        return token ? { Authorization: `Basic ${token}` } : {};
     };
 
     /**
-     * @author Nicholas O'Sullivan
+     * Function to perform GET request
+     * @param url - API endpoint URL
      */
     const get = async (url: string) => {
         const headers = await getAuthHeaders();
-        console.log(headers);
-        return api.get(url, {headers});
+        return api.get(url, { headers });
     };
+
     /**
-     * @author Nicholas O'Sullivan
+     * Function to perform POST request
+     * @param url - API endpoint URL
+     * @param data - Data to be sent in the request body
      */
     const post = async (url: string, data: any) => {
         const headers = await getAuthHeaders();
-        return api.post(url, data, {headers});
+        return api.post(url, data, { headers });
     };
 
-    return {get, post};
+    return { get, post };
 };
-

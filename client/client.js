@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
+// start client from the cmnd line
+// @author nicholas o'sullivan
 const fs = require('fs');
 const path = require('path');
 const { argv, option} = require('yargs');
@@ -51,7 +52,6 @@ const envData = `
 
 fs.writeFileSync(envFilePath, envData.trim());
 
-// Start the Next.js client
 const { exec } = require('child_process');
 exec('npm run dev', (err, stdout, stderr) => {
   if (err) {
