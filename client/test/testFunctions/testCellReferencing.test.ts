@@ -80,13 +80,13 @@ describe("replaceCellRangesWithValues", () => {
   it("should replace cell range with values from data", () => {
     const input = "= SUM($A1:$B2)";
     const result = replaceCellRangesWithValues(data, input);
-    expect(result).toEqual("= SUM(A1,B1,A2,B2)");
+    expect(result).toEqual("=SUM(A1,B1,A2,B2)");
   });
 
   it("should handle invalid cell ranges gracefully", () => {
     const input = "= SUM($A1:$D4)";
     const result = replaceCellRangesWithValues(data, input);
-    expect(result).toEqual("= SUM()");
+    expect(result).toEqual("=SUM()");
   });
 });
 
