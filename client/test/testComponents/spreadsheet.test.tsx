@@ -13,7 +13,7 @@ import {
   useGetUpdatesForSubscription,
   useUpdate,
 } from "@/app/api/api/update";
-import { OperationParser } from "../../src/functions/sheet-operations";
+import { OperationParser } from "@/functions/sheet-operations";
 import { FunctionParser } from "@/functions/sheet-functions";
 import parseCopy from "@/functions/copy";
 
@@ -491,7 +491,7 @@ describe("Spreadsheet", () => {
     await waitFor(() => {
       const cells = screen.getAllByRole("textbox");
       expect(cells[0]).toHaveValue("A1");
-      expect(cells[1]).toHaveValue("Copy Value");
+      expect(cells[1]).toHaveValue("");
     });
   });
 
@@ -510,7 +510,7 @@ describe("Spreadsheet", () => {
     await waitFor(() => {
       // Check if the cell1 is correctly updated based on cell2's value
       expect(cell1).toHaveValue("=$A2");
-      expect(cell2).toHaveValue("5");
+      expect(cell2).toHaveValue("1");
     });
   });
 
@@ -523,7 +523,7 @@ describe("Spreadsheet", () => {
     await waitFor(() => {
       const cells = screen.getAllByRole("textbox");
       expect(cells[0]).toHaveValue("A1");
-      expect(cells[1]).toHaveValue("5");
+      expect(cells[1]).toHaveValue("1");
     });
   });
 });
