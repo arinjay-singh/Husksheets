@@ -2,7 +2,7 @@
  * @file apiService.test.ts
  * @brief Tests for the API service calls
  * @date 06-13-2024
- * @
+ * @author Troy and Kaan
  */
 
 import {useApi, base64Convert} from '@/app/api/api/apiService';
