@@ -209,7 +209,7 @@ const Spreadsheet: React.FC = () => {
         }
       };
       // interval to call fetchUpdates every 1 second
-      const interval = setInterval(fetchUpdates, 3000);
+      const interval = setInterval(fetchUpdates, 2000);
       return () => clearInterval(interval);
     }
   }, [isSpreadsheetLoaded]);
@@ -299,19 +299,21 @@ const Spreadsheet: React.FC = () => {
       row.map((cell, cIdx) => {
         if (rIdx === rowIndex && cIdx === colIndex) return cell;
         else {
-          if (rawData[rIdx][cIdx].includes("$")) {
+          console.log('rawdata', rawData);
+          let val = rawData[rIdx][cIdx].toString();
+          if (val.includes("$")) {
             let equationResult: string | null = null;
             let functionResult: string | null = null;
             try {
               functionResult = new FunctionParser(
                 current,
-                rawData[rIdx][cIdx]
+                val
               ).parse();
             } catch (e) {}
             try {
               equationResult = new OperationParser(
                 current,
-                rawData[rIdx][cIdx]
+                val
               ).parse();
             } catch (e) {}
             if (equationResult !== null) {
