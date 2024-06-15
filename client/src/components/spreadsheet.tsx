@@ -402,7 +402,7 @@ const Spreadsheet: React.FC = () => {
         const payload = formatChanges(changes) + "\n";
         console.log("payload to server:", payload);
         await updatePublished(
-          username,
+          publisher,
           typedSheetRef.current,
           payload,
           isOwner
@@ -453,6 +453,7 @@ const Spreadsheet: React.FC = () => {
     if (username === undefined) return;
     try {
       if (publisher !== "" && selectedSheet !== "") {
+        console.log(publisher);
         if (username == publisher) {
           const payloadAndId = await getUpdatesForPublished(
             username,
@@ -481,7 +482,7 @@ const Spreadsheet: React.FC = () => {
           }
         } else {
           const payloadAndId = await getUpdatesForSubscription(
-            username,
+            publisher,
             typedSheetRef.current,
             subscriptionUpdatesId
           );

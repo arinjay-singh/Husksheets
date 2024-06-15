@@ -15,14 +15,14 @@ import {useAuth} from "@/context/auth-context";
 export const useUpdate = () => {
     const { post } = useApi();
 
-    const updatePublished = async (publisher: string, sheet: string, payload: string, isOwner: boolean) => {
+    const updatePublishedOrSubscription = async (publisher: string, sheet: string, payload: string, isOwner: boolean) => {
         if (isOwner) {
             return await post('/updatePublished', {publisher, sheet, payload});
         } else {
             return await post('/updateSubscription', {publisher, sheet, payload});
         }
     };
-    return { updatePublished };
+    return { updatePublished: updatePublishedOrSubscription };
 };
 
 /**
