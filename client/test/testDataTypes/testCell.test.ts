@@ -54,5 +54,13 @@ describe("Cell", () => {
         expect(cell.formula).toBe("=($A1 + 12.0)");
     });
 
+    test('invalid formula', () => {
+        const cell = new Cell();
+        expect(() => {
+            cell.formula = "$A1 + 12.0";
+        }).toThrow('Invalid formula: Formula must start with "="');
+    });
+    
+
 
 });
