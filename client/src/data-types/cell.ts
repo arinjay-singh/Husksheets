@@ -63,6 +63,10 @@ class Cell {
     }
 
     set formula(value: string | null) {
+        // Check if the formula starts with '='
+        if (value && !value.startsWith('=')) {
+            throw new Error('Invalid formula: Formula must start with "="');
+        }
         this._formula = value;
 
         //this.evaluateFormula(); To be implemented

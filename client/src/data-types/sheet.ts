@@ -26,6 +26,13 @@ class Spreadsheet {
         this.cells = new Map<string, Cell>();
         this.rows = rows;
         this.cols = cols;
+        if (rows <= 0) {
+            throw new Error('Rows must be greater than or equal to 1');
+        }
+        if (cols <= 0) {
+            throw new Error('Columns must be greater than or equal to 1');
+        }
+
         this.initializeCells();
     }
 
