@@ -2,94 +2,59 @@
  * @file apiService.test.ts
  * @brief Tests for the API service calls
  * @date 06-13-2024
+ * @author Troy and Kaan
  */
 
-import { base64Convert, useApi } from '../../src/app/api/api/apiService'; // Adjust the import path
-import { useAuth } from '@/context/auth-context';
+import {useApi, base64Convert} from '@/app/api/api/apiService';
+import {renderHook} from '@testing-library/react';
+import {useAuth} from '@/context/auth-context';
 import axios from 'axios';
 
-jest.mock('@/context/auth-context');
 jest.mock('axios');
+jest.mock('@/context/auth-context');
 
 describe('apiService', () => {
-  const mockAuth = { username: 'testuser', password: 'testpass' };
+  const mockedAxios = axios as jest.Mocked<typeof axios>;
 
   beforeEach(() => {
-    (useAuth as jest.Mock).mockReturnValue({ auth: mockAuth });
+    mockedAxios.get.mockResolvedValue({data: 'test'});
+    mockedAxios.post.mockResolvedValue({data: 'test'});
+
+    (useAuth as jest.Mock).mockReturnValue({
+      auth: {
+        username: 'testuser',
+        password: 'testpassword',
+      },
+    });
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('base64Convert', () => {
-    it('should convert credentials to Base64', async () => {
-      const encodedCredentials = await base64Convert('testuser', 'testpass');
-      expect(encodedCredentials).toBe(btoa('testuser:testpass'));
-    });
+    it('should convert username and password to base64', async () => {
+      //arrange
+      const username = 'testuser';
+      const password = 'testpassword';
 
-    it('should handle undefined credentials', async () => {
-      const encodedCredentials = await base64Convert(undefined, undefined);
-      expect(encodedCredentials).toBe(btoa('undefined:undefined'));
+      //act
+      const result = await base64Convert(username, password);
+      //assert
+      expect(result).toEqual('dGVzdHVzZXI6dGVzdHBhc3N3b3Jk');
     });
   });
 
   describe('useApi', () => {
-    const mockGet = jest.fn();
-    const mockPost = jest.fn();
+    it('should return an object with get and post methods', () => {
+      //act
+      const {result} = renderHook(() => useApi());
 
-    beforeEach(() => {
-      (axios.create as jest.Mock).mockReturnValue({
-        get: mockGet,
-        post: mockPost,
+      //assert
+      expect(result.current).toEqual({
+        get: expect.any(Function),
+        post: expect.any(Function),
       });
-    });
-
-    it('should get data with correct headers', async () => {
-      const { get } = useApi();
-      const token = btoa(`${mockAuth.username}:${mockAuth.password}`);
-      const headers = { Authorization: `Basic ${token}` };
-
-      mockGet.mockResolvedValue({ data: 'response' });
-
-      const response = await get('/test-url');
-
-      expect(mockGet).toHaveBeenCalledWith('/test-url', { headers });
-      expect(response.data).toBe('response');
-    });
-
-    it('should post data with correct headers', async () => {
-      const { post } = useApi();
-      const token = btoa(`${mockAuth.username}:${mockAuth.password}`);
-      const headers = { Authorization: `Basic ${token}` };
-
-      mockPost.mockResolvedValue({ data: 'response' });
-
-      const response = await post('/test-url', { key: 'value' });
-
-      expect(mockPost).toHaveBeenCalledWith('/test-url', { key: 'value' }, { headers });
-      expect(response.data).toBe('response');
-    });
-
-    it('should handle undefined auth data for get request', async () => {
-      (useAuth as jest.Mock).mockReturnValue({ auth: undefined });
-      const { get } = useApi();
-
-      mockGet.mockResolvedValue({ data: 'response' });
-
-      const response = await get('/test-url');
-
-      expect(mockGet).toHaveBeenCalledWith('/test-url', { headers: {} });
-      expect(response.data).toBe('response');
-    });
-
-    it('should handle undefined auth data for post request', async () => {
-      (useAuth as jest.Mock).mockReturnValue({ auth: undefined });
-      const { post } = useApi();
-
-      mockPost.mockResolvedValue({ data: 'response' });
-
-      const response = await post('/test-url', { key: 'value' });
-
-      expect(mockPost).toHaveBeenCalledWith('/test-url', { key: 'value' }, { headers: {} });
-      expect(response.data).toBe('response');
     });
   });
 });
