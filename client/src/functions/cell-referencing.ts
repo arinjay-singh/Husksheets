@@ -6,6 +6,9 @@
  * @author Arinjay Singh
  */
 
+/**
+ * @author Arinjay Singh
+ */
 // function to convert a cell reference code to a row and column index
 // returns a 0-indexed row and column index
 export const cellMap = (cell: string): [number, number] => {
@@ -29,6 +32,9 @@ export const cellMap = (cell: string): [number, number] => {
   return [row - 1, col - 1];
 };
 
+/**
+ * @author Arinjay Singh
+ */
 // function to retrieve the value of a cell from a 2D array
 export const retrieveCellValue = (
   data: string[][],
@@ -37,6 +43,9 @@ export const retrieveCellValue = (
   return data[coord[0]][coord[1]];
 };
 
+/**
+ * @author Arinjay Singh
+ */
 // function to parse cell references in a string
 export const parseCellReferences = (data: string[][], expression: string) => {
   // map cell references to values and replace them in the expression
@@ -54,6 +63,9 @@ export const parseCellReferences = (data: string[][], expression: string) => {
   });
 };
 
+/**
+ * @author Arinjay Singh
+ */
 // function to retrieve the values for a range of cells given a start and end cell
 export const retrieveCellRangeValues = (
   startCell: string,
@@ -90,6 +102,9 @@ export const retrieveCellRangeValues = (
   return cellRangeString;
 };
 
+/**
+ * @author Arinjay Singh
+ */
 export const replaceCellRangesWithValues = (
   data: string[][],
   input: string

@@ -5,6 +5,9 @@
  * @author Arinjay Singh
  */
 
+/**
+ * @author Arinjay Singh
+ */
 const SheetTable = ({
   data,
   addRow,
@@ -18,6 +21,9 @@ const SheetTable = ({
   onChange: (r: number, c: number, v: string) => void;
   onExecute: (r: number, c: number, v: string | null) => void;
 }) => {
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <div className="relative flex-grow flex-col">
       <div className="flex flex-row">

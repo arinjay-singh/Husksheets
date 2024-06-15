@@ -5,9 +5,11 @@
  * @author Arinjay Singh
  */
 
-
 import ButtonRow from "./button-row";
 
+/**
+ * @author Arinjay Singh
+ */
 const SheetInputField = ({
   textValue,
   setTextValue,
@@ -17,9 +19,12 @@ const SheetInputField = ({
   setTextValue: (value: string) => void;
   buttons: any[];
 }) => {
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <div className="flex flex-row justify-center mb-5 items-center">
-      <input        
+      <input
         type="text"
         placeholder="Sheet Name"
         value={textValue}

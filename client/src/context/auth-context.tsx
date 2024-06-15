@@ -19,6 +19,9 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 
+/**
+ * @author Arinjay Singh
+ */
 // authentication context type interface
 // login and logout functions to change isAuthenticated state
 // loading state to prevent being kicked out of the app while checking authentication
@@ -31,14 +34,20 @@ interface AuthContextType {
   loading: boolean;
 }
 
+
+/**
+ * @author Arinjay Singh
+ */
 export interface AuthData {
   username: string;
   password: string;
 }
-
 // create the authentication context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * @author Arinjay Singh
+ */
 // authentication provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // authentication state to store whether the user is authenticated
@@ -111,6 +120,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+/**
+ * @author Arinjay Singh
+ */
 // custom hook to use the authentication context
 export const useAuth = () => {
   const context = useContext(AuthContext);

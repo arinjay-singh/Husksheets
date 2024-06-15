@@ -6,6 +6,9 @@
  * @author Arinjay Singh
  */
 
+/**
+ * @author Arinjay Singh
+ */
 // loading component
 export const Loading = () => {
   // render the loading component

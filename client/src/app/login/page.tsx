@@ -13,6 +13,9 @@ import { useAuth } from "@/context/auth-context";
 import { useRegister } from "../api/api/register";
 import { Loading } from "@/components/loading";
 
+/**
+ * @author Arinjay Singh
+ */
 // login page component
 const LoginPage = () => {
   // state hooks to store the username and password
@@ -26,6 +29,9 @@ const LoginPage = () => {
   const { login, setAuthData } = useAuth();
   const { register } = useRegister();
 
+  /**
+   * @author Arinjay Singh
+   */
   useEffect(() => {
     const handleAuthUpdate = async () => {
       if (isAuthUpdated) {
@@ -43,6 +49,9 @@ const LoginPage = () => {
     handleAuthUpdate();
   }, [isAuthUpdated, login, register]);
 
+  /**
+   * @author Arinjay Singh
+   */
   // handle the login form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +60,9 @@ const LoginPage = () => {
     setIsAuthUpdated(true);
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   // render the login form
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -7,6 +7,9 @@
 
 import { parseCellReferences } from "./cell-referencing";
 
+/**
+ * @author Arinjay Singh
+ */
 // Enums for token types to include logical and comparison operators
 enum TokenType {
   NUMBER,
@@ -17,6 +20,9 @@ enum TokenType {
   EOF,
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Token class
 class Token {
   type: TokenType;
@@ -28,6 +34,9 @@ class Token {
   }
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Tokenizer class for parsing inputs
 class OperationTokenizer {
   input: string;
@@ -112,6 +121,9 @@ class OperationTokenizer {
   }
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Parser class
 export class OperationParser {
   tokens: Token[];

@@ -10,12 +10,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
 
+/**
+ * @author Arinjay Singh
+ */
 // title and description metadata for the application
 export const metadata: Metadata = {
   title: "HuskSheets",
   description: "Created by Arinjay, Kaan, Nick, Parnika, and Troy",
 };
 
+/**
+ * @author Arinjay Singh
+ */
 // root layout component
 export default function RootLayout({
   children,

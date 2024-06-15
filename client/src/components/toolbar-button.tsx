@@ -5,6 +5,9 @@
  * @author Arinjay Singh
  */
 
+/**
+ * @author Arinjay Singh
+ */
 export const ToolBarButton = ({
   children,
   onClick,
@@ -14,6 +17,9 @@ export const ToolBarButton = ({
   onClick: () => void;
   color: string;
 }) => {
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <button
       onClick={onClick}

@@ -32,11 +32,20 @@ import SheetTable from "./sheet-table";
 import ButtonRow from "./button-row";
 import SheetToolbar from "./sheet-toolbar";
 
+/**
+ * @author Arinjay Singh
+ */
 const Spreadsheet: React.FC = () => {
+  /**
+   * @author Arinjay Singh
+   */
   /* USER AUTHENTICATION CONTEXT */
   const { auth } = useAuth();
   const username = auth?.username;
 
+  /**
+   * @author Arinjay Singh
+   */
   /* SHEET DISPLAY AND RAW DATA */
   const [data, setData] = useState<string[][]>([
     ["", "", "", "", ""],
@@ -67,6 +76,9 @@ const Spreadsheet: React.FC = () => {
     { row: number; col: number; value: string }[]
   >([]);
 
+  /**
+   * @author Arinjay Singh
+   */
   /* API CALLS */
   const { getPublishers } = useGetPublishers();
   const { getUpdatesForSubscription } = useGetUpdatesForSubscription();
@@ -76,6 +88,9 @@ const Spreadsheet: React.FC = () => {
   const { getSheets } = useGetSheets();
   const { createSheet } = useCreateSheet();
 
+  /**
+   * @author Arinjay Singh
+   */
   /* STATE VARIABLES */
   const [isClient, setIsClient] = useState(false);
   const [publisher, setPublisher] = useState<string>("");
@@ -97,6 +112,9 @@ const Spreadsheet: React.FC = () => {
     typedSheetRef.current = typedSheet;
   }, [typedSheet]);
 
+  /**
+   * @author Arinjay Singh
+   */
   /* INITIAL DATA LOAD FROM LOCAL STORAGE */
   useEffect(() => {
     setIsClient(true);
@@ -109,6 +127,9 @@ const Spreadsheet: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * @author Arinjay Singh
+   */
   /* SAVE DATA TO LOCAL STORAGE ON CHANGE */
   useEffect(() => {
     if (!isClient || typeof window === "undefined") return;
@@ -118,6 +139,7 @@ const Spreadsheet: React.FC = () => {
 
   /** COMPUTE RAW DATA ON LOAD, update displayed SS data
    * @author: Nicholas O'Sullivan
+   * @author: Arinjay Singh
    */
   useEffect(() => {
     if (isLoadingInData) {
@@ -187,6 +209,9 @@ const Spreadsheet: React.FC = () => {
     }
   }, [isSpreadsheetLoaded]);
 
+  /**
+   * @author Arinjay Singh
+   */
   /* CELL INPUT CHANGE HANDLER */
   const handleInputChange = (
     rowIndex: number,
@@ -213,6 +238,9 @@ const Spreadsheet: React.FC = () => {
     ]);
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   /* EXECUTE CELL HANDLER */
   const executeCell = (
     rowIndex: number,
@@ -302,6 +330,9 @@ const Spreadsheet: React.FC = () => {
     }
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   /* CREATE AND DELETE SHEET API BUTTON HANDLERS */
   const handleCreateSheet = async () => {
     try {
@@ -314,6 +345,10 @@ const Spreadsheet: React.FC = () => {
       alert("Error creating sheet. See console for details.");
     }
   };
+
+  /**
+   * @author Arinjay Singh
+   */
   const handleDeleteSheet = async () => {
     try {
       await deleteSheet(typedSheetRef.current);
@@ -323,6 +358,9 @@ const Spreadsheet: React.FC = () => {
     }
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   /* GET SHEETS AND PUBLISHERS API BUTTON HANDLERS */
   const handleGetSheets = async () => {
     try {
@@ -337,6 +375,9 @@ const Spreadsheet: React.FC = () => {
       alert("Error retrieving sheets. See console for details.");
     }
   };
+  /**
+   * @author Arinjay Singh
+   */
   const handleGetPublishers = async () => {
     let publishers = getPublishers();
     publishers.then((publisherData: string[]) => {
@@ -462,25 +503,40 @@ const Spreadsheet: React.FC = () => {
     }
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   /* LOCAL CHANGE BUTTON HANDLERS */
   const addRow = () => {
     setData([...data, Array(data[0].length).fill("")]);
     setRawData([...rawData, Array(data[0].length).fill("")]);
   };
+  /**
+   * @author Arinjay Singh
+   */
   const handleDeleteRow = () => {
     if (data.length > 1) {
       setData(data.slice(0, -1));
       setRawData(rawData.slice(0, -1));
     }
   };
+  /**
+   * @author Arinjay Singh
+   */
   const addColumn = () => {
     setData(data.map((row) => [...row, ""]));
     setRawData(rawData.map((row) => [...row, ""]));
   };
+  /**
+   * @author Arinjay Singh
+   */
   const handleDeleteColumn = () => {
     if (data[0].length > 1) setData(data.map((row) => row.slice(0, -1)));
     setRawData(rawData.map((row) => row.slice(0, -1)));
   };
+  /**
+   * @author Arinjay Singh
+   */
   const handleResetSheet = () => {
     setData([
       ["", "", "", "", ""],
@@ -507,8 +563,14 @@ const Spreadsheet: React.FC = () => {
       ["", "", "", "", ""],
     ]);
   };
+  /**
+   * @author Arinjay Singh
+   */
   const handleDownloadCSV = () => saveArrayAsCSV(data);
 
+  /**
+   * @author Arinjay Singh
+   */
   /* SPREADSHEET DATA */
   const bottomToolbarButtons = [
     { func: handleDownloadCSV, color: "green", label: "Download CSV" },
@@ -544,6 +606,9 @@ const Spreadsheet: React.FC = () => {
     buttons: topToolbarButtons,
   };
 
+  /**
+   * @author Arinjay Singh
+   */
   /* RENDER SPREADSHEET */
   return (
     <div className="p-4 flex flex-col">

@@ -7,6 +7,9 @@
 
 import { cellMap } from "./cell-referencing";
 
+/**
+ * @author Arinjay Singh
+ */
 export const parseCopy = (
   data: string[][],
   input: string,

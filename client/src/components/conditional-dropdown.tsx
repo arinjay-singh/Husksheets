@@ -5,6 +5,9 @@
  * @author Arinjay Singh
  */
 
+/**
+ * @author Arinjay Singh
+ */
 const ConditionalDropdown = ({
   value,
   setValue,
@@ -14,6 +17,9 @@ const ConditionalDropdown = ({
   setValue: (value: string) => void;
   values: string[];
 }) => {
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <div>
       <select

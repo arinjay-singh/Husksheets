@@ -5,11 +5,12 @@
  * @author Arinjay Singh
  */
 
-
-
 import ConditionalDropdown from "./conditional-dropdown";
 import { ToolBarButton } from "./toolbar-button";
 
+/**
+ * @author Arinjay Singh
+ */
 type ConditionalSelectFieldProps = {
   onClick: () => void;
   value: string;
@@ -18,6 +19,9 @@ type ConditionalSelectFieldProps = {
   label: string;
 };
 
+/**
+ * @author Arinjay Singh
+ */
 const ConditionalSelectField = ({
   onClick,
   value,
@@ -25,16 +29,15 @@ const ConditionalSelectField = ({
   values,
   label,
 }: ConditionalSelectFieldProps) => {
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <div className="flex flex-row justify-start items-center">
       <ToolBarButton onClick={onClick} color="red">
         {label}
       </ToolBarButton>
-      <ConditionalDropdown
-        value={value}
-        setValue={setValue}
-        values={values}
-      />
+      <ConditionalDropdown value={value} setValue={setValue} values={values} />
     </div>
   );
 };

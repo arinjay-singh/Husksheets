@@ -5,10 +5,12 @@
  * @author Arinjay Singh
  */
 
-
 import SheetInputField from "./sheet-input-field";
 import ConditionalSelectField from "./sheet-select-field";
 
+/**
+ * @author Arinjay Singh
+ */
 interface ConditionalDropdownProps {
   onClick: () => Promise<void>;
   value: string;
@@ -17,6 +19,9 @@ interface ConditionalDropdownProps {
   label: string;
 }
 
+/**
+ * @author Arinjay Singh
+ */
 interface SheetInputFieldProps {
   textValue: string;
   setTextValue: (value: string) => void;
@@ -27,6 +32,9 @@ interface SheetInputFieldProps {
   }[];
 }
 
+/**
+ * @author Arinjay Singh
+ */
 const SheetToolbar = ({
   textFieldProps,
   dropdownProps,
@@ -53,6 +61,9 @@ const SheetToolbar = ({
     values: sheets,
     label: sheetLabel,
   } = dropdownProps[1];
+  /**
+   * @author Arinjay Singh
+   */
   return (
     <div className="flex flex-row space-x-32 justify-center items-start">
       <SheetInputField

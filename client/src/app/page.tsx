@@ -15,6 +15,9 @@ import { useAuth } from "@/context/auth-context";
 import { useRegister } from "./api/api/register";
 import { ToolBarButton } from "@/components/toolbar-button";
 
+/**
+ * @author Arinjay Singh
+ */
 const Home: NextPage = () => {
   const { logout } = useAuth();
   /**
@@ -23,6 +26,9 @@ const Home: NextPage = () => {
    */
   const { register } = useRegister();
 
+  /**
+   * @author Arinjay Singh
+   */
   // render the home page
   return (
     <ProtectedRoute>

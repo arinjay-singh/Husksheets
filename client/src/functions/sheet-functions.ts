@@ -11,6 +11,9 @@ import {
   replaceCellRangesWithValues,
 } from "./cell-referencing";
 
+/**
+ * @author Arinjay Singh
+ */
 // Enum for token types
 enum TokenType {
   FUNCTION,
@@ -23,6 +26,9 @@ enum TokenType {
   EOF,
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Token class
 class Token {
   type: TokenType;
@@ -34,6 +40,9 @@ class Token {
   }
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Tokenizer class
 class FunctionTokenizer {
   input: string;
@@ -142,6 +151,9 @@ class FunctionTokenizer {
   }
 }
 
+/**
+ * @author Arinjay Singh
+ */
 // Parser class
 export class FunctionParser {
   tokenizer: FunctionTokenizer;
