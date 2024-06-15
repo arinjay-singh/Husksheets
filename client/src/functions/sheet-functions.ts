@@ -10,6 +10,7 @@ import {
   parseCellReferences,
   replaceCellRangesWithValues,
 } from "./cell-referencing";
+import { extractSimpleEquation } from "./sheet-operations";
 
 /**
  * @author Arinjay Singh
@@ -164,7 +165,8 @@ export class FunctionParser {
   constructor(data: string[][], input: string) {
     const parsedRanges = replaceCellRangesWithValues(data, input);
     const parsedReferences = parseCellReferences(data, parsedRanges);
-    this.tokenizer = new FunctionTokenizer(parsedReferences);
+    const parsedEquations = extractSimpleEquation(data, parsedReferences);
+    this.tokenizer = new FunctionTokenizer(parsedEquations);
     this.currentToken = this.tokenizer.getNextToken();
   }
 
